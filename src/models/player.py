@@ -1,7 +1,12 @@
 from datetime import date
+import re
 
+ELO_MINIMUM = 0
+ELO_MAXIMUM = 3000
+CHESS_NATIONAL_ID_PATTERN = r"^[A-Z]{2}\d{5}$"
 
 class Player:
+    """Represents a chess player."""
     def __init__(
         self,
         first_name: str,
@@ -16,6 +21,17 @@ class Player:
         self.birth_date = birth_date
         self.elo_rating = elo_rating
         self.chess_national_id = chess_national_id
+
+    @staticmethod
+    def _validate_non_empty_string(value: str, field_name: str):
+        if not isinstance(value, str):
+            raise TypeError(f"'{field_names}' must be a string")
+        
+        cleaned_value = value.strip()
+        if not value.strip():
+            raise ValueError(f"'{field_name}' must be a non-empty string")
+        
+        return cleaned_value
 
     @property
     def first_name(self):
@@ -32,12 +48,7 @@ class Player:
 
     @first_name.setter
     def first_name(self, value):
-        if not isinstance(value, str) or not value.strip():
-            raise ValueError(
-                "'first_name' must be a non empty string"
-                )
-
-        self._first_name = value.strip()
+        self._first_name = self._validate_non_empty_string(value, "first_name")
 
     @property
     def last_name(self):
@@ -54,12 +65,7 @@ class Player:
 
     @last_name.setter
     def last_name(self, value):
-        if not isinstance(value, str) or not value.strip():
-            raise ValueError(
-                "'last_name' must be a non empty string"
-                )
-
-        self._last_name = value.strip()
+        self._last_name = self._validate_non_empty_string(value, "last-name")
 
     @property
     def birth_date(self):
@@ -79,6 +85,40 @@ class Player:
             raise TypeError(
                 "'birth_date' doit être une date"
             )
+        self._birth_date = value
+
+    @property
+    def elo_rating(self):
+        return self._elo_rating
+
+    @elo_rating.setter
+    def elo_rating(self, value):
+        if not isinstance(value, int)
+            raise TypeError("'elo_rating' must be an integer")
+    
+        if not ELO_MINIMUM <= value <= ELO_MAXIMUM:
+            raise ValueError(
+                f"'elo_rating' must be between {ELO_MINIMUM} and {ELO_MAXIMUM}"
+                )
+        
+        self._elo_rating = value
+    
+    @property
+    def chess_national_id(self):
+        return self._chess_national_id
+
+    @chess_national_id.setter
+    def chess_national_id(self, value):
+        cleaned_value = self._validate_non_empty_string(value, "chess_national_id").upper()
+
+        if not re.fullmatch(CHESS_NATIONAL_ID_PATTERN, cleaned_value):
+            raise ValueError(
+                "'chess_national_id' format must be: "
+                "two uppercase letters followed by five digits "
+                "(example: AB12345)"
+                )
+        
+        self.correct_chess_national_id = cleaned_value
 
     def correct_first_name(self, new_first_name: str):
         """
@@ -122,3 +162,9 @@ class Player:
             elo_rating=data["elo_rating"],
             chess_national_id=data["chess_national_id"]
         )
+    
+    def __str__(self):
+        pass
+
+    def __repr__(self):
+        pass
