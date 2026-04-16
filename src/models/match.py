@@ -8,6 +8,8 @@ class MatchStatus(Enum):
     IN_COMING = "in_coming"
     IN_PROGRESS = "in_progress"
     OVER = "over"
+
+
 class Match:
     def __init__(
             self,
