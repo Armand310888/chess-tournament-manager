@@ -25,7 +25,7 @@ class Player:
     @staticmethod
     def _validate_non_empty_string(value: str, field_name: str):
         if not isinstance(value, str):
-            raise TypeError(f"'{field_names}' must be a string")
+            raise TypeError(f"'{field_name}' must be a string")
 
         cleaned_value = value.strip()
         if not value.strip():
