@@ -26,11 +26,11 @@ class Player:
     def _validate_non_empty_string(value: str, field_name: str):
         if not isinstance(value, str):
             raise TypeError(f"'{field_names}' must be a string")
-        
+
         cleaned_value = value.strip()
         if not value.strip():
             raise ValueError(f"'{field_name}' must be a non-empty string")
-        
+
         return cleaned_value
 
     @property
@@ -162,7 +162,7 @@ class Player:
             elo_rating=data["elo_rating"],
             chess_national_id=data["chess_national_id"]
         )
-    
+
     def __str__(self):
         pass
 
