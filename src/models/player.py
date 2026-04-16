@@ -65,7 +65,7 @@ class Player:
 
     @last_name.setter
     def last_name(self, value):
-        self._last_name = self._validate_non_empty_string(value, "last-name")
+        self._last_name = self._validate_non_empty_string(value, "last_name")
 
     @property
     def birth_date(self):
@@ -93,16 +93,16 @@ class Player:
 
     @elo_rating.setter
     def elo_rating(self, value):
-        if not isinstance(value, int)
+        if not isinstance(value, int):
             raise TypeError("'elo_rating' must be an integer")
-    
+
         if not ELO_MINIMUM <= value <= ELO_MAXIMUM:
             raise ValueError(
                 f"'elo_rating' must be between {ELO_MINIMUM} and {ELO_MAXIMUM}"
                 )
-        
+
         self._elo_rating = value
-    
+
     @property
     def chess_national_id(self):
         return self._chess_national_id
@@ -117,8 +117,8 @@ class Player:
                 "two uppercase letters followed by five digits "
                 "(example: AB12345)"
                 )
-        
-        self.correct_chess_national_id = cleaned_value
+
+        self._chess_national_id = cleaned_value
 
     def correct_first_name(self, new_first_name: str):
         """
