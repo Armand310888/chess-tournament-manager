@@ -28,12 +28,14 @@ class Match:
 
     @property
     def white_player(self):
-        return _white_player
+        return self._white_player
 
     @white_player.setter
     def white_player(self, value):
         if not isinstance(value, Player):
             raise ValueError("'white_player' must be a Player object")
+
+        self._white_player = value
 
     def start_match():
         pass
