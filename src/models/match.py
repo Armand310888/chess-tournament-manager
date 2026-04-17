@@ -35,9 +35,9 @@ class Match:
         self.black_player_score: float | None = None
 
     @staticmethod
-    def _validate_is_a_player(value: str, field_name: str):
+    def _validate_is_a_player(value: Player, field_name: str):
         if not isinstance(value, Player):
-            raise ValueError(f"'{field_name}' must be a 'Player' object'")
+            raise ValueError(f"'{field_name}' must be a 'Player' object")
 
         return value
 
@@ -47,6 +47,9 @@ class Match:
 
     @white_player.setter
     def white_player(self, value):
+        if value is self.black_player:
+            raise ValueError("White player must be different to Black player")
+
         self._white_player = self._validate_is_a_player(value, "white_player")
 
     @property
