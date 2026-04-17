@@ -11,6 +11,12 @@ class MatchStatus(Enum):
     FINISHED = "finished"
 
 
+class MatchResult(Enum):
+    WHITE_WIN = "white_win"
+    BLACK_WIN = "black_win"
+    DRAW = "draw"
+
+
 class Match:
     def __init__(
             self,
@@ -23,8 +29,10 @@ class Match:
         self.match_id: int | None = None
         self.start_datetime: datetime | None = None
         self.end_datetime: datetime | None = None
-        self.result = None
         self.status = MatchStatus.NOT_STARTED
+        self.result: MatchResult | None = None
+        self.white_player_score: float | None = None
+        self.black_player_score: float | None = None
 
     @staticmethod
     def _validate_is_a_player(value: str, field_name: str):
@@ -51,7 +59,7 @@ class Match:
 
     def start_match(self):
         if (
-            self.start_datetime is not None 
+            self.start_datetime is not None
             or self.status != MatchStatus.IN_COMING
         ):
             raise ValueError(
@@ -61,6 +69,30 @@ class Match:
         self.start_datetime = datetime.now()
         self.status = MatchStatus.IN_PROGRESS
 
+    def end_match(self, result: MatchResult):
+        if (
+            self.start_datetime is None
+            or self.status != MatchStatus.IN_PROGRESS
+        ):
+            raise ValueError(
+                "Match has not started yet and therefore, cannot be finished"
+            )
 
-    def end_match():
-        pass
+        if not isinstance(result, MatchResult):
+            raise ValueError("result must be a MatchResult value")
+
+        self.end_datetime = datetime.now()
+        self.status = MatchStatus.FINISHED
+        self.result = result
+
+        if result == MatchResult.WHITE_WIN:
+            self.white_player_score = 1
+            self.black_player_score = 0
+
+        elif result == MatchResult.BLACK_WIN:
+            self.black_player_score = 1
+            self.white_player_score = 0
+
+        elif result == MatchResult.DRAW:
+            self.white_player_score = 0.5
+            self.black_player_score = 0.5
