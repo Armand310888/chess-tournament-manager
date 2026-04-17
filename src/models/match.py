@@ -6,9 +6,9 @@ from models.player import Player
 
 
 class MatchStatus(Enum):
-    IN_COMING = "in_coming"
+    NOT_STARTED = "not_started"
     IN_PROGRESS = "in_progress"
-    OVER = "over"
+    FINISHED = "finished"
 
 
 class Match:
@@ -23,8 +23,8 @@ class Match:
         self.match_id: int | None = None
         self.start_datetime: datetime | None = None
         self.end_datetime: datetime | None = None
-        self.status = MatchStatus.IN_COMING
         self.result = None
+        self.status = MatchStatus.NOT_STARTED
 
     @staticmethod
     def _validate_is_a_player(value: str, field_name: str):
