@@ -5,6 +5,7 @@ ELO_MINIMUM = 0
 ELO_MAXIMUM = 3000
 CHESS_NATIONAL_ID_PATTERN = r"^[A-Z]{2}\d{5}$"
 
+
 class Player:
     """Represents a chess player."""
     def __init__(

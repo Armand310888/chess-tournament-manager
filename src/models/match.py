@@ -1,14 +1,8 @@
 from datetime import datetime
-
 from enum import Enum
-
 from models.player import Player
 
-
-class MatchStatus(Enum):
-    NOT_STARTED = "not_started"
-    IN_PROGRESS = "in_progress"
-    FINISHED = "finished"
+from models.lifecyle import start_lifecycle, end_lifecycle, EventStatus
 
 
 class MatchResult(Enum):
@@ -29,7 +23,7 @@ class Match:
         self.match_id: int | None = None
         self.start_datetime: datetime | None = None
         self.end_datetime: datetime | None = None
-        self.status = MatchStatus.NOT_STARTED
+        self.status = EventStatus.NOT_STARTED
         self.result: MatchResult | None = None
         self.white_player_score: float | None = None
         self.black_player_score: float | None = None
@@ -61,31 +55,14 @@ class Match:
         self._black_player = self._validate_is_a_player(value, "black_player")
 
     def start_match(self):
-        if (
-            self.start_datetime is not None
-            or self.status != MatchStatus.IN_COMING
-        ):
-            raise ValueError(
-                "Match has already started and cannot be started again"
-                )
-
-        self.start_datetime = datetime.now()
-        self.status = MatchStatus.IN_PROGRESS
+        start_lifecycle(self)
 
     def end_match(self, result: MatchResult):
-        if (
-            self.start_datetime is None
-            or self.status != MatchStatus.IN_PROGRESS
-        ):
-            raise ValueError(
-                "Match has not started yet and therefore, cannot be finished"
-            )
+        end_lifecycle(self)
 
         if not isinstance(result, MatchResult):
             raise ValueError("result must be a MatchResult value")
 
-        self.end_datetime = datetime.now()
-        self.status = MatchStatus.FINISHED
         self.result = result
 
         if result == MatchResult.WHITE_WIN:
