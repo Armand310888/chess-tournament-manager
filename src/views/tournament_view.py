@@ -1,24 +1,35 @@
 
 
 class TournamentView:
-    def create_tournament(self):
+    def prompt_for_tournament(self):
         name = input(
-            "Saissisez le nom du tournoi : "
+            "Enter the tournament's name : "
         )
         place = input(
-            "Saisissez l'adresse du tournoi : "
+            "Enter the tournament address : "
+        )
+        start_date = input(
+            "Enter the tournament starting date and time : "
+        )
+        end_date = input(
+            "Enter the tournament end date and time : "
+        )
+        number_of_players = input(
+            "Enter the maximum number of players admitted to the tournament : "
+        )
+        number_of_rounds = input(
+            "Enter the tournament number of rounds (by default: 4) : "
+        )
+        description = input(
+            "Enter the tournament description : "
         )
 
-
-        
-
-
-
-        self.name = name
-        self.place = place
-        self.number_of_rounds = number_of_rounds
-        self.actual_round = actual_round
-        self.list_of_rounds = list_of_rounds
-        self.list_of_players = list_of_players
-        self.description = description
-        self.tournament_id: int | None = None
+        return {
+            "name": name,
+            "place": place,
+            "start_date": start_date,
+            "end_date": end_date,
+            "number_of_players": number_of_players,
+            "number_of_rounds": number_of_rounds,
+            "description": description
+        }
