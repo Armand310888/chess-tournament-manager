@@ -30,3 +30,8 @@ class PlayerController:
 
         return new_player
 
+    def modify_player(self):
+        pass
+
+    def delete_player(self):
+        pass

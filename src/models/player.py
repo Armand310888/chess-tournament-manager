@@ -110,40 +110,7 @@ class Player:
 
     @chess_national_id.setter
     def chess_national_id(self, value):
-        cleaned_value = self._validate_non_empty_string(value, "chess_national_id").upper()
-
-        if not re.fullmatch(CHESS_NATIONAL_ID_PATTERN, cleaned_value):
-            raise ValueError(
-                "'chess_national_id' format must be: "
-                "two uppercase letters followed by five digits "
-                "(example: AB12345)"
-                )
-
-        self._chess_national_id = cleaned_value
-
-    def correct_first_name(self, new_first_name: str):
-        """
-        Updates the player's first name to correct a data entry error.
-
-        This method applies the same validation rules as the 'first_name'
-        setter.
-
-        Args:
-            new_first_name (str): The corrected first name.
-        """
-        self.first_name = new_first_name
-
-    def correct_last_name(self, new_last_name: str):
-        self.last_name = new_last_name
-
-    def correct_birth_date(self, new_birth_date: date):
-        self.birth_date = new_birth_date
-
-    def correct_elo_rating(self, new_elo_rating: int):
-        self.elo_rating = new_elo_rating
-
-    def correct_chess_national_id(self, new_chess_national_id):
-        self.chess_national_id = new_chess_national_id
+        self._chess_national_id = validate_chess_id(value)
 
     def to_dict(self):
         return {
