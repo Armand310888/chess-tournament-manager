@@ -4,11 +4,14 @@ from models.round import Round
 from models.player import Player
 from utils.validators import (
     validate_non_empty_string,
-    validate_street_number,
-    validate_postal_code,
+    validate_regex_match,
     validate_date,
     validate_date_order,
-    validate_number
+    validate_number,
+    STREET_NUMBER_PATTERN,
+    STREET_NUMBER_PATTERN_DESCRIPTION,
+    POSTAL_CODE_PATTERN,
+    POSTAL_CODE_PATTERN_DESCRIPTION
 )
 
 DEFAULT_ROUND_NUMBER = 4
@@ -21,9 +24,19 @@ class Address:
         postal_code: str,
         city: str
     ):
-        self.street_number = validate_street_number(street_number)
+        self.street_number = validate_regex_match(
+            street_number,
+            "street_number",
+            STREET_NUMBER_PATTERN,
+            STREET_NUMBER_PATTERN_DESCRIPTION
+            )
         self.street_name = validate_non_empty_string(street_name, "street_name")
-        self.postal_code = validate_postal_code(postal_code)
+        self.postal_code = validate_regex_match(
+            postal_code,
+            "postal_code",
+            POSTAL_CODE_PATTERN,
+            POSTAL_CODE_PATTERN_DESCRIPTION
+            )
         self.city = validate_non_empty_string(city, "city")
 
 

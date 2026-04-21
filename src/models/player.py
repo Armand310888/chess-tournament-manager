@@ -1,14 +1,17 @@
 from utils.validators import (
     validate_non_empty_string,
     validate_date,
-    validate_chess_id,
-    validate_number
+    validate_regex_match,
+    validate_number,
+    CHESS_NATIONAL_ID_PATTERN,
+    CHESS_NATIONAL_ID_PATTERN_DESCRIPTION,
+    ELO_MAXIMUM,
+    ELO_MINIMUM
 )
 
 from datetime import date
 
-ELO_MINIMUM = 0
-ELO_MAXIMUM = 3000
+
 
 
 class Player:
@@ -71,7 +74,12 @@ class Player:
 
     @chess_national_id.setter
     def chess_national_id(self, value):
-        self._chess_national_id = validate_chess_id(value)
+        self._chess_national_id = validate_regex_match(
+            value,
+            "chess_national_id",
+            CHESS_NATIONAL_ID_PATTERN,
+            CHESS_NATIONAL_ID_PATTERN_DESCRIPTION
+            )
 
     def to_dict(self):
         return {

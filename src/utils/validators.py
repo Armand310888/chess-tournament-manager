@@ -3,12 +3,29 @@ import re
 from enum import Enum
 
 STREET_NUMBER_PATTERN = r"^\d+\s?(bis|ter|[A-Za-z])?$"
+STREET_NUMBER_PATTERN_DESCRIPTION = (
+    "One or more digits, optionally followed by a space "
+    "and a suffix such as 'bis' or 'ter', or a single letter. "
+    "Examples: 12, 12 bis, 12A"
+)
+
 POSTAL_CODE_PATTERN = r"^\d{5}$"
+POSTAL_CODE_PATTERN_DESCRIPTION = "five positive digits. Example: 92700"
+
 CHESS_NATIONAL_ID_PATTERN = r"^[A-Z]{2}\d{5}$"
+CHESS_NATIONAL_ID_PATTERN_DESCRIPTION = (
+    "Two uppercase letters followed by five digits. "
+    "Example: AB12345 "
+)
+
+ELO_MINIMUM = 0
+ELO_MAXIMUM = 3000
+
 
 class NumberType(Enum):
     INTEGER = int
     FLOAT = float
+
 
 def validate_non_empty_string(value: str, field_name: str):
     if not isinstance(value, str):
@@ -21,12 +38,23 @@ def validate_non_empty_string(value: str, field_name: str):
     return cleaned_value
 
 
-def validate_street_number():
-    pass
+def validate_regex_match(
+        value: str,
+        field_name: str,
+        regex_pattern: str,
+        pattern_description: str
+):
+    cleaned_value = (
+        validate_non_empty_string(value, field_name).upper()
+    )
 
+    if not re.fullmatch(regex_pattern, cleaned_value):
+        raise ValueError(
+            f"'{field_name}' format must be: "
+            f"'{pattern_description}"
+            )
 
-def validate_postal_code():
-    pass
+    return cleaned_value
 
 
 def validate_date(value: date, field_name: str):
@@ -38,24 +66,9 @@ def validate_date(value: date, field_name: str):
     return value
 
 
-def validate_date_order(start_date: datetime, end_date: datetime)
+def validate_date_order(start_date: datetime, end_date: datetime):
     if end_date < start_date:
         raise ValueError("End date and time must be later than start date and time.")
-
-
-def validate_chess_id(value):
-    cleaned_value = (
-        validate_non_empty_string(value, "chess_national_id").upper()
-    )
-
-    if not re.fullmatch(CHESS_NATIONAL_ID_PATTERN, cleaned_value):
-        raise ValueError(
-            "'chess_national_id' format must be: "
-            "two uppercase letters followed by five digits "
-            "(example: AB12345)"
-            )
-
-    return cleaned_value
 
 
 def validate_number(
