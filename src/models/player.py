@@ -1,7 +1,6 @@
-from models.validators import (
+from utils.validators import (
     validate_non_empty_string,
     validate_date,
-    validate_elo_rating,
     validate_chess_id,
     validate_number
 )

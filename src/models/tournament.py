@@ -2,7 +2,7 @@ from datetime import date
 
 from models.round import Round
 from models.player import Player
-from models.validators import (
+from utils.validators import (
     validate_non_empty_string,
     validate_street_number,
     validate_postal_code,
