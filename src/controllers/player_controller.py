@@ -14,20 +14,20 @@ class PlayerController:
             player_data["chess_national_id"].strip().upper()
         )
 
-        registered_players = load_players()
+        all_players = load_players()
 
-        for player in registered_players:
+        for player in all_players:
             if player.chess_national_id == submitted_chess_national_id:
                 raise ValueError(
                     f"A player with chess national ID "
                     f"{player.chess_national_id} already exists. "
                     f"His name is {player.first_name} {player.last_name}")
 
-        new_player = Player(**player_data)
+        player = Player(**player_data)
 
-        save_player(new_player)
+        save_player(player) # ici?????
 
-        return new_player
+        return player
 
     def modify_player(self):
         pass
