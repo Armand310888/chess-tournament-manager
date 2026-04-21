@@ -1,9 +1,15 @@
+from models.validators import (
+    validate_non_empty_string,
+    validate_date,
+    validate_elo_rating,
+    validate_chess_id,
+    validate_number
+)
+
 from datetime import date
-import re
 
 ELO_MINIMUM = 0
 ELO_MAXIMUM = 3000
-CHESS_NATIONAL_ID_PATTERN = r"^[A-Z]{2}\d{5}$"
 
 
 class Player:
@@ -16,77 +22,35 @@ class Player:
         elo_rating: int,
         chess_national_id: str
     ):
-
         self.first_name = first_name
         self.last_name = last_name
         self.birth_date = birth_date
         self.elo_rating = elo_rating
         self.chess_national_id = chess_national_id
 
-    @staticmethod
-    def _validate_non_empty_string(value: str, field_name: str):
-        if not isinstance(value, str):
-            raise TypeError(f"'{field_name}' must be a string")
-
-        cleaned_value = value.strip()
-        if not value.strip():
-            raise ValueError(f"'{field_name}' must be a non-empty string")
-
-        return cleaned_value
-
     @property
     def first_name(self):
-        """
-        Player's first name.
-
-        Must be a non-empty string. Leading and trailing whitespace
-        are removed when setting the value.
-
-        Raises:
-            ValueError: If the value is not a non-empty string.
-        """
         return self._first_name
 
     @first_name.setter
     def first_name(self, value):
-        self._first_name = self._validate_non_empty_string(value, "first_name")
+        self._first_name = validate_non_empty_string(value, "first_name")
 
     @property
     def last_name(self):
-        """
-        Player's last name.
-
-        Must be a non-empty string. Leading and trailing whitespace
-        are removed when setting the value.
-
-        Raises:
-            ValueError: If the value is not a non-empty string.
-        """
         return self._last_name
 
     @last_name.setter
     def last_name(self, value):
-        self._last_name = self._validate_non_empty_string(value, "last_name")
+        self._last_name = validate_non_empty_string(value, "last_name")
 
     @property
     def birth_date(self):
-        """
-        Player's birth name.
-
-        Must be a date.
-
-        Raises:
-            TypeError: If the value is not a date.
-        """
         return self._birth_date
 
     @birth_date.setter
     def birth_date(self, value):
-        if not isinstance(value, date):
-            raise TypeError(
-                "'birth_date' doit être une date"
-            )
-        self._birth_date = value
+        self._birth_date = validate_date(value, "birth_date")
 
     @property
     def elo_rating(self):
@@ -94,15 +58,13 @@ class Player:
 
     @elo_rating.setter
     def elo_rating(self, value):
-        if not isinstance(value, int):
-            raise TypeError("'elo_rating' must be an integer")
-
-        if not ELO_MINIMUM <= value <= ELO_MAXIMUM:
-            raise ValueError(
-                f"'elo_rating' must be between {ELO_MINIMUM} and {ELO_MAXIMUM}"
-                )
-
-        self._elo_rating = value
+        self._elo_rating = validate_number(
+            value,
+            "elo_rating",
+            int,
+            ELO_MINIMUM,
+            ELO_MAXIMUM
+            )
 
     @property
     def chess_national_id(self):
