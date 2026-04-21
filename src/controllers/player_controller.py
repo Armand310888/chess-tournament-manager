@@ -1,5 +1,4 @@
 
-from datetime import date
 
 from models.player import Player
 from views.player_view import PlayerView
