@@ -92,3 +92,9 @@ class Match:
         elif result == MatchResult.DRAW:
             self.white_player_score = 0.5
             self.black_player_score = 0.5
+
+    def __str__(self):
+        pass
+
+    def __repr__(self):
+        pass

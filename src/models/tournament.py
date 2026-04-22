@@ -182,3 +182,8 @@ class Tournament:
     def delete_player(self):
         pass
 
+    def __str__(self):
+        pass
+
+    def __repr__(self):
+        pass
