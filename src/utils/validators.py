@@ -27,7 +27,8 @@ class NumberType(Enum):
     FLOAT = float
 
 
-def validate_non_empty_string(value: str, field_name: str):
+def validate_non_empty_string(value: str, field_name: str) -> str:
+    """"""
     if not isinstance(value, str):
         raise TypeError(f"'{field_name}' must be a string")
 
@@ -43,7 +44,8 @@ def validate_regex_match(
         field_name: str,
         regex_pattern: str,
         pattern_description: str
-):
+) -> str:
+    """"""
     cleaned_value = (
         validate_non_empty_string(value, field_name).upper()
     )
@@ -52,12 +54,13 @@ def validate_regex_match(
         raise ValueError(
             f"'{field_name}' format must be: "
             f"'{pattern_description}"
-            )
+        )
 
     return cleaned_value
 
 
-def validate_date(value: date, field_name: str):
+def validate_date(value: date, field_name: str) -> date:
+    """"""
     if not isinstance(value, date):
         raise TypeError(
             f"'{field_name}' must be a date"
@@ -66,9 +69,12 @@ def validate_date(value: date, field_name: str):
     return value
 
 
-def validate_date_order(start_date: datetime, end_date: datetime):
+def validate_date_order(start_date: datetime, end_date: datetime) -> None:
+    """"""
     if end_date < start_date:
-        raise ValueError("End date and time must be later than start date and time.")
+        raise ValueError(
+            "End date and time must be later than start date and time."
+        )
 
 
 def validate_number(
@@ -77,7 +83,8 @@ def validate_number(
     expected_type: type,
     minimum: int | float | None = None,
     maximum: int | float | None = None,
-):
+) -> int | float:
+    """"""
     # Validate field_name
     if not isinstance(field_name, str) or not field_name.strip():
         raise TypeError("'field_name' must be a non-empty string.")

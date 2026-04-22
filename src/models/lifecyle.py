@@ -17,7 +17,7 @@ class EventType(Protocol):
     end_datetime: datetime | None
 
 
-def start_lifecycle(event: EventType):
+def start_lifecycle(event: EventType) -> None:
     if (
         event.start_datetime is not None
         or event.status != EventStatus.NOT_STARTED
@@ -30,7 +30,7 @@ def start_lifecycle(event: EventType):
     event.status = EventStatus.IN_PROGRESS
 
 
-def end_lifecycle(event: EventType):
+def end_lifecycle(event: EventType) -> None:
     if (
         event.start_datetime is None
         or event.status != EventStatus.IN_PROGRESS

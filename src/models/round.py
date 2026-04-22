@@ -16,8 +16,10 @@ class Round:
         self.round_name: str | None = None
         self.status = EventStatus.NOT_STARTED
 
-    def start_round(self):
+    def start_round(self) -> None:
+        """"""
         start_lifecycle(self)
 
-    def end_round(self):
+    def end_round(self) -> None:
+        """"""
         end_lifecycle(self)
