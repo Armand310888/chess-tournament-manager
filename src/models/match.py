@@ -3,6 +3,7 @@ from enum import Enum
 from models.player import Player
 
 from models.lifecyle import start_lifecycle, end_lifecycle, EventStatus
+from utils.validators import validate_is_a_class_object
 
 
 class MatchResult(Enum):
@@ -28,27 +29,32 @@ class Match:
         self.white_player_score: float | None = None
         self.black_player_score: float | None = None
 
-    @staticmethod
-    def _validate_is_a_player(value: Player, field_name: str):
-        if not isinstance(value, Player):
-            raise ValueError(f"'{field_name}' must be a 'Player' object")
-
-        return value
-
     @property
-    def white_player(self):
-        return self._white_player
+    def player_1(self) -> Player:
+        return self._player_1
 
-    @white_player.setter
-    def white_player(self, value):
-        if value is self.black_player:
+    @player_1.setter
+    def player_1(self, value) -> None:
+        if value is self.player_2:
             raise ValueError("White player must be different to Black player")
 
-        self._white_player = self._validate_is_a_player(value, "white_player")
+        self._player_1 = validate_is_a_class_object(
+            value,
+            "player_1",
+            Player
+        )
 
     @property
-    def black_player(self):
-        return self._black_player
+    def player_2(self) -> Player:
+        return self._player_2
+
+    @player_2.setter
+    def player_2(self, value) -> None:
+        self._player_2 = validate_is_a_class_object(
+            value,
+            "player_2",
+            Player
+        )
 
     @black_player.setter
     def black_player(self, value):

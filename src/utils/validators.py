@@ -123,3 +123,21 @@ def validate_number(
         )
 
     return value
+
+
+def validate_is_a_class_object(
+        value: object,
+        field_name: str,
+        expected_class: type
+        ) -> object:
+    """"""
+
+    if not isinstance(value, expected_class):
+        raise TypeError(
+            f"'{field_name}' must be a '{expected_class.__name__}' object"
+        )
+
+    return value
+
+def validate_ID():
+    pass
