@@ -81,25 +81,6 @@ class Player:
             CHESS_NATIONAL_ID_PATTERN_DESCRIPTION
             )
 
-    def to_dict(self):
-        return {
-            "first_name": self.first_name,
-            "last_name": self.last_name,
-            "birth_date": self.birth_date.isoformat(),
-            "elo_rating": self.elo_rating,
-            "chess_national_id": self.chess_national_id
-        }
-
-    @classmethod
-    def from_dict(cls, data: dict):
-        return cls(
-            first_name=data["first_name"],
-            last_name=data["last_name"],
-            birth_date=date.fromisoformat(data["birth_date"]),
-            elo_rating=data["elo_rating"],
-            chess_national_id=data["chess_national_id"]
-        )
-
     def __str__(self):
         pass
 
