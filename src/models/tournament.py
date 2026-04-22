@@ -80,6 +80,8 @@ class Tournament:
         if not isinstance(value, Address):
             raise ValueError("Place must be an Address object")
 
+        self._place = value
+
     @property
     def start_date(self):
         return self._start_date
