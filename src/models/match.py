@@ -1,7 +1,8 @@
 from datetime import datetime
 from enum import Enum
-from models.player import Player
+import random
 
+from models.player import Player
 from models.lifecyle import start_lifecycle, end_lifecycle, EventStatus
 from utils.validators import validate_is_a_class_object
 
@@ -15,12 +16,13 @@ class MatchResult(Enum):
 class Match:
     def __init__(
             self,
-            white_player: Player,
-            black_player: Player,
-            ):
-
-        self.white_player = white_player
-        self.black_player = black_player
+            player_1: Player,
+            player_2: Player,
+            ) -> None:
+# CORRIGER player 1 + player 2 car définition de la couleur aléatoire, via une méthode
+        self.player_1 = player_1
+        self.player_2 = player_2
+        self.list_of_players: list[Player] | None = None
         self.match_id: int | None = None
         self.start_datetime: datetime | None = None
         self.end_datetime: datetime | None = None
@@ -56,9 +58,17 @@ class Match:
             Player
         )
 
-    @black_player.setter
-    def black_player(self, value):
-        self._black_player = self._validate_is_a_player(value, "black_player")
+    def set_black_and_white_player(self, player_1: Player, player_2: Player) -> Player:
+        players = [player_1, player_2]
+
+        white_player = random.choice(players)
+
+        if white_player == player_1:
+            black_player = player_2
+        else:
+            black_player = player_1
+
+        return white_player, black_player
 
     def start_match(self):
         start_lifecycle(self)
