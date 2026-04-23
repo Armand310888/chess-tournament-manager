@@ -34,7 +34,6 @@ class PlayerView:
                     CHESS_NATIONAL_ID_PATTERN_DESCRIPTION
                 )
                 break
-
             except ValueError as error:
                 print(error)
 
