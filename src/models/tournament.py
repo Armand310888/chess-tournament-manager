@@ -16,7 +16,9 @@ from utils.validators import (
 
 DEFAULT_ROUND_NUMBER = 4
 
+
 class Address:
+    """"""
     def __init__(
         self,
         street_number: str,
@@ -65,6 +67,7 @@ class Tournament:
 
     @property
     def name(self):
+        """"""
         return self._name
 
     @name.setter
@@ -73,6 +76,7 @@ class Tournament:
 
     @property
     def place(self):
+        """"""
         return self._place
 
     @place.setter
@@ -84,6 +88,7 @@ class Tournament:
 
     @property
     def start_date(self):
+        """"""
         return self._start_date
 
     @start_date.setter
@@ -97,6 +102,7 @@ class Tournament:
 
     @property
     def end_date(self):
+        """"""
         return self._end_date
 
     @end_date.setter
@@ -110,6 +116,7 @@ class Tournament:
 
     @property
     def number_of_players(self):
+        """"""
         return self._number_of_players
 
     @number_of_players.setter
@@ -123,6 +130,7 @@ class Tournament:
 
     @property
     def number_of_rounds(self):
+        """"""
         return self._number_of_rounds
 
     @number_of_rounds.setter
@@ -136,6 +144,7 @@ class Tournament:
 
     @property
     def description(self):
+        """"""
         return self._description
 
     @description.setter
@@ -143,6 +152,7 @@ class Tournament:
         self._description = validate_non_empty_string(value, "description")
 
     def add_round(self, round: Round):
+        """"""
         if not isinstance(round, Round):
             raise ValueError(f"'{round}' must be a Round object.")
 
@@ -155,6 +165,7 @@ class Tournament:
         self.list_of_rounds.append(round)
 
     def add_player(self, player: Player):
+        """"""
         if not isinstance(player, Player):
             raise ValueError(f"'{player} must be a Player object.")
 
@@ -167,6 +178,7 @@ class Tournament:
         self.list_of_players.append(player)
 
     def set_actual_round(self, round: Round, list_of_rounds: list[Round]):
+        """"""
         if not isinstance(round, Round):
             raise TypeError("'round' must be a Round class object.")
 
