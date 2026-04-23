@@ -1,28 +1,97 @@
+from utils.validators import (
+    validate_non_empty_string,
+    validate_number,
+    validate_date_order,
+    validate_regex_match,
+    STREET_NUMBER_PATTERN,
+    STREET_NUMBER_PATTERN_DESCRIPTION,
+    POSTAL_CODE_PATTERN,
+    POSTAL_CODE_PATTERN_DESCRIPTION,
+)
+from models.tournament import Address
+from views.input_helpers import (
+    prompt_until_valid,
+    validate_datetime_string,
+    validate_int_string,
+)
 
 
 class TournamentView:
     def prompt_for_tournament(self):
-        name = input(
-            "Enter the tournament's name : "
+        name = prompt_until_valid(
+            "Enter the tournament name: ",
+            validate_non_empty_string,
+            "first_name"
         )
-        place = input(
-            "Enter the tournament address : "
+
+        street_number = prompt_until_valid(
+            "Enter the tournament street number: ",
+            validate_regex_match,
+            "street_number",
+            STREET_NUMBER_PATTERN,
+            STREET_NUMBER_PATTERN_DESCRIPTION
         )
-        start_date = input(
-            "Enter the tournament starting date and time : "
+
+        street_name = prompt_until_valid(
+            "Enter the tournament street name: ",
+            validate_non_empty_string,
+            "street_name"
         )
-        end_date = input(
-            "Enter the tournament end date and time : "
+
+        postal_code = prompt_until_valid(
+            "Enter the tournament postal code: ",
+            validate_regex_match,
+            "postal_code",
+            POSTAL_CODE_PATTERN,
+            POSTAL_CODE_PATTERN_DESCRIPTION
         )
-        number_of_players = input(
-            "Enter the maximum number of players admitted to the tournament : "
+
+        city = prompt_until_valid(
+            "Enter the tournament city name: ",
+            validate_non_empty_string,
+            "city"
         )
-        number_of_rounds = input(
-            "Enter the tournament number of rounds (by default: 4) : "
+
+        start_date = prompt_until_valid(
+                "Enter the tournament starting date and time: ",
+                validate_datetime_string,
+                "start_date"
+            )
+
+        while True:
+            end_date = prompt_until_valid(
+                "Enter the tournament end date and time : ",
+                validate_datetime_string,
+                "end_date"
+            )
+
+            try:
+                validate_date_order(start_date, end_date)
+                break
+            except ValueError as error:
+                print(error)
+
+        number_of_players = prompt_until_valid(
+            "Enter the maximum number of players admitted to the tournament : ",
+            validate_int_string,
+            "number_of_players",
+            1,
         )
-        description = input(
-            "Enter the tournament description : "
+
+        number_of_rounds = prompt_until_valid(
+            "Enter the tournament number of rounds (by default: 4) : ",
+            validate_int_string,
+            "number_of_rounds",
+            1
         )
+
+        description = prompt_until_valid(
+            "Enter the tournament description : ",
+            validate_non_empty_string,
+            "description"
+        )
+
+        place = Address(street_number, street_name, postal_code, city)
 
         return {
             "name": name,
