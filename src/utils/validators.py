@@ -59,22 +59,38 @@ def validate_regex_match(
     return cleaned_value
 
 
-def validate_date(value: date, field_name: str) -> date:
+def validate_date(value: date | datetime, field_name: str) -> date:
     """"""
-    if not isinstance(value, date):
+    if not isinstance(value, date | datetime):
         raise TypeError(
-            f"'{field_name}' must be a date"
+            f"'{field_name}' must be a date or datetime"
         )
 
     return value
 
 
-def validate_date_order(start_date: datetime, end_date: datetime) -> None:
+def validate_date_order(
+        start_date: date | datetime,
+        end_date: date | datetime
+) -> None:
     """"""
-    if end_date < start_date:
-        raise ValueError(
-            "End date and time must be later than start date and time."
+    if type(start_date) is not type(end_date):
+        raise TypeError(
+            "start_date and end_date must be of the same type: "
+            "date or datetime."
         )
+
+    if isinstance(start_date, datetime):
+        if end_date <= start_date:
+            raise ValueError(
+                "End date and time must be later than the start date and time"
+            )
+
+    if isinstance(start_date, date):
+        if end_date < start_date:
+            raise ValueError(
+                "End date cannot be before start date"
+            )
 
 
 def validate_number(
