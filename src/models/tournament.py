@@ -43,13 +43,14 @@ class Address:
 
 
 class Tournament:
+    """"""
     def __init__(
             self,
             name: str,
-            place: Address,
-            start_date: date,
-            end_date: date,
-            number_of_players: int,
+            place: Address | None = None,
+            start_date: date | None = None,
+            end_date: date | None = None,
+            number_of_players: int | None = None,
             number_of_rounds: int = DEFAULT_ROUND_NUMBER,
             description: str | None = None
             ):
