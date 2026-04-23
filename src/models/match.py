@@ -4,7 +4,7 @@ import random
 
 from models.player import Player
 from models.lifecyle import start_lifecycle, end_lifecycle, EventStatus
-from utils.validators import validate_is_a_class_object
+from utils.validators import validate_class_object
 
 
 class MatchResult(Enum):
@@ -40,7 +40,7 @@ class Match:
         if value is self.player_2:
             raise ValueError("White player must be different to Black player")
 
-        self._player_1 = validate_is_a_class_object(
+        self._player_1 = validate_class_object(
             value,
             "player_1",
             Player
@@ -52,7 +52,7 @@ class Match:
 
     @player_2.setter
     def player_2(self, value) -> None:
-        self._player_2 = validate_is_a_class_object(
+        self._player_2 = validate_class_object(
             value,
             "player_2",
             Player

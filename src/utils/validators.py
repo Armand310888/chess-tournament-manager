@@ -125,7 +125,7 @@ def validate_number(
     return value
 
 
-def validate_is_a_class_object(
+def validate_class_object(
         value: object,
         field_name: str,
         expected_class: type
