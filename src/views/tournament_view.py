@@ -1,6 +1,5 @@
 from utils.validators import (
     validate_non_empty_string,
-    validate_number,
     validate_date_order,
     validate_regex_match,
     STREET_NUMBER_PATTERN,
@@ -13,7 +12,9 @@ from views.input_helpers import (
     prompt_until_valid,
     validate_datetime_string,
     validate_int_string,
+    validate_player_selection
 )
+from utils.storage import load_all_players
 
 
 class TournamentView:
