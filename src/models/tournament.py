@@ -65,6 +65,7 @@ class Tournament:
         self.list_of_players: list[Player] | None = None
         self.list_of_rounds: list[Round] | None = None
         self.actual_round: Round | None = None
+        # self.list_of_match? ou matchs contenus dans rounds = suffisant?
 
     @property
     def name(self):
