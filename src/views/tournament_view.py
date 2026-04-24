@@ -103,3 +103,25 @@ class TournamentView:
             "number_of_rounds": number_of_rounds,
             "description": description
         }
+
+    def display_players(self):
+        all_players = load_all_players()
+
+        print("Available players:")
+
+        for index, player in enumerate(all_players, start=1):
+            print(
+                f"{index}. {player.first_name} {player.last_name} - "
+                f"ELO: {player.elo_rating}"
+            )
+
+    def prompt_to_select_players(self):
+        self.display_players()
+
+        selected_players = prompt_until_valid(
+            "Select players by entering their numbers separataed by comas "
+            "(ex: 1,5,7)",
+            validate_player_selection
+        )
+
+        return selected_players
