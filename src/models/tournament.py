@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 
 from models.round import Round
 from models.player import Player
@@ -65,7 +65,7 @@ class Tournament:
         self.id: int | None = None
         self.list_of_players: list[Player] | None = None
         self.list_of_rounds: list[Round] | None = None
-        self.actual_round: Round | None = None
+        self.current_round: Round | None = None
         # self.list_of_match? ou matchs contenus dans rounds = suffisant?
 
     @property
@@ -154,18 +154,36 @@ class Tournament:
     def description(self, value):
         self._description = validate_non_empty_string(value, "description")
 
-    def add_round(self, round: Round):
+    def add_round(self, new_round: Round):
         """"""
-        if not isinstance(round, Round):
-            raise ValueError(f"'{round}' must be a Round object.")
+        if not isinstance(new_round, Round):
+            raise ValueError(f"'{new_round}' must be a Round object.")
 
-        if len(self.list_of_rounds) >= self.number_of_rounds:
-            raise ValueError(
-                "Maximum number of rounds set for this tournament "
-                "has already been reached."
+        if self.list_of_rounds:
+            if len(self.list_of_rounds) >= self.number_of_rounds:
+                raise ValueError(
+                    "Maximum number of rounds set for this tournament "
+                    "has already been reached."
+                    )
+
+            previous_round = self.list_of_rounds[-1]
+
+            if (
+                previous_round.end_datetime is None
+                or previous_round.status != EventStatus.FINISHED
+            ):
+                raise ValueError(
+                    f"Previous round n° {previous_round.number} "
+                    "is still ongoing. Previous round must be finished "
+                    "before creating a new round."
                 )
 
-        self.list_of_rounds.append(round)
+        new_round.number = len(self.list_of_rounds) + 1
+        new_round.start_datetime = datetime.now()
+        new_round.status = EventStatus.IN_PROGRESS
+        new_round.list_of_players = self.list_of_players
+
+        self.list_of_rounds.append(new_round)
 
     def add_player(self, player: Player):
         """"""
@@ -191,7 +209,7 @@ class Tournament:
                 )
 
         if round in list_of_rounds:
-            self.actual_round = round.number
+            self.current_round = round.number
 
     def delete_round(self):
         pass
