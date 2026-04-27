@@ -13,6 +13,7 @@ from utils.validators import (
     POSTAL_CODE_PATTERN,
     POSTAL_CODE_PATTERN_DESCRIPTION
 )
+from models.lifecycle import EventStatus
 
 DEFAULT_ROUND_NUMBER = 4
 

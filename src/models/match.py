@@ -3,7 +3,7 @@ from enum import Enum
 import random
 
 from models.player import Player
-from models.lifecyle import start_lifecycle, end_lifecycle, EventStatus
+from models.lifecycle import start_lifecycle, end_lifecycle, EventStatus
 from utils.validators import validate_class_object
 
 
