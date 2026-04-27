@@ -1,6 +1,6 @@
 """Tournament domain model."""
 
-from datetime import date, datetime
+from datetime import datetime
 
 from models.round import Round
 from models.player import Player
@@ -248,7 +248,9 @@ class Tournament:
             ValueError: If required tournament data is missing or inconsistent.
         """
         if self.place is None:
-            raise ValueError("Tournament place must be defined before starting.")
+            raise ValueError(
+                "Tournament place must be defined before starting."
+            )
 
         if self.start_date is None:
             raise ValueError(
@@ -280,6 +282,6 @@ class Tournament:
             f"players={len(self.list_of_players)!r}, "
             f"rounds={len(self.list_of_rounds)!r}, "
             f"current_round={self.current_round!r}, "
-            f"number_of_rounds={self.self.number_of_rounds!r}"
+            f"number_of_rounds={self.number_of_rounds!r}"
             f")"
         )
