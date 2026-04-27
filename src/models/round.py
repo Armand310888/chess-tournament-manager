@@ -22,12 +22,12 @@ class Round:
         self.id: str | None = None
 
     @property
-    def number(self):
+    def number(self) -> int:
         """"""
         return self._number
 
     @number.setter
-    def number(self, value: int):
+    def number(self, value: int) -> None:
         self._number = validate_number(
             value,
             "number",
