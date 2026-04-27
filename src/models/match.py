@@ -19,7 +19,6 @@ class Match:
             player_1: Player,
             player_2: Player,
             ) -> None:
-# CORRIGER player 1 + player 2 car définition de la couleur aléatoire, via une méthode
         self.player_1 = player_1
         self.player_2 = player_2
         self.list_of_players: list[Player] | None = None
@@ -28,6 +27,8 @@ class Match:
         self.end_datetime: datetime | None = None
         self.status = EventStatus.NOT_STARTED
         self.result: MatchResult | None = None
+        self.white_player: Player | None = None
+        self.black_player: Player | None = None
         self.white_player_score: float | None = None
         self.black_player_score: float | None = None
 
@@ -38,7 +39,7 @@ class Match:
     @player_1.setter
     def player_1(self, value) -> None:
         if value is self.player_2:
-            raise ValueError("White player must be different to Black player")
+            raise ValueError("'player_1' must be different to 'player_2'")
 
         self._player_1 = validate_class_object(
             value,
@@ -64,11 +65,9 @@ class Match:
         white_player = random.choice(players)
 
         if white_player == player_1:
-            black_player = player_2
+            self.black_player = player_2
         else:
-            black_player = player_1
-
-        return white_player, black_player
+            self.black_player = player_1
 
     def start_match(self):
         start_lifecycle(self)
