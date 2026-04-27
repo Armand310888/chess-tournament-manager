@@ -9,12 +9,12 @@ from utils.validators import validate_number
 class Round:
     """"""
     def __init__(self) -> None:
-        self.list_of_match: list[Match] | None = None
-        self.list_of_players: list[Player] | None = None
+        self.list_of_matchs: list[Match] | None = None
         self.start_datetime: datetime | None = None
         self.end_datetime: datetime | None = None
-        self.number: int | None = None # ici faire quelque chose comme Round 1?
+        self.number: int | None = None
         self.status = EventStatus.NOT_STARTED
+        self.ID: str | None = None
 
     @property
     def number(self):
@@ -29,7 +29,6 @@ class Round:
             int,
             1
         )
-
 
     def start_round(self) -> None:
         """"""
