@@ -1,6 +1,7 @@
+"""Validation helpers and validation constants."""
+
 from datetime import date, datetime
 import re
-from enum import Enum
 
 STREET_NUMBER_PATTERN = r"^\d+\s?(bis|ter|[A-Za-z])?$"
 STREET_NUMBER_PATTERN_DESCRIPTION = (
@@ -22,18 +23,26 @@ ELO_MINIMUM = 0
 ELO_MAXIMUM = 3000
 
 
-class NumberType(Enum):
-    INTEGER = int
-    FLOAT = float
-
-
 def validate_non_empty_string(value: str, field_name: str) -> str:
-    """"""
+    """Validate and clean a non-empty string.
+
+    Args:
+        value: Value to validate.
+        field_name: Name of the validated field, used in error messages.
+
+    Raises:
+        TypeError: If value is not a string.
+        ValueError: If value is empty after stripping whitespace.
+
+    Returns:
+        The cleaned string.
+    """
     if not isinstance(value, str):
         raise TypeError(f"'{field_name}' must be a string")
 
     cleaned_value = value.strip()
-    if not value.strip():
+
+    if not cleaned_value():
         raise ValueError(f"'{field_name}' must be a non-empty string")
 
     return cleaned_value
@@ -45,7 +54,23 @@ def validate_regex_match(
         regex_pattern: str,
         pattern_description: str
 ) -> str:
-    """"""
+    """Validate that a string matches a regular expression.
+
+    The value is stripped and converted to uppercase before validation.
+
+    Args:
+        value: String value to validate.
+        field_name: Name of the validated field.
+        regex_pattern: Regular expression pattern to match.
+        pattern_description: Human-readable description of the expected format.
+
+    Raises:
+        TypeError: If value is not a string.
+        ValueError: If value does not match the expected pattern.
+
+    Returns:
+        The cleaned uppercase string.
+    """
     cleaned_value = (
         validate_non_empty_string(value, field_name).upper()
     )
@@ -60,10 +85,21 @@ def validate_regex_match(
 
 
 def validate_date(value: date | datetime, field_name: str) -> date:
-    """"""
+    """Validate that a value is a date or datetime object.
+
+    Args:
+        value: Value to validate.
+        field_name: Name of the validated field.
+
+    Raises:
+        TypeError: If value is not a date or datetime.
+
+    Returns:
+        The validated date or datetime object.
+    """
     if not isinstance(value, (date, datetime)):
         raise TypeError(
-            f"'{field_name}' must be a date or datetime"
+            f"'{field_name}' must be a date or datetime."
         )
 
     return value
@@ -73,7 +109,20 @@ def validate_date_order(
         start_date: date | datetime,
         end_date: date | datetime
 ) -> None:
-    """"""
+    """Validate that an end date is not before a start date.
+
+    If both values are datetimes, the end datetime must be strictly later than
+    the start datetime. If both values are dates, the end date may be equal to
+    the start date but cannot be earlier.
+
+    Args:
+        start_date: Start date or datetime.
+        end_date: End date or datetime.
+
+    Raises:
+        TypeError: If start_date and end_date do not have the same type.
+        ValueError: If the date order is invalid.
+    """
     if type(start_date) is not type(end_date):
         raise TypeError(
             "start_date and end_date must be of the same type: "
@@ -86,7 +135,7 @@ def validate_date_order(
                 "End date and time must be later than the start date and time"
             )
 
-    if isinstance(start_date, date):
+    elif isinstance(start_date, date):
         if end_date < start_date:
             raise ValueError(
                 "End date cannot be before start date"
@@ -100,16 +149,25 @@ def validate_number(
     minimum: int | float | None = None,
     maximum: int | float | None = None,
 ) -> int | float:
-    """"""
-    # Validate field_name
-    if not isinstance(field_name, str) or not field_name.strip():
-        raise TypeError("'field_name' must be a non-empty string.")
+    """Validate a number type and optional bounds.
 
-    # Validate expected_type
+    Args:
+        value: Numeric value to validate.
+        field_name: Name of the validated field.
+        expected_type: Expected numeric type, either int or float.
+        minimum: Optional inclusive minimum value.
+        maximum: Optional inclusive maximum value.
+
+    Raises:
+        TypeError: If arguments have invalid types.
+        ValueError: If bounds are inconsistent or value is outside bounds.
+
+    Returns:
+        The validated numeric value.
+    """
     if expected_type not in (int, float):
         raise TypeError("'expected_type' must be int or float.")
 
-    # Validate minimum and maximum types
     if minimum is not None:
         if not isinstance(minimum, (int, float)):
             raise TypeError("'minimum' must be an int or a float.")
@@ -118,16 +176,14 @@ def validate_number(
         if not isinstance(maximum, (int, float)):
             raise TypeError("'maximum' must be an int or a float.")
 
-    # Validate logical consistency of bounds
     if minimum is not None and maximum is not None and minimum > maximum:
         raise ValueError("'minimum' cannot be greater than 'maximum'.")
 
-    # Validate value type
     if not isinstance(value, expected_type):
         raise TypeError(
             f"'{field_name}' must be of type {expected_type.__name__}."
         )
-    # Validate bounds
+
     if minimum is not None and value < minimum:
         raise ValueError(
             f"'{field_name}' must be greater than or equal to {minimum}."
@@ -145,8 +201,20 @@ def validate_class_object(
         value: object,
         field_name: str,
         expected_class: type
-        ) -> object:
-    """"""
+) -> object:
+    """Validate that a value is an instance of the expected class.
+
+    Args:
+        value: Object to validate.
+        field_name: Name of the validated field.
+        expected_class: Expected class.
+
+    Raises:
+        TypeError: If value is not an instance of expected_class.
+
+    Returns:
+        The validated object.
+    """
 
     if not isinstance(value, expected_class):
         raise TypeError(
