@@ -61,7 +61,7 @@ def validate_regex_match(
 
 def validate_date(value: date | datetime, field_name: str) -> date:
     """"""
-    if not isinstance(value, date | datetime):
+    if not isinstance(value, (date, datetime)):
         raise TypeError(
             f"'{field_name}' must be a date or datetime"
         )
