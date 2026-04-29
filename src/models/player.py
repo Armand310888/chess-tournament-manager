@@ -86,6 +86,56 @@ class Player:
             CHESS_NATIONAL_ID_PATTERN_DESCRIPTION
             )
 
+    def to_dict(self) -> dict:
+        """Convert the player instance into a JSON-serializable dictionary.
+
+        This method prepares the player data for storage by transforming
+        non-serializable fields (such as dates) into string representations.
+
+        Returns:
+            A dictionary with the player's data, ready to be written to JSON.
+        """
+        return {
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "birth_date": self.birth_date.isoformat(),
+            "elo_rating": self.elo_rating,
+            "chess_national_id": self.chess_national_id,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "Player":
+        """Create a Player instance from a serialized dictionary.
+
+        Reconstructs a player from JSON-compatible data, converting
+        string values such as birth_date back into Python types.
+
+        Args:
+            data: Dictionary containing serialized player data.
+
+        Returns:
+            A Player instance built from the provided data.
+
+        Raises:
+            TypeError: If 'data' is not a dictionary.
+            ValueError: If a required field is missing or cannot be converted.
+        """
+        if not isinstance(data, dict):
+            raise TypeError("'data' must be a dictionary.")
+
+        try:
+            return cls(
+                first_name=data["first_name"],
+                last_name=data["last_name"],
+                birth_date=date.fromisoformat(data["birth_date"]),
+                elo_rating=data["elo_rating"],
+                chess_national_id=data["chess_national_id"],
+            )
+        except KeyError as missing_field:
+            raise ValueError(
+                f"Missing field: {missing_field.args[0]}"
+            ) from missing_field
+
     def __str__(self) -> str:
         """Return the player's display name."""
         return f"{self.first_name} {self.last_name}"
