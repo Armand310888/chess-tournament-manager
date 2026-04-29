@@ -1,44 +1,106 @@
+"""Provide JSON persistence helpers for Player objects."""
+import json
+from pathlib import Path
 
-def get_player_by_id():
-    pass
-
-
-def load_players():
-    pass
+from models.player import Player
 
 
-def save_players():
-    pass
+BASE_DIR = Path(__file__).resolve().parent.parent
+DATA_DIR = BASE_DIR / "data"
+PLAYERS_FILE = DATA_DIR / "players.json"
 
 
-def load_all_players() -> list[Player]:
-    if not DATA_DIR.exists():
-        DATA_DIR.mkdir()
+def get_player_by_id(chess_national_id: str, players: list[Player]) -> Player:
+    """Return the player matching the given chess national ID.
+
+    Args:
+        chess_national_id: Player ID to look up.
+        players: Players to search through.
+
+    Returns:
+        The matching Player instance.
+
+    Raises:
+        ValueError: If no player matches the given ID.
+    """
+    if not isinstance(chess_national_id, str):
+        raise TypeError("'chess_national_id' must be a string.")
+
+    if not isinstance(players, list):
+        raise TypeError("'players' must be a list.")
+
+    for player in players:
+        if player.chess_national_id == chess_national_id:
+            return player
+
+    raise ValueError(f"Unknown player ID: {chess_national_id}")
+
+
+def load_players() -> list[Player]:
+    """Load all players from the JSON storage file.
+
+    Returns:
+        A list of Player instances. Returns an empty list if the
+        storage file does not exist.
+
+    Raises:
+        ValueError: If the JSON file is invalid or has unexpected
+        structure.
+    """
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
 
     if not PLAYERS_FILE.exists():
         return []
 
-    with open(PLAYERS_FILE, "r", encoding="utf-8") as file:
-        data = json.load(file)
+    try:
+        with open(PLAYERS_FILE, "r", encoding="utf-8") as file:
+            data = json.load(file)
+    except json.JSONDecodeError as error:
+        raise ValueError(
+            f"Invalid JSON data in {PLAYERS_FILE}."
+        ) from error
 
-    all_players = []
+    if not isinstance(data, list):
+        raise ValueError(f"Expected a list of players in {PLAYERS_FILE}.")
+
+    players = []
 
     for player_data in data:
-        player = player_from_dict(player_data)
-        all_players.append(player)
+        player = Player.from_dict(player_data)
+        players.append(player)
 
-    return all_players
-# quid gestion erreur?
+    return players
 
-def save_all_players(all_players: list[Player]):
+
+def save_players(players: list[Player]) -> None:
+    """Save players to the JSON storage file.
+
+    Converts each Player instance to a JSON-serializable dictionary
+    before writing the full list to disk.
+
+    Args:
+        players: Players to persist.
+
+    Raises:
+        TypeError: If players is not a list or contains non-Player
+        objects.
+    """
+    if not isinstance(players, list):
+        raise TypeError("'players' must be a list.")
+
+    for player in players:
+        if not isinstance(player, Player):
+            raise TypeError(
+                "'players' must contain only Player instances."
+            )
+
     DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-    all_players_data = []
+    players_data = []
 
-    for player in all_players:
-        player_data = player_to_dict(player)
-        all_players_data.append(player_data)
+    for player in players:
+        player_data = player.to_dict()
+        players_data.append(player_data)
 
     with open(PLAYERS_FILE, "w", encoding="utf-8") as file:
-        json.dump(all_players_data, file, indent=4)
-# quid gestion erreur?
+        json.dump(players_data, file, indent=4)
