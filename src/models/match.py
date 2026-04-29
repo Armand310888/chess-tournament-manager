@@ -7,7 +7,7 @@ import random
 from models.player import Player
 from models.lifecycle import start_lifecycle, end_lifecycle, EventStatus
 from utils.validators import validate_class_object
-from controllers.player_controller import get_player_by_id
+from repository.player_repository import get_player_by_id
 
 
 class MatchResult(Enum):
@@ -129,23 +129,23 @@ class Match:
 
     @classmethod
     def from_dict(cls, data: dict, players: list[Player]) -> "Match":
-        """Create a Match instance from a serialized dictionary.
+        """Rebuild a Match from serialized data.
 
-        This method reconstructs a match object from data previously stored
-        in JSON format. It converts serialized datetime and enum values back
-        into their Python types and resolves player identifiers into Player
-        objects.
+        Resolve player IDs to Player objects and restore datetime and
+        enum fields to their Python representations. The match is first
+        instantiated with its required players, then completed with
+        persisted state.
 
         Args:
-            data: Dictionary containing the serialized match data.
-            players: List of available players used to resolve player IDs.
+            data: Serialized match data.
+            players: Available players used for ID resolution.
 
         Returns:
-            A Match instance built from the provided data.
+            A reconstructed Match instance.
 
         Raises:
             TypeError: If data is not a dictionary.
-            ValueError: If a required field is missing, invalid, or references
+            ValueError: If a field is missing, invalid, or references
                 an unknown player.
         """
         if not isinstance(data, dict):
@@ -168,7 +168,7 @@ class Match:
                 if data.get("end_datetime") else None
             )
 
-            match.status = EventStatus(data["status"]),
+            match.status = EventStatus(data["status"])
 
             match.result = (
                 MatchResult(data["result"])
@@ -190,7 +190,9 @@ class Match:
             return match
 
         except KeyError as missing_field:
-            raise ValueError(f"Missing field: {missing_field}")
+            raise ValueError(
+                f"Missing field: {missing_field.args[0]}"
+            ) from missing_field
 
     def __str__(self) -> str:
         """Return a readable match description."""
