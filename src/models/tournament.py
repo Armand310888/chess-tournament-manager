@@ -7,7 +7,7 @@ from src.models.player import Player
 from src.utils.validators import (
     validate_non_empty_string,
     validate_regex_match,
-    validate_date,
+    validate_date_or_datetime,
     validate_date_order,
     validate_number,
     validate_class_object,
@@ -154,7 +154,7 @@ class Tournament:
             self._start_datetime = None
             return
 
-        validated_date = validate_date(value, "start_datetime")
+        validated_date = validate_date_or_datetime(value, "start_datetime")
 
         if hasattr(self, "_end_datetime") and self._end_datetime is not None:
             validate_date_order(validated_date, self._end_datetime)
@@ -172,7 +172,7 @@ class Tournament:
             self._end_datetime = None
             return
 
-        validated_date = validate_date(value, "end_date")
+        validated_date = validate_date_or_datetime(value, "end_date")
 
         if hasattr(self, "_start_date") and self._start_datetime is not None:
             validate_date_order(self._start_datetime, validated_date)

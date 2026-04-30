@@ -2,7 +2,7 @@
 
 from src.utils.validators import (
     validate_non_empty_string,
-    validate_date,
+    validate_date_or_datetime,
     validate_regex_match,
     validate_number,
     Pattern,
@@ -55,7 +55,7 @@ class Player:
 
     @birth_date.setter
     def birth_date(self, value: date) -> None:
-        self._birth_date = validate_date(value, "birth_date")
+        self._birth_date = validate_date_or_datetime(value, "birth_date")
 
     @property
     def elo_rating(self) -> int:

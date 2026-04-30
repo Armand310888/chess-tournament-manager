@@ -108,25 +108,42 @@ def validate_regex_match(
     return cleaned_value
 
 
-def validate_date(value: date | datetime, field_name: str) -> date:
-    """Validate that a value is a date or datetime object.
+def validate_date_or_datetime(
+        value: str | date | datetime,
+        field_name: str,
+) -> date | datetime:
+    """Validate and normalize a date or datetime value.
+
+    Accept either a string in ISO format (YYYY-MM-DD), a date,
+    or a datetime object, and return a date instance.
 
     Args:
         value: Value to validate.
-        field_name: Name of the validated field.
-
-    Raises:
-        TypeError: If value is not a date or datetime.
+        field_name: Name of the field, used in error messages.
 
     Returns:
-        The validated date or datetime object.
+        A valid date object.
+
+    Raises:
+        TypeError: If value is not a string, date, or datetime.
+        ValueError: If the string cannot be parsed as a valid date.
     """
-    if not isinstance(value, (date, datetime)):
+    if isinstance(value, (date, datetime)):
+        return value
+
+    if not isinstance(value, str):
         raise TypeError(
-            f"'{field_name}' must be a date or datetime."
+            f"'{field_name}' must be a string, date, or datetime."
         )
 
-    return value
+    cleaned_value = validate_non_empty_string(value, field_name)
+
+    try:
+        return date.fromisoformat(cleaned_value)
+    except ValueError:
+        raise ValueError(
+            f"'{field_name}' must be a valid date or datetime in isoformat.\n"
+            "YYYY-MM-DD  HH:MM:SS\n")
 
 
 def validate_date_order(
