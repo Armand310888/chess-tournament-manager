@@ -138,7 +138,10 @@ class Player:
 
     def __str__(self) -> str:
         """Return the player's display name."""
-        return f"{self.first_name} {self.last_name}"
+        return (
+            f"{self.first_name} {self.last_name}\n"
+            f"ELO: {self.elo_rating}"
+        )
 
     def __repr__(self) -> str:
         """Return a developer-friendly representation of the player."""
