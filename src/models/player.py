@@ -5,8 +5,8 @@ from utils.validators import (
     validate_date,
     validate_regex_match,
     validate_number,
-    CHESS_NATIONAL_ID_PATTERN,
-    CHESS_NATIONAL_ID_PATTERN_DESCRIPTION,
+    Pattern,
+    PatternDescription,
     ELO_MAXIMUM,
     ELO_MINIMUM
 )
@@ -82,8 +82,8 @@ class Player:
         self._chess_national_id = validate_regex_match(
             value,
             "chess_national_id",
-            CHESS_NATIONAL_ID_PATTERN,
-            CHESS_NATIONAL_ID_PATTERN_DESCRIPTION
+            Pattern.CHESS_NATIONAL_ID,
+            PatternDescription.CHESS_NATIONAL_ID,
             )
 
     def to_dict(self) -> dict:

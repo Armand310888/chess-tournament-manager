@@ -11,10 +11,8 @@ from utils.validators import (
     validate_date_order,
     validate_number,
     validate_class_object,
-    STREET_NUMBER_PATTERN,
-    STREET_NUMBER_PATTERN_DESCRIPTION,
-    POSTAL_CODE_PATTERN,
-    POSTAL_CODE_PATTERN_DESCRIPTION
+    Pattern,
+    PatternDescription,
 )
 from models.lifecycle import EventStatus
 from repository.player_repository import get_player_by_id
@@ -35,8 +33,8 @@ class Address:
         self.street_number = validate_regex_match(
             street_number,
             "street_number",
-            STREET_NUMBER_PATTERN,
-            STREET_NUMBER_PATTERN_DESCRIPTION
+            Pattern.STREET_NUMBER,
+            PatternDescription.STREET_NUMBER
         )
         self.street_name = validate_non_empty_string(
             street_name,
@@ -45,8 +43,8 @@ class Address:
         self.postal_code = validate_regex_match(
             postal_code,
             "postal_code",
-            POSTAL_CODE_PATTERN,
-            POSTAL_CODE_PATTERN_DESCRIPTION,
+            Pattern.POSTAL_CODE,
+            PatternDescription.POSTAL_CODE,
         )
         self.city = validate_non_empty_string(city, "city")
 

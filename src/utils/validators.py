@@ -2,22 +2,38 @@
 
 from datetime import date, datetime
 import re
+from enum import Enum
 
-STREET_NUMBER_PATTERN = r"^\d+\s?(bis|ter|[A-Za-z])?$"
-STREET_NUMBER_PATTERN_DESCRIPTION = (
-    "One or more digits, optionally followed by a space "
-    "and a suffix such as 'bis' or 'ter', or a single letter. "
-    "Examples: 12, 12 bis, 12A"
-)
 
-POSTAL_CODE_PATTERN = r"^\d{5}$"
-POSTAL_CODE_PATTERN_DESCRIPTION = "five positive digits. Example: 92700"
+class Pattern(Enum):
+    """"""
+    STREET_NUMBER = re.compile(r"^\d+\s?(bis|ter|[A-Za-z])?$")
+    POSTAL_CODE = re.compile(r"^\d{5}$")
+    CHESS_NATIONAL_ID = re.compile(r"^[A-Z]{2}\d{5}$")
+    ID = re.compile(r"^[TRM]\d{3,}$")
 
-CHESS_NATIONAL_ID_PATTERN = r"^[A-Z]{2}\d{5}$"
-CHESS_NATIONAL_ID_PATTERN_DESCRIPTION = (
-    "Two uppercase letters followed by five digits. "
-    "Example: AB12345 "
-)
+
+class PatternDescription(Enum):
+    """"""
+    STREET_NUMBER = (
+        "One or more digits, optionally followed by a space "
+        "and a suffix such as 'bis' or 'ter', or a single letter. "
+        "Examples: 12, 12 bis, 12A"
+    )
+    POSTAL_CODE = "five positive digits. Example: 92700"
+    CHESS_NATIONAL_ID = (
+        "Two uppercase letters followed by five digits. "
+        "Example: AB12345 "
+        )
+    ID = (
+        "ID starts with one letter:\n"
+        "- 'T' for tournament object\n"
+        "- 'R' for round object\n"
+        "- 'M' for match object\n"
+        "Then the letter is followed by at least three digits\n"
+        "Examples: M001, T012, R1520"
+    )
+
 
 ELO_MINIMUM = 0
 ELO_MAXIMUM = 3000
@@ -51,8 +67,8 @@ def validate_non_empty_string(value: str, field_name: str) -> str:
 def validate_regex_match(
         value: str,
         field_name: str,
-        regex_pattern: str,
-        pattern_description: str
+        regex_pattern: Pattern,
+        pattern_description: PatternDescription
 ) -> str:
     """Validate that a string matches a regular expression.
 
@@ -71,11 +87,19 @@ def validate_regex_match(
     Returns:
         The cleaned uppercase string.
     """
+    if not isinstance(regex_pattern, Pattern):
+        raise TypeError("'regex_pattern' must be a Pattern object.")
+
+    if not isinstance(pattern_description, PatternDescription):
+        raise TypeError(
+            "'pattern_description' must be a PatternDescription object."
+        )
+
     cleaned_value = (
         validate_non_empty_string(value, field_name).upper()
     )
 
-    if not re.fullmatch(regex_pattern, cleaned_value):
+    if not regex_pattern.fullmatch(cleaned_value):
         raise ValueError(
             f"'{field_name}' format must be: "
             f"'{pattern_description}"
