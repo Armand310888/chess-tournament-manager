@@ -184,28 +184,39 @@ def validate_date_order(
 
 
 def validate_number(
-    value: int | float,
+    value: str,
     field_name: str,
     expected_type: type,
     minimum: int | float | None = None,
     maximum: int | float | None = None,
 ) -> int | float:
-    """Validate a number type and optional bounds.
+    """Validate and convert a numeric input.
+
+    Convert a string input into the expected numeric type and
+    enforce optional minimum and maximum bounds.
 
     Args:
-        value: Numeric value to validate.
-        field_name: Name of the validated field.
-        expected_type: Expected numeric type, either int or float.
-        minimum: Optional inclusive minimum value.
-        maximum: Optional inclusive maximum value.
-
-    Raises:
-        TypeError: If arguments have invalid types.
-        ValueError: If bounds are inconsistent or value is outside bounds.
+        value: Raw input value to validate.
+        field_name: Name of the field, used in error messages.
+        expected_type: Target numeric type (int or float).
+        minimum: Optional lower bound (inclusive).
+        maximum: Optional upper bound (inclusive).
 
     Returns:
-        The validated numeric value.
+        The validated number converted to the expected type.
+
+    Raises:
+        TypeError: If expected_type is not int or float, or if
+            minimum/maximum are not numeric.
+        ValueError: If value cannot be converted to a number, if
+            bounds are inconsistent, or if the value is outside
+            the allowed range.
     """
+    try:
+        number = expected_type(value)
+    except ValueError:
+        raise ValueError(f"'{field_name} must be a valid number.")
+
     if expected_type not in (int, float):
         raise TypeError("'expected_type' must be int or float.")
 
@@ -220,17 +231,12 @@ def validate_number(
     if minimum is not None and maximum is not None and minimum > maximum:
         raise ValueError("'minimum' cannot be greater than 'maximum'.")
 
-    if not isinstance(value, expected_type):
-        raise TypeError(
-            f"'{field_name}' must be of type {expected_type.__name__}."
-        )
-
-    if minimum is not None and value < minimum:
+    if minimum is not None and number < minimum:
         raise ValueError(
             f"'{field_name}' must be greater than or equal to {minimum}."
         )
 
-    if maximum is not None and value > maximum:
+    if maximum is not None and number > maximum:
         raise ValueError(
             f"'{field_name}' must be less than or equal to {maximum}."
         )
