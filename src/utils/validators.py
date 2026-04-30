@@ -58,7 +58,7 @@ def validate_non_empty_string(value: str, field_name: str) -> str:
 
     cleaned_value = value.strip()
 
-    if not cleaned_value():
+    if not cleaned_value:
         raise ValueError(f"'{field_name}' must be a non-empty string")
 
     return cleaned_value
