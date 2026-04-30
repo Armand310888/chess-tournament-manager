@@ -99,10 +99,10 @@ def validate_regex_match(
         validate_non_empty_string(value, field_name).upper()
     )
 
-    if not regex_pattern.fullmatch(cleaned_value):
+    if not regex_pattern.value.fullmatch(cleaned_value):
         raise ValueError(
             f"'{field_name}' format must be: "
-            f"'{pattern_description}"
+            f"'{pattern_description.value}"
         )
 
     return cleaned_value
