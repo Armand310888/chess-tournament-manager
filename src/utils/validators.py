@@ -270,5 +270,6 @@ def validate_class_object(
 
     return value
 
+
 def validate_ID():
     pass

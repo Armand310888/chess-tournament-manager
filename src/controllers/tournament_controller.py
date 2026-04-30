@@ -21,9 +21,7 @@ class TournamentController:
 
         return tournament
 
-    # comment créer l'ID? Fonction à part? Possible de manière automatique? Depuis la base de données?
-    def assign_tournament_id(self, tournament: Tournament):
-        pass
+
 
     def select_players(self, tournament: Tournament):
 

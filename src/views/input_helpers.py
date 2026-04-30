@@ -19,7 +19,7 @@ def prompt_until_valid(prompt_message, validator, *args):
 
 # qu'avais-je voulu faire ici. Est-ce bien la place de cette fonction?
 def validate_player_selection(raw_player_selection):
-    all_players = load_all_players()
+    all_players = load_players()
 
     raw_player_selection = raw_player_selection.strip().replace(" ", "")
 

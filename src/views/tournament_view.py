@@ -105,7 +105,7 @@ class TournamentView:
         }
 
     def display_players(self):
-        all_players = load_all_players()
+        all_players = load_players()
 
         print("Available players:")
 
