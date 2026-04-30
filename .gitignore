@@ -1,4 +1,4 @@
-# Environnement virtuel
+# Virtual environment
 .venv/
 
 # Python
@@ -7,3 +7,6 @@ __pycache__/
 
 # IDE
 .vscode/
+
+# Data
+data/
