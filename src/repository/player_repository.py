@@ -1,13 +1,14 @@
-"""Provide JSON persistence helpers for Player objects."""
+"""Provide repository functions for Player persistence and lookup.
+
+This module handles loading and saving Player objects to a JSON
+file, as well as retrieving players by their chess national ID.
+It relies on Player serialization methods and ensures basic
+validation of inputs and stored data.
+"""
 import json
-from pathlib import Path
 
 from models.player import Player
-
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = BASE_DIR / "data"
-PLAYERS_FILE = DATA_DIR / "players.json"
+from src import paths
 
 
 def get_player_by_id(chess_national_id: str, players: list[Player]) -> Player:
@@ -47,21 +48,23 @@ def load_players() -> list[Player]:
         ValueError: If the JSON file is invalid or has unexpected
         structure.
     """
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    paths.DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-    if not PLAYERS_FILE.exists():
+    if not paths.PLAYERS_FILE.exists():
         return []
 
     try:
-        with open(PLAYERS_FILE, "r", encoding="utf-8") as file:
+        with open(paths.PLAYERS_FILE, "r", encoding="utf-8") as file:
             data = json.load(file)
     except json.JSONDecodeError as error:
         raise ValueError(
-            f"Invalid JSON data in {PLAYERS_FILE}."
+            f"Invalid JSON data in {paths.PLAYERS_FILE}."
         ) from error
 
     if not isinstance(data, list):
-        raise ValueError(f"Expected a list of players in {PLAYERS_FILE}.")
+        raise ValueError(
+            f"Expected a list of players in {paths.PLAYERS_FILE}."
+        )
 
     players = []
 
@@ -94,7 +97,7 @@ def save_players(players: list[Player]) -> None:
                 "'players' must contain only Player instances."
             )
 
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    paths.DATA_DIR.mkdir(parents=True, exist_ok=True)
 
     players_data = []
 
@@ -102,5 +105,5 @@ def save_players(players: list[Player]) -> None:
         player_data = player.to_dict()
         players_data.append(player_data)
 
-    with open(PLAYERS_FILE, "w", encoding="utf-8") as file:
+    with open(paths.PLAYERS_FILE, "w", encoding="utf-8") as file:
         json.dump(players_data, file, indent=4)
