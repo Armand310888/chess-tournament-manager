@@ -1,8 +1,5 @@
-
-
-from models.player import Player
-from views.player_view import PlayerView
-from utils.storage import load_all_players, save_all_players
+from src.models.player import Player
+from src.repository.player_repository import save_players
 
 
 class PlayerController:

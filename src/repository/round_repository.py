@@ -9,9 +9,9 @@ data is also enforced.
 import json
 
 from src import paths
-from utils.validators import Pattern, PatternDescription
-from models.round import Round
-from models.match import Match
+from src.utils.validators import Pattern, PatternDescription
+from src.models.round import Round
+from src.models.match import Match
 
 
 def get_round_by_id(round_id: str, rounds: list[Round]) -> Round:

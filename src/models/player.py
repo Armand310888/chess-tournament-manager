@@ -1,6 +1,6 @@
 """Player domain model."""
 
-from utils.validators import (
+from src.utils.validators import (
     validate_non_empty_string,
     validate_date,
     validate_regex_match,

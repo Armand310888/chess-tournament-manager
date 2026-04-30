@@ -1,4 +1,4 @@
-from models.player import CHESS_NATIONAL_ID_PATTERN
+from src.models.player import CHESS_NATIONAL_ID_PATTERN
 
 
 class MatchView:

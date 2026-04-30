@@ -2,9 +2,9 @@
 
 from datetime import datetime
 
-from models.round import Round
-from models.player import Player
-from utils.validators import (
+from src.models.round import Round
+from src.models.player import Player
+from src.utils.validators import (
     validate_non_empty_string,
     validate_regex_match,
     validate_date,
@@ -14,9 +14,9 @@ from utils.validators import (
     Pattern,
     PatternDescription,
 )
-from models.lifecycle import EventStatus
-from repository.player_repository import get_player_by_id
-from repository.round_repository import get_round_by_id
+from src.models.lifecycle import EventStatus
+from src.repository.player_repository import get_player_by_id
+from src.repository.round_repository import get_round_by_id
 
 DEFAULT_ROUND_NUMBER = 4
 

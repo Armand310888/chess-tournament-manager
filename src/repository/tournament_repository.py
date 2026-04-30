@@ -8,10 +8,10 @@ and stored data is also enforced.
 """
 import json
 
-from utils.validators import Pattern, PatternDescription
-from models.tournament import Tournament
-from models.round import Round
-from models.player import Player
+from src.utils.validators import Pattern, PatternDescription
+from src.models.tournament import Tournament
+from src.models.round import Round
+from src.models.player import Player
 from src import paths
 
 

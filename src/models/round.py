@@ -2,10 +2,10 @@
 
 from datetime import datetime
 
-from models.match import Match
-from models.lifecycle import start_lifecycle, end_lifecycle, EventStatus
-from utils.validators import validate_number
-from repository.match_repository import get_match_by_id
+from src.models.match import Match
+from src.models.lifecycle import start_lifecycle, end_lifecycle, EventStatus
+from src.utils.validators import validate_number
+from src.repository.match_repository import get_match_by_id
 
 
 class Round:

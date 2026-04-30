@@ -1,4 +1,4 @@
-from utils.validators import (
+from src.utils.validators import (
     validate_non_empty_string,
     validate_date_order,
     validate_regex_match,
@@ -7,14 +7,14 @@ from utils.validators import (
     POSTAL_CODE_PATTERN,
     POSTAL_CODE_PATTERN_DESCRIPTION,
 )
-from models.tournament import Address
-from views.input_helpers import (
+from src.models.tournament import Address
+from src.views.input_helpers import (
     prompt_until_valid,
     validate_datetime_string,
     validate_int_string,
     validate_player_selection
 )
-from utils.storage import load_all_players
+from src.repository.player_repository import load_players
 
 
 class TournamentView:

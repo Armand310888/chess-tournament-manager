@@ -1,4 +1,5 @@
-from models.match import Match
+from src.models.match import Match
+
 
 def create_match(white_player: Player, black_player: Player) -> Match:
     matches = load_matches() #depuis JSON

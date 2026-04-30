@@ -4,10 +4,10 @@ from datetime import datetime
 from enum import Enum
 import random
 
-from models.player import Player
-from models.lifecycle import start_lifecycle, end_lifecycle, EventStatus
-from utils.validators import validate_class_object
-from repository.player_repository import get_player_by_id
+from src.models.player import Player
+from src.models.lifecycle import start_lifecycle, end_lifecycle, EventStatus
+from src.utils.validators import validate_class_object
+from src.repository.player_repository import get_player_by_id
 
 
 class MatchResult(Enum):

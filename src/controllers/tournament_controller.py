@@ -1,12 +1,12 @@
 import random
 
-from models.tournament import Tournament
-from models.round import Round
-from models.player import Player
-from models.match import Match
-from views.tournament_view import TournamentView
-from views.round_view import RoundView
-from models.lifecycle import EventStatus
+from src.models.tournament import Tournament
+from src.models.round import Round
+from src.models.player import Player
+from src.models.match import Match
+from src.views.tournament_view import TournamentView
+from src.views.round_view import RoundView
+from src.models.lifecycle import EventStatus
 
 
 class TournamentController:

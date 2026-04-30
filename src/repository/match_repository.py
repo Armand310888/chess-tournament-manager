@@ -8,9 +8,9 @@ to rebuild player references during loading.
 from src import paths
 import json
 
-from models.match import Match
-from models.player import Player
-from utils.validators import Pattern, PatternDescription
+from src.models.match import Match
+from src.models.player import Player
+from src.utils.validators import Pattern, PatternDescription
 
 
 def get_match_by_id(match_id: str, matches: list[Match]) -> Match:

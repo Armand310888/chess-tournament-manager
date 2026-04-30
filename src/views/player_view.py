@@ -1,10 +1,12 @@
 import re
 
-from utils.validators import (
+from src.utils.validators import (
     validate_regex_match,
     CHESS_NATIONAL_ID_PATTERN,
     CHESS_NATIONAL_ID_PATTERN_DESCRIPTION
 )
+from src.models.player import Player
+
 
 # prévoir la validation des inputs à l'aide de mes validators
 class PlayerView:

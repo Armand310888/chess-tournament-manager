@@ -1,9 +1,7 @@
-from views.input_helpers import (
+from src.views.input_helpers import (
     prompt_until_valid,
     validate_yes_or_no_string,
 )
-from models.tournament import Tournament
-
 
 
 class RoundView:
