@@ -355,7 +355,8 @@ class Tournament:
             "rounds_id": rounds_id,
             "current_round_id": (
                 self.current_round.id
-                if self.current_round.id else None
+                if self.current_round
+                else None
             ),
         }
 
