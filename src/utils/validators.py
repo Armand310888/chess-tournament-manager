@@ -139,11 +139,11 @@ def validate_date_or_datetime(
     cleaned_value = validate_non_empty_string(value, field_name)
 
     try:
-        return date.fromisoformat(cleaned_value)
+        return datetime.fromisoformat(cleaned_value)
     except ValueError:
         raise ValueError(
             f"'{field_name}' must be a valid date or datetime in isoformat.\n"
-            "YYYY-MM-DD  HH:MM:SS\n")
+            "YYYY-MM-DD HH:MM:SS\n")
 
 
 def validate_date_order(
