@@ -72,15 +72,15 @@ class TournamentController:
 
         return new_round
 
-    def create_match_for_round(self, current_round: Round, list_of_players: list[Players]):
+    def create_match_for_round(self, current_round: Round, list_of_players: list[Player]):
         if current_round.number == 1:
-            pairs = self.create_random_pairs(list_of_players)
+            pairs = self.create_random_pairs(players)
 
             for pair in pairs:
                 player_1 = pair[0]
                 player_2 = pair[1]
                 new_match = Match(player_1, player_2)
-                current_round.list_of_matchs.append(new_match)
+                current_round.matchs.append(new_match)
 
         players_scores = []
 
@@ -117,8 +117,8 @@ class TournamentController:
     def get_player_score(self, player: Player, tournament: Tournament):
         total_score = 0
 
-        for round in tournament.list_of_rounds:
-            for match in round.list_of_matchs:
+        for round in tournament.rounds:
+            for match in round.matchs:
                 if match.status == EventStatus.FINSIHED:
                     if match.white_player == player:
                         total_score += match.white_player_score
@@ -130,7 +130,7 @@ class TournamentController:
     def get_players_ranked(self, tournament: Tournament):
         ranked_players = []
 
-        for player in tournament.list_of_players:
+        for player in tournament.players:
             total_score = self.get_player_score(player, tournament)
             ranked_players.append((player, total_score))
 
@@ -146,7 +146,7 @@ class TournamentController:
     ):
 
         for round in list_of_rounds:
-            for match in round.list_of_matchs:
+            for match in round.matchs:
                 if (
                     (player_1 == match.player_1 and player_2 == match.player_2)
                     or
