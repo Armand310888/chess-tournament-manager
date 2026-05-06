@@ -1,27 +1,54 @@
+from datetime import datetime
 import random
 
 from src.models.tournament import Tournament
 from src.models.round import Round
 from src.models.player import Player
 from src.models.match import Match
+from src.models.lifecycle import EventStatus
 from src.views.tournament_view import TournamentView
 from src.views.round_view import RoundView
-from src.models.lifecycle import EventStatus
+from src.repository.tournament_repository import save_tournaments
+from src.utils.id_generator import generate_next_id, IDPrefix
 
 
 class TournamentController:
-    def __init__(self):
+    def __init__(self, tournaments: list[Tournament]):
+        self.tournaments = tournaments
         self.tournament_view = TournamentView()
         self.round_view = RoundView()
 
-    def create_tournament(self):
-        tournament_data = self.tournament_view.prompt_for_tournament()
+    def create_tournament(self, tournament_data: dict) -> Tournament:
+        """"""
+        try:
+            tournament = Tournament(**tournament_data)
+        except (TypeError, ValueError) as error:
+            raise ValueError(f"Invalid tournament data: {error}") from error
 
-        tournament = Tournament(**tournament_data)
+        if self.tournament_already_exists(
+            tournament.name,
+            tournament.address.city,
+            tournament.start_datetime
+        ):
+            raise ValueError(
+                    "A tournament with the same:\n"
+                    f"- name: {tournament.name}\n"
+                    "- start datetime: "
+                    f"{tournament.start_datetime.sfrtime("%Y-%m")}\n"
+                    f"- city: {tournament.address.city}\n"
+                    "already exists."
+                )
 
+        existing_ids = [
+            tournament.id
+            for tournament in self.tournaments
+        ]
+
+        tournament.id = generate_next_id(IDPrefix.TOURNAMENT, existing_ids)
+
+        self.tournaments.append(tournament)
+        save_tournaments(self.tournaments)
         return tournament
-
-
 
     def select_players(self, tournament: Tournament):
 
@@ -199,3 +226,23 @@ class TournamentController:
                 pairs.append(pair)
 
         return pairs
+
+    def tournament_already_exists(
+            self,
+            name: str,
+            city: str,
+            start_datetime: datetime,
+    ) -> bool:
+        """"""
+        for tournament in self.tournaments:
+            if (
+                tournament.name.lower() == name.lower()
+                and tournament.address.city.lower() == city.lower()
+                and (
+                    tournament.start_datetime.strftime("%Y-%m")
+                    == start_datetime.sfrtime("%Y-%m")
+                )
+            ):
+                return True
+
+            return False

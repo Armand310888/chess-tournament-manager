@@ -75,3 +75,15 @@ class PlayerView:
             f"Birth date    : {player.birth_date}\n"
             f"Chess n. ID   : {player.chess_national_id}\n"
         )
+
+    def display_players(self) -> None:
+        """"""
+        all_players = load_players()
+
+        print("Available players:")
+
+        for index, player in enumerate(all_players, start=1):
+            print(
+                f"{index}. {player.first_name} {player.last_name} - "
+                f"ELO: {player.elo_rating}"
+            )

@@ -56,3 +56,7 @@ def validate_yes_or_no_string(
         )
 
     return answer
+
+
+def pause() -> None:
+    input("\nPress Enter to continue...")

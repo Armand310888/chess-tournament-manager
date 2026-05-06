@@ -92,31 +92,44 @@ class TournamentView:
             "description"
         )
 
-        place = Address(street_number, street_name, postal_code, city)
+        address = Address(street_number, street_name, postal_code, city)
 
         return {
             "name": name,
-            "place": place,
-            "start_date": start_date,
-            "end_date": end_date,
+            "address": address,
+            "start_datetime": start_datetime,
+            "end_datetime": end_datetime,
             "number_of_players": number_of_players,
             "number_of_rounds": number_of_rounds,
             "description": description
         }
 
-    def display_players(self):
-        all_players = load_players()
+    def display_tournaments(self, players: list, rounds: list):
+        """"""
+        all_tournaments = load_tournaments(players, rounds)
 
-        print("Available players:")
+        if not all_tournaments:
+            print("No ")
 
-        for index, player in enumerate(all_players, start=1):
+        print("Existing tournaments:")
+
+        for index, tournament in enumerate(all_tournaments, start=1):
             print(
-                f"{index}. {player.first_name} {player.last_name} - "
-                f"ELO: {player.elo_rating}"
+                f"{index}. {tournament.name} - {tournament.address.city} - "
+                f"{tournament.start_datetime.strftime("%Y-%m")}"
             )
 
+    def display_created_tournament(self, tournament: Tournament) -> None:
+        """"""
+        print(
+            "\nNew tournament created with success:\n"
+            f"{tournament.name} - {tournament.address.city} - "
+            f"{tournament.start_datetime.strftime("%Y-%m")}"
+        )
+
     def prompt_to_select_players(self):
-        self.display_players()
+        """"""
+        self.player_view.display_players()
 
         selected_players = prompt_until_valid(
             "Select players by entering their numbers separataed by comas "
