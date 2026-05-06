@@ -26,8 +26,9 @@ class PlayerController:
         save_players(self.players)
         return player
 
-    def list_players(self):
-        pass
+    def list_players(self) -> list[Player]:
+        """"""
+        return self.players
 
     def save(self):
         pass
