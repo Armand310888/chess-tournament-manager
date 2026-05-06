@@ -22,7 +22,7 @@ DEFAULT_ROUND_NUMBER = 4
 
 
 class Address:
-    """Represent the place address where a tournament takes place."""
+    """Represent the address where a tournament takes place."""
     def __init__(
         self,
         street_number: str,
@@ -141,7 +141,7 @@ class Tournament:
             self._address = None
             return
 
-        self._address = validate_class_object(value, "place", Address)
+        self._address = validate_class_object(value, "address", Address)
 
     @property
     def start_datetime(self) -> datetime | None:
@@ -288,9 +288,9 @@ class Tournament:
         Raises:
             ValueError: If required tournament data is missing or inconsistent.
         """
-        if self.place is None:
+        if self.address is None:
             raise ValueError(
-                "Tournament place must be defined before starting."
+                "Tournament address must be defined before starting."
             )
 
         if self.start_datetime is None:
