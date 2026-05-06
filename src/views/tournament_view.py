@@ -59,29 +59,33 @@ class TournamentView:
             "city"
         )
 
-        start_date = prompt_until_valid(
-                "Enter the tournament starting date and time: ",
-                validate_datetime_string,
+        start_datetime = prompt_until_valid(
+                "Enter the tournament starting date and time "
+                "(YYYY-MM-DD HH:MM): ",
+                validate_date_or_datetime,
                 "start_date"
             )
 
         while True:
-            end_date = prompt_until_valid(
-                "Enter the tournament end date and time : ",
-                validate_datetime_string,
+            end_datetime = prompt_until_valid(
+                "Enter the tournament end date and time "
+                "(YYYY-MM-DD HH:MM): ",
+                validate_date_or_datetime,
                 "end_date"
             )
 
             try:
-                validate_date_order(start_date, end_date)
+                validate_date_order(start_datetime, end_datetime)
                 break
             except ValueError as error:
                 print(error)
 
         number_of_players = prompt_until_valid(
-            "Enter the maximum number of players admitted to the tournament : ",
-            validate_int_string,
+            "Enter the maximum number of players "
+            "admitted to the tournament : ",
+            validate_number,
             "number_of_players",
+            int,
             1,
         )
 
