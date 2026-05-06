@@ -89,12 +89,22 @@ class TournamentView:
             1,
         )
 
-        number_of_rounds = prompt_until_valid(
-            "Enter the tournament number of rounds (by default: 4) : ",
-            validate_int_string,
-            "number_of_rounds",
-            1
-        )
+        while True:
+            number_of_rounds_input = input(
+                "Enter the tournament number of rounds "
+                "or Enter to set it by default (4 rounds) : "
+            )
+
+            if number_of_rounds_input == "":
+                number_of_rounds = 4
+            else:
+                number_of_rounds = validate_number(
+                    number_of_rounds_input,
+                    "number_of_rounds",
+                    int,
+                    1
+                )
+            break
 
         description = prompt_until_valid(
             "Enter the tournament description : ",
