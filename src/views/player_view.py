@@ -1,5 +1,4 @@
 from src.views.input_helpers import prompt_until_valid
-
 from src.utils.validators import (
     validate_regex_match,
     validate_non_empty_string,
@@ -11,6 +10,7 @@ from src.utils.validators import (
     PatternDescription,
 )
 from src.models.player import Player
+from src.repository.player_repository import load_players
 
 
 class PlayerView:
