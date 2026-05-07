@@ -45,10 +45,12 @@ class MainController:
                 self.create_player_flow()
             elif choice == "2":
                 self.list_players_flow()
-            elif choice =="3":
+            elif choice == "3":
                 self.create_tournament_flow()
             elif choice == "4":
                 self.list_tournaments_flow()
+            elif choice == "5":
+                self.add_player_flow()
             elif choice == "0":
                 break
             else:
@@ -99,3 +101,26 @@ class MainController:
         self.tournament_view.display_tournaments(self.players, self.rounds)
 
         pause()
+
+    def add_player_flow(self) -> None:
+        """"""
+        selected_tournament_index = (
+            self.tournament_view
+            .prompt_to_select_tournament(self.tournaments)
+        )
+        selected_tournament = (
+            self.tournament_controller.select_tournament(
+                self.tournaments,
+                selected_tournament_index,
+            )
+        )
+        selected_players_indices = (
+            self.tournament_view
+            .prompt_to_select_players(selected_tournament, self.players)
+        )
+
+        selected_players = self.tournament_controller.select_players(
+            selected_tournament,
+            self.players,
+            selected_players_indices
+        )
