@@ -1,5 +1,4 @@
 """"""
-from src.repository.player_repository import load_players
 
 
 def prompt_until_valid(prompt_message, validator, *args):

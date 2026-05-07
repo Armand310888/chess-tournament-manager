@@ -136,7 +136,7 @@ class TournamentController:
 
         return new_round
 
-    def create_match_for_round(self, current_round: Round, list_of_players: list[Player]):
+    def create_match_for_round(self, current_round: Round, players: list[Player]):
         if current_round.number == 1:
             pairs = self.create_random_pairs(players)
 

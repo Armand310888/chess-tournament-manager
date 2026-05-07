@@ -26,7 +26,7 @@ class PlayerController:
         save_players(self.players)
         return player
 
-    def list_players(self) -> list[Player]:
+    def get_players(self) -> list[Player]:
         """"""
         return self.players
 

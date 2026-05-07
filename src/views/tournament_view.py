@@ -10,12 +10,12 @@ from src.utils.validators import (
 )
 from src.models.tournament import Address
 from src.models.tournament import Tournament
+from src.models.player import Player
 from src.views.input_helpers import (
     prompt_until_valid,
-    validate_player_selection
+    validate_index_selection,
 )
 from src.views.player_view import PlayerView
-from src.repository.tournament_repository import load_tournaments
 
 
 class TournamentView:

@@ -86,7 +86,11 @@ class MainController:
         tournament_data = self.tournament_view.prompt_for_tournament_data()
 
         try:
-            tournament = self.tournament_controller.create_tournament(tournament_data)
+            tournament = (
+                self.tournament_controller.create_tournament(
+                    tournament_data
+                )
+            )
 
         except (TypeError, ValueError) as error:
             print(error)

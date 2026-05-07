@@ -10,7 +10,8 @@ from src.utils.validators import (
     PatternDescription,
 )
 from src.models.player import Player
-from src.repository.player_repository import load_players
+from src.models.tournament import Tournament
+from src.controllers.tournament_controller import TournamentController
 
 
 class PlayerView:

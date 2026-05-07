@@ -14,4 +14,3 @@ class RoundView:
         )
 
         return choice
-
