@@ -124,21 +124,6 @@ class TournamentView:
             "description": description
         }
 
-    def display_tournaments(self, players: list, rounds: list):
-        """"""
-        all_tournaments = load_tournaments(players, rounds)
-
-        if not all_tournaments:
-            print("No ")
-
-        print("Existing tournaments:")
-
-        for index, tournament in enumerate(all_tournaments, start=1):
-            print(
-                f"{index}. {tournament.name} - {tournament.address.city} - "
-                f"{tournament.start_datetime.strftime("%Y-%m")}"
-            )
-
     def display_created_tournament(self, tournament: Tournament) -> None:
         """"""
         print(
@@ -147,14 +132,60 @@ class TournamentView:
             f"{tournament.start_datetime.strftime("%Y-%m")}"
         )
 
-    def prompt_to_select_players(self):
+    def display_tournaments(self, tournaments: list[Tournament]) -> None:
         """"""
-        self.player_view.display_players()
+        if not tournaments:
+            print("No tournament have been created yet.")
 
-        selected_players = prompt_until_valid(
-            "Select players by entering their numbers separataed by comas "
-            "(ex: 1,5,7)",
-            validate_player_selection
+        print("Existing tournaments:")
+
+        for index, tournament in enumerate(tournaments, start=1):
+            print(
+                f"{index}. {tournament.name} - {tournament.address.city} - "
+                f"{tournament.start_datetime.strftime("%Y-%m")}"
+            )
+
+    def prompt_to_select_players(
+            self,
+            tournament: Tournament,
+            players: list[Player]
+    ) -> list[int]:
+        """"""
+        self.player_view.display_selectable_players(tournament, players)
+
+        selected_players_indices = prompt_until_valid(
+            "Select players by entering their numbers separated by comas "
+            "(ex: 1,5,7): ",
+            validate_index_selection,
+            players,
+            1,
         )
 
-        return selected_players
+        return selected_players_indices
+
+    def prompt_to_select_tournament(
+            self,
+            tournaments: list[Tournament]
+    ) -> list[int]:
+        """"""
+        self.display_tournaments(tournaments)
+
+        selected_tournament_index = prompt_until_valid(
+            "Select tournament by entering it's number (ex: 3): ",
+            validate_index_selection,
+            tournaments,
+            1,
+            1,
+        )
+
+        return selected_tournament_index
+
+    def display_players_added_to_tournament(
+            self,
+            selected_players: list[Player]
+    ) -> None:
+        """"""
+
+    def display_tournament_players(self):
+        """"""
+        pass
