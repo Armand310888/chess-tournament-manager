@@ -13,8 +13,9 @@ from src.utils.id_generator import generate_next_id, IDPrefix
 
 
 class TournamentController:
-    def __init__(self, tournaments: list[Tournament]):
+    def __init__(self, tournaments: list[Tournament], players: list[Player]):
         self.tournaments = tournaments
+        self.players = players
         self.tournament_view = TournamentView()
         self.round_view = RoundView()
 
@@ -50,15 +51,78 @@ class TournamentController:
         save_tournaments(self.tournaments)
         return tournament
 
-    def select_players(self, tournament: Tournament):
+    def get_selectable_players(
+            self,
+            tournament: Tournament,
+    ) -> list[Player]:
+        """"""
+        tournament_players_ids = [
+            player.chess_national_id
+            for player in tournament.players
+        ]
 
+        selectable_players = [
+            player
+            for player in self.players
+            if player.chess_national_id not in tournament_players_ids
+        ]
+
+        if not selectable_players:
+            print("No players selectable for this tournament.")
+
+        return selectable_players
+
+    def select_players(
+            self,
+            tournament: Tournament,
+            selected_players_indices: list[int],
+    ) -> None:
+        """"""
         if not isinstance(tournament, Tournament):
-            raise TypeError("'tournament' must be a Tournament object")
+            raise TypeError("'tournament' must be a Tournament object.")
 
-        selected_players = self.tournament_view.prompt_to_select_players
+        if not isinstance(self.players, list):
+            raise TypeError("'players' must be a list.")
 
-        for player in selected_players:
-            tournament.add_player(player)
+        for player in self.players:
+            if not isinstance(player, Player):
+                raise TypeError("'players' must contain only Player Object")
+
+        if not isinstance(selected_players_indices, list):
+            raise TypeError("'selected_players_indices' must be a list.")
+
+        for index in selected_players_indices:
+            if not isinstance(index, int):
+                raise TypeError(
+                    "'selected_players_indices' must contain "
+                    "only integer numbers."
+                )
+
+        selected_players = []
+
+        for index in selected_players_indices:
+            selected_players.append(self.players[index - 1])
+
+        tournament.players = selected_players
+        save_tournaments(self.tournaments)
+        return selected_players
+
+    def select_tournament(
+            self,
+            selected_tournament_index: list,
+    ) -> Tournament:
+        """"""
+        if not isinstance(selected_tournament_index, list):
+            raise TypeError(
+                "'selected_tournament_index' must be a list (of one index)"
+            )
+
+        if len(selected_tournament_index) > 1:
+            raise ValueError("Only one tournament can be selected at once.")
+
+        selected_tournament = self.tournaments[selected_tournament_index - 1]
+
+        return selected_tournament
 
     def create_new_round(self, tournament: Tournament):
         choice = self.round_view.prompt_for_new_round()
