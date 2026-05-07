@@ -12,30 +12,45 @@ def prompt_until_valid(prompt_message, validator, *args):
             print(error)
 
 
-# qu'avais-je voulu faire ici. Est-ce bien la place de cette fonction?
-def validate_player_selection(raw_player_selection):
-    all_players = load_players()
+def validate_index_selection(
+        raw_selection,
+        list_for_selection: list,
+        minimum_selection: int = 1,
+        maximum_selection: int | None = None,
+) -> list[str]:
+    """"""
+    raw_indices = (
+        raw_selection
+        .strip()
+        .replace(" ", "")
+        .split(",")
+    )
 
-    raw_player_selection = raw_player_selection.strip().replace(" ", "")
-
-    raw_indices = raw_player_selection.split(",")
-
-    selected_players = []
+    selected_indices = []
 
     for raw_index in raw_indices:
-        raw_index = raw_index.strip()
-
         if not raw_index.isdigit():
             raise ValueError("Enter only numbers separated by comas.")
 
         index = int(raw_index)
 
-        if index < 1 or index > len(all_players):
-            raise ValueError(f"Invalid player number: {index}")
+        if index < 1:
+            raise ValueError("The number cannot be zero")
+        if index > len(list_for_selection):
+            raise ValueError("The number cannot be out of range")
 
-        selected_players.append(all_players[index - 1])
+        selected_indices.append(index)
 
-    return selected_players
+        if len(selected_indices) < minimum_selection:
+            raise ValueError(
+                f"A minimum of {minimum_selection} numbers must be selected."
+            )
+        if len(selected_indices) > maximum_selection:
+            raise ValueError(
+                f"A maximum of {maximum_selection} numbers must be selected."
+            )
+
+    return selected_indices
 
 
 def validate_yes_or_no_string(
