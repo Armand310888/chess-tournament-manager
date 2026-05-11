@@ -141,7 +141,7 @@ class TournamentController:
     ):
 
         for round in list_of_rounds:
-            for match in round.matchs:
+            for match in round.matches:
                 if (
                     (player_1 == match.player_1 and player_2 == match.player_2)
                     or
