@@ -92,7 +92,7 @@ class TournamentView:
         while True:
             number_of_rounds_input = input(
                 "Enter the tournament number of rounds "
-                "or Enter to set it by default (4 rounds) : "
+                "or press 'Enter' to set it by default (4 rounds) : "
             )
 
             if number_of_rounds_input == "":
