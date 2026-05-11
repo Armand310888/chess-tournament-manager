@@ -65,11 +65,9 @@ class MainController:
 
         pause()
 
-    def list_players_flow(self) -> None:
+    def get_players_flow(self) -> None:
         """"""
-        players = self.player_controller.list_players()
-
-        self.player_view.display_players(players)
+        self.player_view.display_players(self.players)
 
         pause()
 

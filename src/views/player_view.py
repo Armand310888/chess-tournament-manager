@@ -69,10 +69,10 @@ class PlayerView:
 
     def display_created_player(self, player: Player) -> None:
         print(
-            "\nNew player created with success\n"
-            f"{player}\n"
+            "\n- New player created with success- \n"
+            f"\n{player}\n"
             f"Birth date    : {player.birth_date}\n"
-            f"Chess n. ID   : {player.chess_national_id}\n"
+            f"Chess n. ID   : {player.chess_national_id}"
         )
 
     def display_players(self, players: list[Player]) -> None:
