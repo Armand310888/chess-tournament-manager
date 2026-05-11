@@ -4,8 +4,10 @@ from src.repository.match_repository import load_matches
 from src.repository.round_repository import load_rounds
 from src.repository.tournament_repository import load_tournaments
 from src.controllers.player_controller import PlayerController
+from src.controllers.round_controller import RoundController
 from src.controllers.tournament_controller import TournamentController
 from src.views.player_view import PlayerView
+from src.views.round_view import RoundView
 from src.views.tournament_view import TournamentView
 from src.views.input_helpers import pause
 from src.views.main_view import MainView
@@ -19,10 +21,12 @@ class MainController:
         self.rounds = load_rounds(self.matchs)
         self.tournaments = load_tournaments(self.players, self.rounds)
         self.player_controller = PlayerController(self.players)
+        self.round_controller = RoundController()
         self.tournament_controller = (
             TournamentController(self.tournaments, self.players)
         )
         self.player_view = PlayerView()
+        self.round_view = RoundView()
         self.tournament_view = TournamentView()
         self.main_view = MainView()
 
@@ -43,6 +47,8 @@ class MainController:
                 self.get_tournaments_flow()
             elif choice == "5":
                 self.add_player_flow()
+            elif choice == "6":
+                self.start_next_round_flow()
             elif choice == "0":
                 break
             else:
@@ -130,3 +136,32 @@ class MainController:
         self.player_view.display_players(selected_players, "Selected")
 
         pause()
+
+    def start_next_round_flow(self) -> None:
+        """"""
+        choice = self.round_view.prompt_for_new_round()
+
+        if choice != "y":
+            return None       
+
+        selected_tournament_index = (
+            self.tournament_view
+            .prompt_to_select_tournament(self.tournaments)
+        )
+        selected_tournament = (
+            self.tournament_controller.select_tournament(
+                selected_tournament_index,
+            )
+        )
+        new_round = (
+            self.round_controller
+            .create_new_round(
+                selected_tournament,
+                self.rounds,
+                self.tournaments
+            )
+        )
+
+        
+
+        pause ()
