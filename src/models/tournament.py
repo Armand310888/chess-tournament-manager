@@ -394,10 +394,16 @@ class Tournament:
             )
 
             players_id = data.get("players_id") or []
-            players = [get_player_by_id(player_id, players) for player_id in players_id]
+            players = [
+                get_player_by_id(player_id, players)
+                for player_id in players_id
+            ]
 
             rounds_id = data.get("rounds_id") or []
-            rounds = [get_round_by_id(round_id, rounds) for round_id in rounds_id]
+            rounds = [
+                get_round_by_id(round_id, rounds)
+                for round_id in rounds_id
+            ]
 
             tournament = cls(
                 name=data["name"],
