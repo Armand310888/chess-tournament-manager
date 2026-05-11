@@ -3,7 +3,7 @@
 from datetime import datetime
 
 from src.models.match import Match
-from src.models.lifecycle import start_lifecycle, end_lifecycle, EventStatus
+from src.services.lifecycle_manager import start_lifecycle, end_lifecycle, EventStatus
 from src.utils.validators import validate_number
 from src.repository.match_repository import get_match_by_id
 

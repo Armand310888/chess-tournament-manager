@@ -14,7 +14,7 @@ from src.utils.validators import (
     Pattern,
     PatternDescription,
 )
-from src.models.lifecycle import EventStatus
+from src.services.lifecycle_manager import EventStatus
 from src.repository.player_repository import get_player_by_id
 from src.repository.round_repository import get_round_by_id
 

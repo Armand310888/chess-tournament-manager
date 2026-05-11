@@ -1,11 +1,10 @@
 from datetime import datetime
-import random
 
 from src.models.tournament import Tournament
 from src.models.round import Round
 from src.models.player import Player
 from src.models.match import Match
-from src.models.lifecycle import EventStatus
+from src.services.lifecycle_manager import EventStatus
 from src.views.tournament_view import TournamentView
 from src.views.round_view import RoundView
 from src.repository.tournament_repository import save_tournaments
@@ -125,83 +124,14 @@ class TournamentController:
 
         return selected_tournament
 
-    def create_new_round(self, tournament: Tournament):
-        choice = self.round_view.prompt_for_new_round()
-
-        if choice != "y":
-            return None
-
-        new_round = Round(ID="example") # coder création et assignation d'ID
-
-        tournament.add_round(new_round)
-
-        return new_round
-
-    def create_match_for_round(self, current_round: Round, players: list[Player]):
-        if current_round.number == 1:
-            pairs = self.create_random_pairs(players)
-
-            for pair in pairs:
-                player_1 = pair[0]
-                player_2 = pair[1]
-                new_match = Match(player_1, player_2)
-                current_round.matchs.append(new_match)
-
-        players_scores = []
-
-        if current_round.number != 1:
-            players_scores = self.get_players_ranking(tournament)
-        
-
-
-
     def start_tournament():
         pass
 
-    def shuffle_a_list(self, list_to_shuffle: list):
-        shuffled_list = list_to_shuffle[:]
 
-        if len(shuffled_list) % 2 != 0:
-            raise ValueError("Number of players must be pair and at least two.")
 
-        random.shuffle(shuffled_list)
 
-        return shuffled_list
 
-    def create_random_pairs(self, list_of_players: list[Player]):
-        shuffled_players = self.shuffle_a_list(list_of_players)
 
-        pairs = []
-
-        for index in range(0, len(shuffled_players), 2):
-            pair = (shuffled_players[index], shuffled_players[index + 1])
-            pairs.append(pair)
-
-        return pairs
-
-    def get_player_score(self, player: Player, tournament: Tournament):
-        total_score = 0
-
-        for round in tournament.rounds:
-            for match in round.matchs:
-                if match.status == EventStatus.FINSIHED:
-                    if match.white_player == player:
-                        total_score += match.white_player_score
-                    if match.black_player == player:
-                        total_score += match.black_player_score
-
-        return total_score
-
-    def get_players_ranked(self, tournament: Tournament):
-        ranked_players = []
-
-        for player in tournament.players:
-            total_score = self.get_player_score(player, tournament)
-            ranked_players.append((player, total_score))
-
-        ranked_players = sorted(ranked_players, key=lambda x: x[1], reverse=True)
-
-        return ranked_players
 
     def have_players_already_played(
             self,
@@ -221,15 +151,7 @@ class TournamentController:
 
         return False
 
-    def group_players_by_rank(self, ranked_players: list):
-        players_groups = {}
 
-        for player, score in ranked_players:
-            if score not in players_groups:
-                players_groups[score] = []
-            players_groups[score] = player
-
-        return players_groups
 
     def find_available_opponent(
             self,
@@ -250,7 +172,7 @@ class TournamentController:
 
     def pair_players_by_score(
             self,
-            ranked_players: list[tuple[Player, float]], 
+            ranked_players: list[tuple[Player, float]],
             list_of_rounds: list[Round]):
 
         players_groups = self.group_players_by_rank(ranked_players)
