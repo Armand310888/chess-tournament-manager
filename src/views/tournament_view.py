@@ -3,7 +3,7 @@ from src.utils.validators import (
     validate_non_empty_string,
     validate_date_order,
     validate_regex_match,
-    validate_date_or_datetime,
+    validate_datetime,
     validate_number,
     Pattern,
     PatternDescription,
@@ -62,7 +62,7 @@ class TournamentView:
         start_datetime = prompt_until_valid(
                 "Enter the tournament starting date and time "
                 "(YYYY-MM-DD HH:MM): ",
-                validate_date_or_datetime,
+                validate_datetime,
                 "start_date"
             )
 
@@ -70,7 +70,7 @@ class TournamentView:
             end_datetime = prompt_until_valid(
                 "Enter the tournament end date and time "
                 "(YYYY-MM-DD HH:MM): ",
-                validate_date_or_datetime,
+                validate_datetime,
                 "end_date"
             )
 

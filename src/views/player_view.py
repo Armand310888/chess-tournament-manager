@@ -3,7 +3,7 @@ from src.utils.validators import (
     validate_regex_match,
     validate_non_empty_string,
     validate_number,
-    validate_date_or_datetime,
+    validate_date,
     ELO_MAXIMUM,
     ELO_MINIMUM,
     Pattern,
@@ -28,7 +28,7 @@ class PlayerView:
 
         birth_date = prompt_until_valid(
             "Enter player's birth date: ",
-            validate_date_or_datetime,
+            validate_date,
             "birth_date",
         )
 
