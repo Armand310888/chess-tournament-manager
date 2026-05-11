@@ -85,10 +85,10 @@ class TournamentController:
         if not isinstance(tournament, Tournament):
             raise TypeError("'tournament' must be a Tournament object.")
 
-        if not isinstance(self.players, list):
+        if not isinstance(selectable_players, list):
             raise TypeError("'players' must be a list.")
 
-        for player in self.players:
+        for player in selectable_players:
             if not isinstance(player, Player):
                 raise TypeError("'players' must contain only Player Object")
 
