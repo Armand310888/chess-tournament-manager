@@ -92,7 +92,7 @@ class MainController:
 
     def get_tournaments_flow(self) -> None:
         """"""
-        self.tournament_view.display_tournaments(self.players, self.rounds)
+        self.tournament_view.display_tournaments(self.tournaments)
 
         pause()
 
