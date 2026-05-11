@@ -36,11 +36,11 @@ class MainController:
             if choice == "1":
                 self.create_player_flow()
             elif choice == "2":
-                self.list_players_flow()
+                self.get_players_flow()
             elif choice == "3":
                 self.create_tournament_flow()
             elif choice == "4":
-                self.list_tournaments_flow()
+                self.get_tournaments_flow()
             elif choice == "5":
                 self.add_player_flow()
             elif choice == "0":
