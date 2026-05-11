@@ -147,17 +147,16 @@ class TournamentView:
 
     def prompt_to_select_players(
             self,
-            tournament: Tournament,
-            players: list[Player]
+            selectable_players: list[Player]
     ) -> list[int]:
         """"""
-        self.player_view.display_selectable_players(tournament, players)
+        self.player_view.display_players(selectable_players)
 
         selected_players_indices = prompt_until_valid(
             "Select players by entering their numbers separated by comas "
             "(ex: 1,5,7): ",
             validate_index_selection,
-            players,
+            selectable_players,
             1,
         )
 
@@ -170,7 +169,7 @@ class TournamentView:
         """"""
         self.display_tournaments(tournaments)
 
-        selected_tournament_index = prompt_until_valid(
+        raw_selected_tournament_index = prompt_until_valid(
             "Select tournament by entering it's number (ex: 3): ",
             validate_index_selection,
             tournaments,
@@ -178,13 +177,9 @@ class TournamentView:
             1,
         )
 
-        return selected_tournament_index
+        selected_tournament_index = raw_selected_tournament_index[0]
 
-    def display_players_added_to_tournament(
-            self,
-            selected_players: list[Player]
-    ) -> None:
-        """"""
+        return selected_tournament_index
 
     def display_tournament_players(self):
         """"""

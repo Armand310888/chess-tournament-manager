@@ -10,8 +10,6 @@ from src.utils.validators import (
     PatternDescription,
 )
 from src.models.player import Player
-from src.models.tournament import Tournament
-from src.controllers.tournament_controller import TournamentController
 
 
 class PlayerView:
@@ -82,24 +80,6 @@ class PlayerView:
         print("Available players:")
 
         for index, player in enumerate(players, start=1):
-            print(
-                f"{index}. {player.first_name} {player.last_name} - "
-                f"ELO: {player.elo_rating}"
-            )
-
-    def display_selectable_players(
-            self,
-            tournament: Tournament,
-            players: list[Player]
-    ) -> None:
-        """"""
-        selectable_players = (
-            TournamentController.get_selectable_players(tournament, players)
-        )
-
-        print("Selectable players for the tournament:")
-
-        for index, player in enumerate(selectable_players, start=1):
             print(
                 f"{index}. {player.first_name} {player.last_name} - "
                 f"ELO: {player.elo_rating}"

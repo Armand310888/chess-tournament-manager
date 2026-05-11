@@ -19,7 +19,10 @@ class TournamentController:
         self.tournament_view = TournamentView()
         self.round_view = RoundView()
 
-    def create_tournament(self, tournament_data: dict) -> Tournament:
+    def create_tournament(
+            self,
+            tournament_data: dict,
+    ) -> Tournament:
         """"""
         try:
             tournament = Tournament(**tournament_data)
@@ -75,8 +78,9 @@ class TournamentController:
     def select_players(
             self,
             tournament: Tournament,
+            selectable_players: list[Player],
             selected_players_indices: list[int],
-    ) -> None:
+    ) -> list[Player]:
         """"""
         if not isinstance(tournament, Tournament):
             raise TypeError("'tournament' must be a Tournament object.")
@@ -101,24 +105,21 @@ class TournamentController:
         selected_players = []
 
         for index in selected_players_indices:
-            selected_players.append(self.players[index - 1])
+            selected_players.append(selectable_players[index - 1])
 
-        tournament.players = selected_players
+        tournament.players.extend(selected_players)
         save_tournaments(self.tournaments)
         return selected_players
 
     def select_tournament(
             self,
-            selected_tournament_index: list,
+            selected_tournament_index: int,
     ) -> Tournament:
         """"""
-        if not isinstance(selected_tournament_index, list):
+        if not isinstance(selected_tournament_index, int):
             raise TypeError(
-                "'selected_tournament_index' must be a list (of one index)"
+                "'selected_tournament_index' must be an integer "
             )
-
-        if len(selected_tournament_index) > 1:
-            raise ValueError("Only one tournament can be selected at once.")
 
         selected_tournament = self.tournaments[selected_tournament_index - 1]
 

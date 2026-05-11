@@ -19,8 +19,10 @@ class MainController:
         self.rounds = load_rounds(self.matchs)
         self.tournaments = load_tournaments(self.players, self.rounds)
         self.player_controller = PlayerController(self.players)
+        self.tournament_controller = (
+            TournamentController(self.tournaments, self.players)
+        )
         self.player_view = PlayerView()
-        self.tournament_controller = TournamentController(self.tournaments)
         self.tournament_view = TournamentView()
         self.main_view = MainView()
 
@@ -104,17 +106,29 @@ class MainController:
         )
         selected_tournament = (
             self.tournament_controller.select_tournament(
-                self.tournaments,
                 selected_tournament_index,
             )
         )
-        selected_players_indices = (
-            self.tournament_view
-            .prompt_to_select_players(selected_tournament, self.players)
+
+        selectable_players = (
+            self.tournament_controller
+            .get_selectable_players(selected_tournament)
         )
 
-        selected_players = self.tournament_controller.select_players(
-            selected_tournament,
-            self.players,
-            selected_players_indices
+        selected_players_indices = (
+            self.tournament_view
+            .prompt_to_select_players(selectable_players)
         )
+
+        selected_players = (
+            self.tournament_controller
+            .select_players(
+                selected_tournament,
+                selectable_players,
+                selected_players_indices
+            )
+        )
+
+        self.player_view.display_players(selected_players)
+
+        pause()

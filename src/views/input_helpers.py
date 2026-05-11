@@ -34,9 +34,10 @@ def validate_index_selection(
         index = int(raw_index)
 
         if index < 1:
-            raise ValueError("The number cannot be zero")
+            raise ValueError("The number cannot be zero.")
+
         if index > len(list_for_selection):
-            raise ValueError("The number cannot be out of range")
+            raise ValueError("The number cannot be out of range.")
 
         selected_indices.append(index)
 
@@ -44,12 +45,16 @@ def validate_index_selection(
             raise ValueError(
                 f"A minimum of {minimum_selection} numbers must be selected."
             )
-        if len(selected_indices) > maximum_selection:
+
+        if (
+            maximum_selection is not None
+            and len(selected_indices) > maximum_selection
+        ):
             raise ValueError(
                 f"A maximum of {maximum_selection} numbers must be selected."
             )
 
-    return selected_indices
+        return selected_indices
 
 
 def validate_yes_or_no_string(
