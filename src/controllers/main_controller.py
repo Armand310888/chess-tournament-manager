@@ -8,6 +8,7 @@ from src.controllers.tournament_controller import TournamentController
 from src.views.player_view import PlayerView
 from src.views.tournament_view import TournamentView
 from src.views.input_helpers import pause
+from src.views.main_view import MainView
 
 
 class MainController:
@@ -21,25 +22,14 @@ class MainController:
         self.player_view = PlayerView()
         self.tournament_controller = TournamentController(self.tournaments)
         self.tournament_view = TournamentView()
+        self.main_view = MainView()
 
     def run(self) -> None:
         """"""
         print("Application started")
 
         while True:
-            print(
-                "\n0. Quit\n"
-                "1. Create player\n"
-                "2. List players\n"
-                "3. Create tournament\n"
-                "4. List tournaments\n"
-                "5. Add players to tournament\n"
-                "6. Start next round\n"
-                "7. Enter match results\n"
-                "8. Save and quit\n"
-            )
-
-            choice = input("Choice: ")
+            choice = self.main_view.prompt_main_menu_choice()
 
             if choice == "1":
                 self.create_player_flow()
