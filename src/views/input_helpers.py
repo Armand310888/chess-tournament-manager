@@ -41,20 +41,20 @@ def validate_index_selection(
 
         selected_indices.append(index)
 
-        if len(selected_indices) < minimum_selection:
-            raise ValueError(
-                f"A minimum of {minimum_selection} numbers must be selected."
-            )
+    if len(selected_indices) < minimum_selection:
+        raise ValueError(
+            f"A minimum of {minimum_selection} numbers must be selected."
+        )
 
-        if (
-            maximum_selection is not None
-            and len(selected_indices) > maximum_selection
-        ):
-            raise ValueError(
-                f"A maximum of {maximum_selection} numbers must be selected."
-            )
+    if (
+        maximum_selection is not None
+        and len(selected_indices) > maximum_selection
+    ):
+        raise ValueError(
+            f"A maximum of {maximum_selection} numbers must be selected."
+        )
 
-        return selected_indices
+    return selected_indices
 
 
 def validate_yes_or_no_string(
