@@ -67,7 +67,7 @@ class MainController:
 
     def get_players_flow(self) -> None:
         """"""
-        self.player_view.display_players(self.players)
+        self.player_view.display_players(self.players, "Available")
 
         pause()
 
@@ -127,6 +127,6 @@ class MainController:
             )
         )
 
-        self.player_view.display_players(selected_players)
+        self.player_view.display_players(selected_players, "Selected")
 
         pause()

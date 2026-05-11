@@ -75,12 +75,21 @@ class PlayerView:
             f"Chess n. ID   : {player.chess_national_id}"
         )
 
-    def display_players(self, players: list[Player]) -> None:
+    def display_players(
+            self,
+            players: list[Player],
+            type_of_player: str,
+    ) -> None:
         """"""
-        print("Available players:")
+        if not isinstance(type_of_player, str):
+            raise TypeError("'type_of_player' must be a string.")
+
+        print(f"\n- {type_of_player} players -\n")
 
         for index, player in enumerate(players, start=1):
             print(
                 f"{index}. {player.first_name} {player.last_name} - "
                 f"ELO: {player.elo_rating}"
             )
+
+        print("")

@@ -137,20 +137,21 @@ class TournamentView:
         if not tournaments:
             print("No tournament have been created yet.")
 
-        print("Existing tournaments:")
+        print("\n - Existing tournaments -\n")
 
         for index, tournament in enumerate(tournaments, start=1):
             print(
                 f"{index}. {tournament.name} - {tournament.address.city} - "
                 f"{tournament.start_datetime.strftime("%Y-%m")}"
             )
+        print("")
 
     def prompt_to_select_players(
             self,
             selectable_players: list[Player]
     ) -> list[int]:
         """"""
-        self.player_view.display_players(selectable_players)
+        self.player_view.display_players(selectable_players, "Selectable")
 
         selected_players_indices = prompt_until_valid(
             "Select players by entering their numbers separated by comas "
