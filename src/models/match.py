@@ -5,7 +5,11 @@ from enum import Enum
 import random
 
 from src.models.player import Player
-from src.services.lifecycle_manager import start_lifecycle, end_lifecycle, EventStatus
+from src.services.lifecycle_manager import (
+    start_lifecycle,
+    end_lifecycle,
+    EventStatus,
+)
 from src.utils.validators import validate_class_object
 from src.repository.player_repository import get_player_by_id
 
