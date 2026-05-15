@@ -1,19 +1,28 @@
+""""""
 from src.models.match import Match
+from src.models.player import Player
+from src.utils.id_generator import generate_next_id, IDPrefix
+from src.repository.match_repository import save_matches
 
 
-def create_match(white_player: Player, black_player: Player) -> Match:
-    matches = load_matches() #depuis JSON
-    next_id = compute_next_id(matches)
+class MatchController:
+    def create_match(
+            player_1: Player,
+            player_2: Player,
+            matches: list[Match]
+    ) -> Match:
+        """"""
+        match = Match(player_1, player_2)
 
-    return Match(
-        white_player=white_player,
-        black_player=black_player,
-        match_id=next_id
-    )
+        existing_ids = [
+            existing_match.id
+            for existing_match in matches
+        ]
 
-def load_matches():
-    pass
+        match.id = generate_next_id(IDPrefix.MATCH, existing_ids)
+        match.set_black_and_white_player()
 
-def compute_next_id():
-    pass
+        matches.append(match)
+        save_matches(matches)
 
+        return match
