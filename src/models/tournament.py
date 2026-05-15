@@ -441,7 +441,7 @@ class Tournament:
             tournament.players = players
             tournament.rounds = rounds
             tournament.current_round = (
-                get_round_by_id(data["current_round_id"])
+                get_round_by_id(data["current_round_id"], rounds)
                 if data.get("current_round_id") else None
             )
 
