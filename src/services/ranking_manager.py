@@ -48,7 +48,7 @@ def group_players_by_rank(ranked_players: list):
 
     return dict(
         sorted(
-            players_grouped_by_ranks,
+            players_grouped_by_ranks.items(),
             reverse=True
         )
     )
