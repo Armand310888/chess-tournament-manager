@@ -1,30 +1,37 @@
+""""""
 from datetime import datetime
 
-from src.models.player import Player
 from src.models.match import Match
 from src.models.round import Round
 from src.models.tournament import Tournament
-from src.views.round_view import RoundView
+from src.controllers.match_controller import MatchController
 from src.utils.id_generator import generate_next_id, IDPrefix
 from src.services.lifecycle_manager import EventStatus
 from src.repository.round_repository import save_rounds
 from src.repository.tournament_repository import save_tournaments
-from src.services.pairing_manager import create_random_pairs
-from src.services.ranking_manager import get_players_ranked
+from src.services.pairing_manager import (
+    create_random_pairs,
+    pair_players_by_score
+)
 
 
 class RoundController:
-    def __init__(self):
-        self.round_view = RoundView()
-
-    def create_list_of_matchs(self, current_round: Round):
-        pass
+    """"""
+    def __init__(
+            self,
+            matches: list[Match],
+            rounds: list[Round],
+            tournaments: list[Tournament],
+    ) -> None:
+        """"""
+        self.matches = matches
+        self.rounds = rounds
+        self.tournaments = tournaments
+        self.match_controller = MatchController()
 
     def create_new_round(
             self,
             tournament: Tournament,
-            rounds: list[Round],
-            tournaments: list[Tournament]
     ) -> Round:
         """"""
         round_number = (
@@ -38,8 +45,8 @@ class RoundController:
             tournament.current_round = new_round
 
         existing_ids = [
-            round.id
-            for round in rounds
+            existing_round.id
+            for existing_round in self.rounds
         ]
 
         new_round.id = generate_next_id(IDPrefix.ROUND, existing_ids)
@@ -47,33 +54,30 @@ class RoundController:
         new_round.status = EventStatus.IN_PROGRESS
 
         tournament.rounds.append(new_round)
-        save_tournaments(tournaments)
+        save_tournaments(self.tournaments)
 
-        rounds.append(new_round)
-        save_rounds(rounds)
+        self.rounds.append(new_round)
+        save_rounds(self.rounds)
 
         return new_round
 
     def create_match_for_round(
+            self,
+            round: Round,
             tournament: Tournament,
     ) -> None:
-        if tournament.current_round.number == 1:
+        """"""
+        if round.number == 1:
             pairs = create_random_pairs(tournament.players)
 
-            for pair in pairs:
-                player_1 = pair[0]
-                player_2 = pair[1]
-                new_match = Match(player_1, player_2)
-                tournament.current_round.matches.append(new_match)
+        if round.number != 1:
+            pairs = pair_players_by_score(tournament)
 
-        if tournament.current_round.number != 1:
-            players_ranked = get_players_ranked(tournament)
+        for player_1, player_2 in pairs:
+            match = self.match_controller.create_match(
+                player_1,
+                player_2,
+                self.matches)
 
-
-
-
-
-
-
-
-      
+            round.matches.append(match)
+            save_rounds(self.rounds)
