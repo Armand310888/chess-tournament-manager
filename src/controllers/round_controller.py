@@ -77,7 +77,8 @@ class RoundController:
             match = self.match_controller.create_match(
                 player_1,
                 player_2,
-                self.matches)
+                self.matches
+            )
 
             round.matches.append(match)
             save_rounds(self.rounds)
