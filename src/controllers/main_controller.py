@@ -48,7 +48,7 @@ class MainController:
             elif choice == "5":
                 self.add_player_flow()
             elif choice == "6":
-                self.start_next_round_flow()
+                self.create_next_round_flow()
             elif choice == "0":
                 break
             else:
@@ -137,12 +137,12 @@ class MainController:
 
         pause()
 
-    def start_next_round_flow(self) -> None:
+    def create_next_round_flow(self) -> None:
         """"""
         choice = self.round_view.prompt_for_new_round()
 
         if choice != "y":
-            return None       
+            return None
 
         selected_tournament_index = (
             self.tournament_view
@@ -157,11 +157,15 @@ class MainController:
             self.round_controller
             .create_new_round(
                 selected_tournament,
-                self.rounds,
-                self.tournaments
             )
         )
 
-        
+        new_round.matches = (
+            self.round_controller
+            .create_match_for_round(
+                new_round,
+                selected_tournament
+            )
+        )
 
-        pause ()
+        pause()
