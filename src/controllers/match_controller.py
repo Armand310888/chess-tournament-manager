@@ -7,6 +7,7 @@ from src.repository.match_repository import save_matches
 
 class MatchController:
     def create_match(
+            self,
             player_1: Player,
             player_2: Player,
             matches: list[Match]
