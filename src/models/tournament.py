@@ -105,7 +105,7 @@ class Tournament:
             address: Address | None = None,
             start_datetime: datetime | None = None,
             end_datetime: datetime | None = None,
-            number_of_players: int | None = None,
+            max_number_of_players: int | None = None,
             number_of_rounds: int = DEFAULT_ROUND_NUMBER,
             description: str | None = None,
     ):
@@ -113,7 +113,7 @@ class Tournament:
         self.address = address
         self.start_datetime = start_datetime
         self.end_datetime = end_datetime
-        self.number_of_players = number_of_players
+        self.max_number_of_players = max_number_of_players
         self.number_of_rounds = number_of_rounds
         self.description = description
         self.id: int | None = None
@@ -180,18 +180,30 @@ class Tournament:
         self._end_datetime = validated_date
 
     @property
-    def number_of_players(self) -> int | None:
+    def max_number_of_players(self) -> int | None:
         """Return the maximum number of players, if defined."""
-        return self._number_of_players
+        return self._max_number_of_players
 
-    @number_of_players.setter
-    def number_of_players(self, value: int | None) -> None:
-        self._number_of_players = validate_number(
+    @max_number_of_players.setter
+    def max_number_of_players(self, value: int | None) -> None:
+        if value == "":
+            value = None
+
+        if value is None:
+            self._max_number_of_players = None
+            return
+
+        validated_value = validate_number(
             value,
-            "number_of_players",
+            "max_number_of_players",
             int,
             2
         )
+
+        if validated_value % 2 != 0:
+            raise ValueError("'max_number_of_players' must be even.")
+
+        self._max_number_of_players = validated_value
 
     @property
     def number_of_rounds(self) -> int:
@@ -214,6 +226,9 @@ class Tournament:
 
     @description.setter
     def description(self, value: str | None):
+        if value == "":
+            value = None
+
         if value is None:
             self._description = None
             return
@@ -231,11 +246,12 @@ class Tournament:
         validated_player = validate_class_object(player, "player", Player)
 
         if (
-            self.number_of_players is not None
-            and len(self.players) >= self.number_of_players
+            self.max_number_of_players is not None
+            and len(self.players) >= self.max_number_of_players
         ):
             raise ValueError(
-                "Maximum number of players set for this tournament "
+                "Maximum number of players set for this tournament: "
+                f"{self.max_number_of_players}, "
                 "has already been reached."
             )
 
@@ -303,7 +319,7 @@ class Tournament:
                 "Tournament end date must be defined before starting."
             )
 
-        if self.number_of_players is None:
+        if self.max_number_of_players is None:
             raise ValueError(
                 "Tournament number of players must be defined before starting."
             )
@@ -341,9 +357,9 @@ class Tournament:
                 self.end_datetime.isoformat()
                 if self.end_datetime else None
             ),
-            "number_of_players": (
-                self.number_of_players
-                if self.number_of_players else None
+            "max_number_of_players": (
+                self.max_number_of_players
+                if self.max_number_of_players else None
             ),
             "number_of_rounds": self.number_of_rounds,
             "description": (
@@ -416,7 +432,7 @@ class Tournament:
                     datetime.fromisoformat(data["end_datetime"])
                     if data.get("end_datetime") else None
                 ),
-                number_of_players=data.get("number_of_players"),
+                max_number_of_players=data.get("max_number_of_players"),
                 number_of_rounds=data.get("number_of_rounds"),
                 description=data.get("description"),
             )
