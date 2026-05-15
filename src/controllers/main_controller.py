@@ -17,11 +17,11 @@ class MainController:
     """"""
     def __init__(self):
         self.players = load_players()
-        self.matchs = load_matches(self.players)
-        self.rounds = load_rounds(self.matchs)
+        self.matches = load_matches(self.players)
+        self.rounds = load_rounds(self.matches)
         self.tournaments = load_tournaments(self.players, self.rounds)
         self.player_controller = PlayerController(self.players)
-        self.round_controller = RoundController()
+        self.round_controller = RoundController(self.matches, self.rounds, self.tournaments)
         self.tournament_controller = (
             TournamentController(self.tournaments, self.players)
         )
