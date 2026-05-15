@@ -1,10 +1,7 @@
 from datetime import datetime
 
 from src.models.tournament import Tournament
-from src.models.round import Round
 from src.models.player import Player
-from src.models.match import Match
-from src.services.lifecycle_manager import EventStatus
 from src.views.tournament_view import TournamentView
 from src.views.round_view import RoundView
 from src.repository.tournament_repository import save_tournaments
@@ -126,93 +123,6 @@ class TournamentController:
 
     def start_tournament():
         pass
-
-
-
-
-
-
-
-    def have_players_already_played(
-            self,
-            player_1: Player,
-            player_2: Player,
-            list_of_rounds: list[Round]
-    ):
-
-        for round in list_of_rounds:
-            for match in round.matches:
-                if (
-                    (player_1 == match.player_1 and player_2 == match.player_2)
-                    or
-                    (player_1 == match.player_2 and player_2 == match.player_1)
-                ):
-                    return True
-
-        return False
-
-
-
-    def find_available_opponent(
-            self,
-            player: Player,
-            list_of_players: list[Player],
-            list_of_rounds: list[Round]
-    ):
-
-        for opponent in list_of_players:
-            if not self.have_players_already_played(
-                player,
-                opponent,
-                list_of_rounds
-            ):
-                return opponent
-
-            return None
-
-    def pair_players_by_score(
-            self,
-            ranked_players: list[tuple[Player, float]],
-            list_of_rounds: list[Round]):
-
-        players_groups = self.group_players_by_rank(ranked_players)
-
-        pairs = []
-        leftover_players = None
-
-        for score in sorted(players_groups, reverse=True):
-            players_to_pair = players_groups[score] + leftover_players
-
-            self.shuffle_a_list(players_to_pair)
-
-            while len(players_to_pair) >=2:
-                player_1 = players_to_pair.pop(0)
-
-                opponent = self.find_available_opponent(
-                    player_1,
-                    players_to_pair,
-                    list_of_rounds,
-                )
-
-                if opponent is None:
-                    leftover_players.append(player_1)
-                else:
-                    players_to_pair.remove(opponent)
-                    pairs.append((player_1, opponent))
-
-            if len(players_to_pair) == 1:
-                remaining_player = players_to_pair.pop(0)
-                leftover_players.append(remaining_player)
-
-        if leftover_players:
-            if len(leftover_players) % 2 != 0:
-                raise ValueError("Cannot pair an odd number of players.")
-
-            for index in range(0, len(leftover_players), 2):
-                pair =(leftover_players[index], leftover_players[index + 1])
-                pairs.append(pair)
-
-        return pairs
 
     def tournament_already_exists(
             self,
