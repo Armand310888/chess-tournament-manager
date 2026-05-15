@@ -25,6 +25,3 @@ class PlayerController:
         self.players.append(player)
         save_players(self.players)
         return player
-
-    def save(self):
-        pass
