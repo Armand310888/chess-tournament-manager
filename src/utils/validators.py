@@ -251,7 +251,7 @@ def validate_number(
             f"'{field_name}' must be less than or equal to {maximum}."
         )
 
-    return value
+    return int(value)
 
 
 def validate_class_object(
