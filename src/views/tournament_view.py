@@ -84,7 +84,7 @@ class TournamentView:
             "Enter the maximum number of players "
             "admitted to the tournament (or press 'Enter' to skip): ",
             validate_number,
-            "number_of_players",
+            "max_number_of_players",
             int,
             1,
         )
