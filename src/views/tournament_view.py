@@ -80,9 +80,9 @@ class TournamentView:
             except ValueError as error:
                 print(error)
 
-        number_of_players = prompt_until_valid(
+        max_number_of_players = prompt_until_valid(
             "Enter the maximum number of players "
-            "admitted to the tournament : ",
+            "admitted to the tournament (or press 'Enter' to skip): ",
             validate_number,
             "number_of_players",
             int,
@@ -92,7 +92,7 @@ class TournamentView:
         while True:
             number_of_rounds_input = input(
                 "Enter the tournament number of rounds "
-                "or press 'Enter' to set it by default (4 rounds) : "
+                "(or press 'Enter' to set it by default (4 rounds)) : "
             )
 
             if number_of_rounds_input == "":
@@ -107,7 +107,7 @@ class TournamentView:
             break
 
         description = prompt_until_valid(
-            "Enter the tournament description : ",
+            "Enter the tournament description (or press 'Enter' to skip) : ",
             validate_non_empty_string,
             "description"
         )
@@ -119,7 +119,7 @@ class TournamentView:
             "address": address,
             "start_datetime": start_datetime,
             "end_datetime": end_datetime,
-            "number_of_players": number_of_players,
+            "max_number_of_players": max_number_of_players,
             "number_of_rounds": number_of_rounds,
             "description": description
         }
