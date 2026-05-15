@@ -39,11 +39,16 @@ def get_players_ranked(tournament: Tournament) -> list[Player]:
 
 
 def group_players_by_rank(ranked_players: list):
-    players_groups = {}
+    players_grouped_by_ranks = {}
 
     for player, score in ranked_players:
-        if score not in players_groups:
-            players_groups[score] = []
-        players_groups[score] = player
+        if score not in players_grouped_by_ranks:
+            players_grouped_by_ranks[score] = []
+        players_grouped_by_ranks[score].append(player)
 
-    return players_groups
+    return dict(
+        sorted(
+            players_grouped_by_ranks,
+            reverse=True
+        )
+    )
