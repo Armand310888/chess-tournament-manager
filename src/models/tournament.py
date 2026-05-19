@@ -102,9 +102,9 @@ class Tournament:
     def __init__(
             self,
             name: str,
-            address: Address | None = None,
-            start_datetime: datetime | None = None,
-            end_datetime: datetime | None = None,
+            address: Address,
+            start_datetime: datetime,
+            end_datetime: datetime,
             max_number_of_players: int | None = None,
             number_of_rounds: int = DEFAULT_ROUND_NUMBER,
             description: str | None = None,
@@ -137,10 +137,6 @@ class Tournament:
 
     @address.setter
     def address(self, value: Address | None) -> None:
-        if value is None:
-            self._address = None
-            return
-
         self._address = validate_class_object(value, "address", Address)
 
     @property
@@ -150,10 +146,6 @@ class Tournament:
 
     @start_datetime.setter
     def start_datetime(self, value: datetime | None) -> None:
-        if value is None:
-            self._start_datetime = None
-            return
-
         validated_date = validate_datetime(value, "start_datetime")
 
         if hasattr(self, "_end_datetime") and self._end_datetime is not None:
@@ -168,10 +160,6 @@ class Tournament:
 
     @end_datetime.setter
     def end_datetime(self, value: datetime | None) -> None:
-        if value is None:
-            self._end_datetime = None
-            return
-
         validated_date = validate_datetime(value, "end_date")
 
         if hasattr(self, "_start_date") and self._start_datetime is not None:
@@ -403,11 +391,7 @@ class Tournament:
             raise TypeError("'data' must be a dictionary.")
 
         try:
-            address = (
-                Address.from_dict(data["address"])
-                if data.get("address") is not None
-                else None
-            )
+            address = (Address.from_dict(data["address"]))
 
             players_id = data.get("players_id") or []
             players = [
@@ -426,11 +410,9 @@ class Tournament:
                 address=address,
                 start_datetime=(
                     datetime.fromisoformat(data["start_datetime"])
-                    if data.get("start_datetime") else None
                 ),
                 end_datetime=(
                     datetime.fromisoformat(data["end_datetime"])
-                    if data.get("end_datetime") else None
                 ),
                 max_number_of_players=data.get("max_number_of_players"),
                 number_of_rounds=data.get("number_of_rounds"),
