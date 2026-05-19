@@ -6,7 +6,6 @@ from src.views.input_helpers import (
 
 class RoundView:
     """"""
-
     def prompt_for_new_round(self):
         choice = prompt_until_valid(
             "Create round? Enter 'y' for YES or 'n' for NO: ",
@@ -14,4 +13,3 @@ class RoundView:
         )
 
         return choice
-    

@@ -137,9 +137,9 @@ class TournamentController:
                 and tournament.address.city.lower() == city.lower()
                 and (
                     tournament.start_datetime.strftime("%Y-%m")
-                    == start_datetime.sfrtime("%Y-%m")
+                    == start_datetime.strftime("%Y-%m")
                 )
             ):
                 return True
 
-            return False
+        return False
