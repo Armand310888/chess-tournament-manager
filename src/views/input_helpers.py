@@ -1,9 +1,31 @@
 """"""
+from enum import Enum
+from typing import Callable, TypeVar
+
+T = TypeVar("T)")
 
 
-def prompt_until_valid(prompt_message, validator, *args):
+class OptionalOrNot(Enum):
+    """"""
+    OPTIONAL = "yes"
+    NOT_OPTIONAL = "no"
+
+
+def prompt_until_valid(
+        optionnal_or_not: OptionalOrNot,
+        prompt_message: str,
+        validator: Callable[..., T],
+        *args
+) -> T | None:
+    """"""
+    if not isinstance(optionnal_or_not, OptionalOrNot):
+        raise TypeError("'optionnal_or_not' must be an OptionnalOrNot value.")
+
     while True:
         raw_value = input(prompt_message)
+
+        if optionnal_or_not == OptionalOrNot.OPTIONAL and raw_value == "":
+            return None
 
         try:
             return validator(raw_value, *args)
@@ -59,7 +81,8 @@ def validate_index_selection(
 
 def validate_yes_or_no_string(
         raw_value: str,
-):
+) -> str:
+    """"""
     answer = raw_value.strip().lower()
 
     try:
@@ -73,4 +96,5 @@ def validate_yes_or_no_string(
 
 
 def pause() -> None:
+    """"""
     input("\nPress Enter to continue...")
