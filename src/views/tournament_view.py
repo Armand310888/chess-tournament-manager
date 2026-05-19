@@ -10,10 +10,10 @@ from src.utils.validators import (
 )
 from src.models.tournament import Address
 from src.models.tournament import Tournament
-from src.models.player import Player
 from src.views.input_helpers import (
     prompt_until_valid,
     validate_index_selection,
+    OptionalOrNot,
 )
 from src.views.player_view import PlayerView
 
@@ -25,13 +25,16 @@ class TournamentView:
 
     def prompt_for_tournament_data(self):
         """"""
+        print("")
         name = prompt_until_valid(
+            OptionalOrNot.NOT_OPTIONAL,
             "Enter the tournament name: ",
             validate_non_empty_string,
             "first_name"
         )
 
         street_number = prompt_until_valid(
+            OptionalOrNot.NOT_OPTIONAL,
             "Enter the tournament street number: ",
             validate_regex_match,
             "street_number",
@@ -40,12 +43,14 @@ class TournamentView:
         )
 
         street_name = prompt_until_valid(
+            OptionalOrNot.NOT_OPTIONAL,
             "Enter the tournament street name: ",
             validate_non_empty_string,
             "street_name"
         )
 
         postal_code = prompt_until_valid(
+            OptionalOrNot.NOT_OPTIONAL,
             "Enter the tournament postal code: ",
             validate_regex_match,
             "postal_code",
@@ -54,22 +59,29 @@ class TournamentView:
         )
 
         city = prompt_until_valid(
+            OptionalOrNot.NOT_OPTIONAL,
             "Enter the tournament city name: ",
             validate_non_empty_string,
             "city"
         )
 
+        address = Address(street_number, street_name, postal_code, city)
+
+        print("")
         start_datetime = prompt_until_valid(
+                OptionalOrNot.NOT_OPTIONAL,
                 "Enter the tournament starting date and time "
-                "(YYYY-MM-DD HH:MM): ",
+                "(YYYY-MM-DD HH:MM), or press'Enter' to skip: ",
                 validate_datetime,
                 "start_date"
             )
 
         while True:
+            print("")
             end_datetime = prompt_until_valid(
+                OptionalOrNot.NOT_OPTIONAL,
                 "Enter the tournament end date and time "
-                "(YYYY-MM-DD HH:MM): ",
+                "(YYYY-MM-DD HH:MM), or press'Enter' to skip: ",
                 validate_datetime,
                 "end_date"
             )
@@ -80,7 +92,9 @@ class TournamentView:
             except ValueError as error:
                 print(error)
 
+        print("")
         max_number_of_players = prompt_until_valid(
+            OptionalOrNot.OPTIONAL,
             "Enter the maximum number of players "
             "admitted to the tournament (or press 'Enter' to skip): ",
             validate_number,
@@ -90,6 +104,7 @@ class TournamentView:
         )
 
         while True:
+            print("")
             number_of_rounds_input = input(
                 "Enter the tournament number of rounds "
                 "(or press 'Enter' to set it by default (4 rounds)) : "
@@ -106,13 +121,14 @@ class TournamentView:
                 )
             break
 
+        print("")
         description = prompt_until_valid(
+            OptionalOrNot.OPTIONAL,
             "Enter the tournament description (or press 'Enter' to skip) : ",
             validate_non_empty_string,
-            "description"
+            "description",
+            100
         )
-
-        address = Address(street_number, street_name, postal_code, city)
 
         return {
             "name": name,
@@ -145,23 +161,6 @@ class TournamentView:
                 f"{tournament.start_datetime.strftime("%Y-%m")}"
             )
         print("")
-
-    def prompt_to_select_players(
-            self,
-            selectable_players: list[Player]
-    ) -> list[int]:
-        """"""
-        self.player_view.display_players(selectable_players, "Selectable")
-
-        selected_players_indices = prompt_until_valid(
-            "Select players by entering their numbers separated by comas "
-            "(ex: 1,5,7): ",
-            validate_index_selection,
-            selectable_players,
-            1,
-        )
-
-        return selected_players_indices
 
     def prompt_to_select_tournament(
             self,
