@@ -39,27 +39,30 @@ ELO_MINIMUM = 0
 ELO_MAXIMUM = 3000
 
 
-def validate_non_empty_string(value: str, field_name: str) -> str:
-    """Validate and clean a non-empty string.
-
-    Args:
-        value: Value to validate.
-        field_name: Name of the validated field, used in error messages.
-
-    Raises:
-        TypeError: If value is not a string.
-        ValueError: If value is empty after stripping whitespace.
-
-    Returns:
-        The cleaned string.
+def validate_non_empty_string(
+        value: str,
+        field_name: str,
+        max_length: int | None = None,
+) -> str:
+    """
     """
     if not isinstance(value, str):
         raise TypeError(f"'{field_name}' must be a string")
+
+    if max_length is not None:
+        if not isinstance(max_length, int):
+            raise TypeError(f"'{max_length}' must be an integer.")
 
     cleaned_value = value.strip()
 
     if not cleaned_value:
         raise ValueError(f"'{field_name}' must be a non-empty string")
+
+    if max_length is not None:
+        if len(cleaned_value) > max_length:
+            raise ValueError(
+                f"'{field_name}' must be {max_length} characters maximum."
+            )
 
     return cleaned_value
 

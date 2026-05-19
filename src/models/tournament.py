@@ -174,9 +174,6 @@ class Tournament:
 
     @max_number_of_players.setter
     def max_number_of_players(self, value: int | None) -> None:
-        if value == "":
-            value = None
-
         if value is None:
             self._max_number_of_players = None
             return
@@ -214,10 +211,7 @@ class Tournament:
 
     @description.setter
     def description(self, value: str | None):
-        if value == "":
-            value = None
-
-        if value is None:
+        if value in ("", None):
             self._description = None
             return
 
