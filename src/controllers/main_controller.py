@@ -21,7 +21,11 @@ class MainController:
         self.rounds = load_rounds(self.matches)
         self.tournaments = load_tournaments(self.players, self.rounds)
         self.player_controller = PlayerController(self.players)
-        self.round_controller = RoundController(self.matches, self.rounds, self.tournaments)
+        self.round_controller = RoundController(
+            self.matches,
+            self.rounds,
+            self.tournaments
+        )
         self.tournament_controller = (
             TournamentController(self.tournaments, self.players)
         )
@@ -35,27 +39,58 @@ class MainController:
         print("Application started")
 
         while True:
-            choice = self.main_view.prompt_main_menu_choice()
+            choice = self.main_view.display_main_menu()
+
+            if choice == "1":
+                self.player_menu_flow()
+            elif choice == "2":
+                self.tournament_menu_flow()
+            elif choice == "0":
+                break
+
+    def player_menu_flow(self) -> None:
+        """"""
+        while True:
+            choice = self.main_view.display_player_menu()
 
             if choice == "1":
                 self.create_player_flow()
             elif choice == "2":
-                self.get_players_flow()
-            elif choice == "3":
-                self.create_tournament_flow()
-            elif choice == "4":
-                self.get_tournaments_flow()
-            elif choice == "5":
-                self.add_player_flow()
-            elif choice == "6":
-                self.create_next_round_flow()
+                self.list_players_menu_flow()
             elif choice == "0":
                 break
             else:
-                print(
-                    "Invalid choice.\n"
-                    "Please enter the digit corresponding to your choice"
-                )
+                self.main_view.invalid_choice_message()
+
+    def list_players_menu_flow(self) -> None:
+        """"""
+        while True:
+            self.player_view.display_players(self.players, "Registered")
+
+            choice = self.main_view.display_list_players_menu()
+
+            if choice == "1":
+                self.show_selected_players_details_flow()
+            elif choice == "0":
+                break
+            else:
+                self.main_view.invalid_choice_message()
+
+    def tournament_menu_flow(self) -> None:
+        """"""
+        while True:
+            choice = self.main_view.display_tournaments_menu()
+
+            if choice == "1":
+                self.create_tournament_flow()
+            elif choice == "2":
+                self.get_tournaments_flow()
+            elif choice == "3":
+                self.run_tournament_flow()
+            elif choice == "0":
+                break
+            else:
+                self.main_view.invalid_choice_message()
 
     def create_player_flow(self) -> None:
         """"""
@@ -74,6 +109,21 @@ class MainController:
     def get_players_flow(self) -> None:
         """"""
         self.player_view.display_players(self.players, "Available")
+
+        pause()
+
+    def show_selected_players_details_flow(self) -> None:
+        """"""
+        selected_indices = self.player_view.prompt_to_select_players_indices(
+            self.players,
+        )
+
+        selected_players = [
+            self.players[index - 1]
+            for index in selected_indices
+        ]
+
+        self.player_view.display_players_details(selected_players)
 
         pause()
 
@@ -102,7 +152,7 @@ class MainController:
 
         pause()
 
-    def add_player_flow(self) -> None:
+    def add_player_to_tournament_flow(self) -> None:
         """"""
         selected_tournament_index = (
             self.tournament_view

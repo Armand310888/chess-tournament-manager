@@ -6,7 +6,6 @@ from src.models.round import Round
 from src.models.tournament import Tournament
 from src.controllers.match_controller import MatchController
 from src.utils.id_generator import generate_next_id, IDPrefix
-from src.services.lifecycle_manager import EventStatus
 from src.repository.round_repository import save_rounds
 from src.repository.tournament_repository import save_tournaments
 from src.services.pairing_manager import (
@@ -51,7 +50,6 @@ class RoundController:
 
         new_round.id = generate_next_id(IDPrefix.ROUND, existing_ids)
         new_round.start_datetime = datetime.now()
-        new_round.status = EventStatus.IN_PROGRESS
 
         tournament.rounds.append(new_round)
         save_tournaments(self.tournaments)

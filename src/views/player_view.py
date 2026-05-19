@@ -10,6 +10,7 @@ from src.utils.validators import (
     PatternDescription,
 )
 from src.models.player import Player
+from src.views.input_helpers import validate_index_selection
 
 
 class PlayerView:
@@ -93,3 +94,44 @@ class PlayerView:
             )
 
         print("")
+
+    def display_players_details(
+            self,
+            players: list[Player],
+    ) -> None:
+        """"""
+        if not isinstance(players, list):
+            raise TypeError("'players' must be a list.")
+
+        for player in players:
+            if not isinstance(player, Player):
+                raise TypeError("'players' must contain only Player objects.")
+
+        print("\n- Selected players details -\n")
+        for index, player in enumerate(players, start=1):
+            print(
+                f"\033[4mPlayer {index}:\033[0m\n"
+                f"First name:           {player.first_name}\n"
+                f"Last name:            {player.last_name}\n"
+                f"Birth date:           {player.birth_date}\n"
+                f"ELO rating:           {player.elo_rating}\n"
+                f"Chess National ID:    {player.chess_national_id}"
+            )
+
+            print("")
+
+    def prompt_to_select_players_indices(
+            self,
+            selectable_players: list[Player],
+    ) -> list[int]:
+        """"""
+
+        selected_players_indices = prompt_until_valid(
+            "Select players by entering their numbers separated by comas "
+            "(ex: 1,5,7): ",
+            validate_index_selection,
+            selectable_players,
+            1,
+        )
+
+        return selected_players_indices
