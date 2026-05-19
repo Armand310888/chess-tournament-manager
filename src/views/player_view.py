@@ -10,7 +10,10 @@ from src.utils.validators import (
     PatternDescription,
 )
 from src.models.player import Player
-from src.views.input_helpers import validate_index_selection
+from src.views.input_helpers import (
+    validate_index_selection,
+    OptionalOrNot,
+)
 
 
 class PlayerView:
@@ -125,8 +128,8 @@ class PlayerView:
             selectable_players: list[Player],
     ) -> list[int]:
         """"""
-
         selected_players_indices = prompt_until_valid(
+            OptionalOrNot.NOT_OPTIONAL,
             "Select players by entering their numbers separated by comas "
             "(ex: 1,5,7): ",
             validate_index_selection,

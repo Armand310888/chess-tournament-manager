@@ -84,9 +84,27 @@ class MainController:
             if choice == "1":
                 self.create_tournament_flow()
             elif choice == "2":
-                self.get_tournaments_flow()
+                self.list_tournaments_menu_flow()
             elif choice == "3":
                 self.run_tournament_flow()
+            elif choice == "0":
+                break
+            else:
+                self.main_view.invalid_choice_message()
+
+    def list_tournaments_menu_flow(self):
+        """"""
+        while True:
+            self.tournament_view.display_tournaments(self.tournaments)
+
+            choice = self.main_view.display_list_tournaments_menu()
+
+            if choice == "1":  # ajouter des joueurs
+                self.add_player_to_tournament_flow()
+            elif choice == "2":  # lister des joueurs
+                print("test")
+            elif choice == "3":  # afficher rounds et matchs
+                print("test")
             elif choice == "0":
                 break
             else:
@@ -156,7 +174,7 @@ class MainController:
         """"""
         selected_tournament_index = (
             self.tournament_view
-            .prompt_to_select_tournament(self.tournaments)
+            .prompt_to_select_tournament_indices(self.tournaments)
         )
         selected_tournament = (
             self.tournament_controller.select_tournament(
@@ -169,9 +187,11 @@ class MainController:
             .get_selectable_players(selected_tournament)
         )
 
+        self.player_view.display_players(selectable_players, "Selectable")
+
         selected_players_indices = (
-            self.tournament_view
-            .prompt_to_select_players(selectable_players)
+            self.player_view
+            .prompt_to_select_players_indices(selectable_players)
         )
 
         selected_players = (

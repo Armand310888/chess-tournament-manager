@@ -1,3 +1,4 @@
+""""""
 
 class MainView:
     def display_main_menu(self) -> str:
@@ -49,18 +50,10 @@ class MainView:
         """"""
         print("--- Choices ---\n")
         print(
-            "1. Select a Tournament"
-            "0. Back"
-        )
-
-    def display_select_a_tournament_menu(self) -> str:
-        """"""
-        print("--- Choices ---\n")
-        print(
-            "1. Add players to the Tournament"
-            "2. List Tournament's Players"
-            "3. List Tournament's Rounds and Matches"
-            "0. Back"
+            "1. Add players to the Tournament\n"
+            "2. List Tournament's Players\n"
+            "3. List Tournament's Rounds and Matches\n"
+            "0. Back\n"
         )
 
         return input("Enter your choice here: ")

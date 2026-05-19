@@ -162,14 +162,13 @@ class TournamentView:
             )
         print("")
 
-    def prompt_to_select_tournament(
+    def prompt_to_select_tournament_indices(
             self,
             tournaments: list[Tournament]
     ) -> list[int]:
         """"""
-        self.display_tournaments(tournaments)
-
         raw_selected_tournament_index = prompt_until_valid(
+            OptionalOrNot.NOT_OPTIONAL,
             "Select tournament by entering it's number (ex: 3): ",
             validate_index_selection,
             tournaments,
