@@ -16,9 +16,10 @@ from src.views.input_helpers import (
     OptionalOrNot,
 )
 from src.views.player_view import PlayerView
+from src.views.base_view import BaseView
 
 
-class TournamentView:
+class TournamentView(BaseView):
     """"""
     def __init__(self):
         self.player_view = PlayerView()
@@ -28,41 +29,46 @@ class TournamentView:
         print("")
         name = prompt_until_valid(
             OptionalOrNot.NOT_OPTIONAL,
-            "Enter the tournament name: ",
+            self.prompt_format("Enter the tournament name: "),
             validate_non_empty_string,
-            "first_name"
+            "first_name",
+            console=self.console
         )
 
         street_number = prompt_until_valid(
             OptionalOrNot.NOT_OPTIONAL,
-            "Enter the tournament street number: ",
+            self.prompt_format("Enter the tournament street number: "),
             validate_regex_match,
             "street_number",
             Pattern.STREET_NUMBER,
             PatternDescription.STREET_NUMBER,
+            console=self.console
         )
 
         street_name = prompt_until_valid(
             OptionalOrNot.NOT_OPTIONAL,
-            "Enter the tournament street name: ",
+            self.prompt_format("Enter the tournament street name: "),
             validate_non_empty_string,
-            "street_name"
+            "street_name",
+            console=self.console
         )
 
         postal_code = prompt_until_valid(
             OptionalOrNot.NOT_OPTIONAL,
-            "Enter the tournament postal code: ",
+            self.prompt_format("Enter the tournament postal code: "),
             validate_regex_match,
             "postal_code",
             Pattern.POSTAL_CODE,
             PatternDescription.POSTAL_CODE,
+            console=self.console
         )
 
         city = prompt_until_valid(
             OptionalOrNot.NOT_OPTIONAL,
-            "Enter the tournament city name: ",
+            self.prompt_format("Enter the tournament city name: "),
             validate_non_empty_string,
-            "city"
+            "city",
+            console=self.console
         )
 
         address = Address(street_number, street_name, postal_code, city)
@@ -70,20 +76,26 @@ class TournamentView:
         print("")
         start_datetime = prompt_until_valid(
                 OptionalOrNot.NOT_OPTIONAL,
-                "Enter the tournament starting date and time "
-                "(YYYY-MM-DD HH:MM), or press'Enter' to skip: ",
+                self.prompt_format(
+                    "Enter the tournament starting date "
+                    "and time (YYYY-MM-DD HH:MM), or press'Enter' to skip: "
+                ),
                 validate_datetime,
-                "start_date"
+                "start_date",
+                console=self.console
             )
 
         while True:
             print("")
             end_datetime = prompt_until_valid(
                 OptionalOrNot.NOT_OPTIONAL,
-                "Enter the tournament end date and time "
-                "(YYYY-MM-DD HH:MM), or press'Enter' to skip: ",
+                self.prompt_format(
+                    "Enter the tournament end date and time "
+                    "(YYYY-MM-DD HH:MM), or press'Enter' to skip: "
+                ),
                 validate_datetime,
-                "end_date"
+                "end_date",
+                console=self.console
             )
 
             try:
@@ -95,19 +107,24 @@ class TournamentView:
         print("")
         max_number_of_players = prompt_until_valid(
             OptionalOrNot.OPTIONAL,
-            "Enter the maximum number of players "
-            "admitted to the tournament (or press 'Enter' to skip): ",
+            self.prompt_format(
+                "Enter the maximum number of players "
+                "admitted to the tournament (or press 'Enter' to skip): "
+            ),
             validate_number,
             "max_number_of_players",
             int,
             1,
+            console=self.console
         )
 
         while True:
             print("")
             number_of_rounds_input = input(
-                "Enter the tournament number of rounds "
-                "(or press 'Enter' to set it by default (4 rounds)) : "
+                self.prompt_format(
+                    "Enter the tournament number of rounds "
+                    "(or press 'Enter' to set it by default (4 rounds)) : "
+                )
             )
 
             if number_of_rounds_input == "":
@@ -124,10 +141,14 @@ class TournamentView:
         print("")
         description = prompt_until_valid(
             OptionalOrNot.OPTIONAL,
-            "Enter the tournament description (or press 'Enter' to skip) : ",
+            self.prompt_format(
+                "Enter the tournament description "
+                "(or press 'Enter' to skip) : "
+            ),
             validate_non_empty_string,
             "description",
-            100
+            100,
+            console=self.console
         )
 
         return {
@@ -169,11 +190,14 @@ class TournamentView:
         """"""
         raw_selected_tournament_index = prompt_until_valid(
             OptionalOrNot.NOT_OPTIONAL,
-            "Select tournament by entering it's number (ex: 3): ",
+            self.prompt_format(
+                "Select tournament by entering it's number (ex: 3): "
+            ),
             validate_index_selection,
             tournaments,
             1,
             1,
+            console=self.console
         )
 
         selected_tournament_index = raw_selected_tournament_index[0]
