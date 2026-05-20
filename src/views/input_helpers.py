@@ -1,6 +1,7 @@
 """"""
 from enum import Enum
 from typing import Callable, TypeVar
+from rich.console import Console
 
 T = TypeVar("T)")
 
@@ -15,14 +16,15 @@ def prompt_until_valid(
         optionnal_or_not: OptionalOrNot,
         prompt_message: str,
         validator: Callable[..., T],
-        *args
+        *args,
+        console: Console | None = None
 ) -> T | None:
     """"""
     if not isinstance(optionnal_or_not, OptionalOrNot):
         raise TypeError("'optionnal_or_not' must be an OptionnalOrNot value.")
 
     while True:
-        raw_value = input(prompt_message)
+        raw_value = console.input(prompt_message)
 
         if optionnal_or_not == OptionalOrNot.OPTIONAL and raw_value == "":
             return None
@@ -95,6 +97,4 @@ def validate_yes_or_no_string(
     return answer
 
 
-def pause() -> None:
-    """"""
-    input("\nPress Enter to continue...")
+
