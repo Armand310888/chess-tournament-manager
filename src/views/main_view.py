@@ -1,37 +1,81 @@
 """"""
+from src.views.base_view import BaseView
 
-class MainView:
+import questionary
+
+
+class MainView(BaseView):
+    """"""
     def display_main_menu(self) -> str:
-        print("\n=== Chess Tournament Manager ===\n")
-        print(
-            "1. Players Menu\n"
-            "2. Tournaments Menu\n"
-            "0. Quit\n"
-        )
+        """"""
+        self.display_application_header()
+        self.display_section_title("Main Menu")
 
-        return input("Enter your choice here: ")
+        return questionary.select(
+            "Choose an action\n",
+            choices=[
+                questionary.Choice(
+                    "Manage Players",
+                    value="manage_players"
+                ),
+                questionary.Choice(
+                    "Manage Tournaments",
+                    value="manage_tournaments"
+                ),
+                questionary.Choice(
+                    "Exit",
+                    value="exit"
+                ),
+            ],
+            instruction="Use ↑ ↓ and 'Enter' to navigate",
+            style=self.QUESTIONARY_STYLE,
+            qmark=""
+        ).ask()
 
     def display_player_menu(self) -> str:
         """"""
-        print("")
-        print("\n=== Player Menu ===\n")
-        print(
-            "1. Add Player\n"
-            "2. List Players\n"
-            "0. Back\n"
-        )
+        self.display_application_header()
+        self.display_section_title("Player Menu")
 
-        return input("Enter your choice here: ")
+        return questionary.select(
+            "Choose an action\n",
+            choices=[
+                questionary.Choice(
+                    "Add Player",
+                    value="add_player"
+                ),
+                questionary.Choice(
+                    "List Players",
+                    value="list_players"
+                ),
+                questionary.Choice(
+                    "Back",
+                    value="back"
+                ),
+            ],
+            instruction="Use ↑ ↓ and 'Enter' to navigate",
+            style=self.QUESTIONARY_STYLE,
+            qmark=""
+        ).ask()
 
     def display_list_players_menu(self) -> str:
         """"""
-        print("--- Choices ---\n")
-        print(
-            "1. Show Player(s) details\n"
-            "0. Back\n"
-        )
-
-        return input("Enter your choice here: ")
+        return questionary.select(
+            "Choose an action\n",
+            choices=[
+                questionary.Choice(
+                    "Show Player(s) details",
+                    value="players_details"
+                ),
+                questionary.Choice(
+                    "Back",
+                    value="back"
+                )
+            ],
+            instruction="Use ↑ ↓ and 'Enter' to navigate",
+            style=self.QUESTIONARY_STYLE,
+            qmark=""
+        ).ask()
 
     def display_tournaments_menu(self) -> str:
         """"""
