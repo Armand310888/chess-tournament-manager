@@ -9,7 +9,6 @@ from src.controllers.tournament_controller import TournamentController
 from src.views.player_view import PlayerView
 from src.views.round_view import RoundView
 from src.views.tournament_view import TournamentView
-from src.views.input_helpers import pause
 from src.views.main_view import MainView
 
 
@@ -41,11 +40,11 @@ class MainController:
         while True:
             choice = self.main_view.display_main_menu()
 
-            if choice == "1":
+            if choice == "manage_players":
                 self.player_menu_flow()
-            elif choice == "2":
+            elif choice == "manage_tournaments":
                 self.tournament_menu_flow()
-            elif choice == "0":
+            elif choice == "exit":
                 break
 
     def player_menu_flow(self) -> None:
@@ -53,14 +52,12 @@ class MainController:
         while True:
             choice = self.main_view.display_player_menu()
 
-            if choice == "1":
+            if choice == "add_player":
                 self.create_player_flow()
-            elif choice == "2":
+            elif choice == "list_players":
                 self.list_players_menu_flow()
-            elif choice == "0":
+            elif choice == "back":
                 break
-            else:
-                self.main_view.invalid_choice_message()
 
     def list_players_menu_flow(self) -> None:
         """"""
@@ -69,12 +66,10 @@ class MainController:
 
             choice = self.main_view.display_list_players_menu()
 
-            if choice == "1":
+            if choice == "players_details":
                 self.show_selected_players_details_flow()
-            elif choice == "0":
+            elif choice == "back":
                 break
-            else:
-                self.main_view.invalid_choice_message()
 
     def tournament_menu_flow(self) -> None:
         """"""
@@ -122,13 +117,13 @@ class MainController:
 
         self.player_view.display_created_player(player)
 
-        pause()
+        self.main_view.pause()
 
     def get_players_flow(self) -> None:
         """"""
         self.player_view.display_players(self.players, "Available")
 
-        pause()
+        self.main_view.pause()
 
     def show_selected_players_details_flow(self) -> None:
         """"""
@@ -136,14 +131,12 @@ class MainController:
             self.players,
         )
 
-        selected_players = [
-            self.players[index - 1]
-            for index in selected_indices
-        ]
+        self.player_view.display_players_details(
+            self.players,
+            selected_indices,
+        )
 
-        self.player_view.display_players_details(selected_players)
-
-        pause()
+        self.main_view.pause()
 
     def create_tournament_flow(self) -> None:
         """"""
@@ -162,13 +155,13 @@ class MainController:
 
         self.tournament_view.display_created_tournament(tournament)
 
-        pause()
+        self.main_view.pause()
 
     def get_tournaments_flow(self) -> None:
         """"""
         self.tournament_view.display_tournaments(self.tournaments)
 
-        pause()
+        self.main_view.pause()
 
     def add_player_to_tournament_flow(self) -> None:
         """"""
@@ -205,7 +198,7 @@ class MainController:
 
         self.player_view.display_players(selected_players, "Selected")
 
-        pause()
+        self.main_view.pause()
 
     def create_next_round_flow(self) -> None:
         """"""
@@ -238,4 +231,4 @@ class MainController:
             )
         )
 
-        pause()
+        self.main_view.pause()
