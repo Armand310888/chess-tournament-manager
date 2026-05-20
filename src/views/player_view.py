@@ -1,4 +1,9 @@
+""""""
+from rich.panel import Panel
+from rich.table import Table
+
 from src.views.input_helpers import prompt_until_valid
+from src.views.base_view import BaseView
 from src.utils.validators import (
     validate_regex_match,
     validate_non_empty_string,
@@ -16,38 +21,47 @@ from src.views.input_helpers import (
 )
 
 
-class PlayerView:
+class PlayerView(BaseView):
+    """"""
     def prompt_for_player_data(self):
         first_name = prompt_until_valid(
-            "Enter player's first name: ",
+            OptionalOrNot.NOT_OPTIONAL,
+            self.prompt_format("Enter player's first name: "),
             validate_non_empty_string,
             "first_name",
+            console=self.console
         )
 
         last_name = prompt_until_valid(
-            "Enter player's last name: ",
+            OptionalOrNot.NOT_OPTIONAL,
+            self.prompt_format("Enter player's last name: "),
             validate_non_empty_string,
-            "last_name"
+            "last_name",
+            console=self.console
         )
 
         birth_date = prompt_until_valid(
-            "Enter player's birth date: ",
+            OptionalOrNot.NOT_OPTIONAL,
+            self.prompt_format("Enter player's birth date: "),
             validate_date,
             "birth_date",
+            console=self.console
         )
 
         elo_rating = prompt_until_valid(
-            "Enter player's ELO rank: ",
+            OptionalOrNot.NOT_OPTIONAL,
+            self.prompt_format("Enter player's ELO rank: "),
             validate_number,
             "elo_rating",
             int,
             ELO_MINIMUM,
             ELO_MAXIMUM,
+            console=self.console
         )
 
         while True:
             raw_chess_national_id = input(
-                "Enter player chess national ID: "
+                self.prompt_format("Enter player chess national ID: ")
             )
 
             try:
@@ -72,35 +86,33 @@ class PlayerView:
         return player_data
 
     def display_created_player(self, player: Player) -> None:
-        print(
-            "\n- New player created with success- \n"
-            f"\n{player}\n"
-            f"Birth date    : {player.birth_date}\n"
-            f"Chess n. ID   : {player.chess_national_id}"
+        content = (
+            f"\n{player.first_name.upper()} "
+            f"[bold]{player.last_name.upper()}[/bold]"
+            f"\n[underline]ELO[/underline]           : {player.elo_rating}\n"
+            f"[underline]Birth date[/underline]    : {player.birth_date}\n"
+            f"[underline]Chess n. ID[/underline]   : "
+            f"{player.chess_national_id}"
+        )
+
+        self.console.print()
+
+        self.console.print(
+            Panel(
+                content,
+                self.results_title_format(
+                    "[bold yellow]- New Player created "
+                    "successfully -[/bold yellow]"
+                ),
+                border_style="yellow",
+                width=self.APP_WIDTH
+            )
         )
 
     def display_players(
             self,
             players: list[Player],
             type_of_player: str,
-    ) -> None:
-        """"""
-        if not isinstance(type_of_player, str):
-            raise TypeError("'type_of_player' must be a string.")
-
-        print(f"\n- {type_of_player} players -\n")
-
-        for index, player in enumerate(players, start=1):
-            print(
-                f"{index}. {player.first_name} {player.last_name} - "
-                f"ELO: {player.elo_rating}"
-            )
-
-        print("")
-
-    def display_players_details(
-            self,
-            players: list[Player],
     ) -> None:
         """"""
         if not isinstance(players, list):
@@ -110,31 +122,83 @@ class PlayerView:
             if not isinstance(player, Player):
                 raise TypeError("'players' must contain only Player objects.")
 
-        print("\n- Selected players details -\n")
+        if not isinstance(type_of_player, str):
+            raise TypeError("'type_of_player' must be a string.")
+
+        table = Table(
+            title=self.results_title_format("Registered Players"),
+            width=self.APP_WIDTH,
+            show_lines=True,
+        )
+
+        table.add_column("Index", style="bold")
+        table.add_column("Last name", style="bold")
+        table.add_column("First name", style="bold")
+        table.add_column("ELO rating", style="bold")
+
         for index, player in enumerate(players, start=1):
-            print(
-                f"\033[4mPlayer {index}:\033[0m\n"
-                f"First name:           {player.first_name}\n"
-                f"Last name:            {player.last_name}\n"
-                f"Birth date:           {player.birth_date}\n"
-                f"ELO rating:           {player.elo_rating}\n"
-                f"Chess National ID:    {player.chess_national_id}"
+            table.add_row(
+                str(index),
+                player.last_name.upper(),
+                player.first_name,
+                str(player.elo_rating),
             )
 
-            print("")
+        self.console.print(table)
+
+    def display_players_details(
+            self,
+            players: list[Player],
+            selected_indices: list[int]
+    ) -> None:
+        """"""
+        if not isinstance(players, list):
+            raise TypeError("'players' must be a list.")
+
+        for player in players:
+            if not isinstance(player, Player):
+                raise TypeError("'players' must contain only Player objects.")
+
+        self.console.print()
+
+        for index in selected_indices:
+            player = players[index-1]
+
+            content = (
+                f"[underline]First name[/underline]         :   "
+                f"{player.first_name}\n"
+                f"[underline]Last name[/underline]          :   "
+                f"{player.last_name}\n"
+                f"[underline]Birth date[/underline]         :   "
+                f"{player.birth_date}\n"
+                f"[underline]ELO rating[/underline]         :   "
+                f"{player.elo_rating}\n"
+                f"[underline]Chess National ID[/underline]  :   "
+                f"{player.chess_national_id}"
+            )
+
+            self.console.print(
+                Panel(
+                    content,
+                    title=self.results_title_format(f"- Player {index} -"),
+                    border_style="yellow",
+                    width=self.APP_WIDTH,
+                )
+            )
 
     def prompt_to_select_players_indices(
             self,
             selectable_players: list[Player],
     ) -> list[int]:
         """"""
-        selected_players_indices = prompt_until_valid(
+        return prompt_until_valid(
             OptionalOrNot.NOT_OPTIONAL,
-            "Select players by entering their numbers separated by comas "
-            "(ex: 1,5,7): ",
+            self.prompt_format(
+                "Select players by entering their numbers separated by commas "
+                "(ex: 1,5,7): "
+            ),
             validate_index_selection,
             selectable_players,
             1,
+            console=self.console
         )
-
-        return selected_players_indices
