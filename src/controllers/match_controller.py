@@ -5,6 +5,8 @@ from src.models.round import Round
 from src.models.tournament import Tournament
 from src.utils.id_generator import generate_next_id, IDPrefix
 from src.repository.match_repository import save_matches
+from src.repository.round_repository import save_rounds
+from src.repository.tournament_repository import save_tournaments
 
 
 class MatchController:
@@ -38,3 +40,21 @@ class MatchController:
         save_matches(self.matches)
 
         return match
+
+    def enter_match_results(
+            self,
+            match: Match,
+            result: MatchResult
+    ) -> None:
+        """"""
+        if not isinstance(match, Match):
+            raise TypeError("'match' must be a Match object.")
+
+        if not isinstance(result, MatchResult):
+            raise TypeError("'result' must be a MatchResult object")
+
+        match.end_match(result)
+
+        save_matches(self.matches)
+        save_rounds(self.rounds)
+        save_tournaments(self.tournaments)
