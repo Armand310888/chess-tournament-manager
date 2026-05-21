@@ -88,11 +88,19 @@ class PlayerView(BaseView):
     def display_created_player(self, player: Player) -> None:
         content = (
             f"\n{player.first_name.upper()} "
-            f"[bold]{player.last_name.upper()}[/bold]"
-            f"\n[underline]ELO[/underline]           : {player.elo_rating}\n"
-            f"[underline]Birth date[/underline]    : {player.birth_date}\n"
-            f"[underline]Chess n. ID[/underline]   : "
-            f"{player.chess_national_id}"
+            f"[bold]{player.last_name.upper()}[/bold]\n"
+            + self.content_format(
+                "ELO rating",
+                player.elo_rating
+            )
+            + self.content_format(
+                "Birth date",
+                player.birth_date
+            )
+            + self.content_format(
+                "Chess National ID",
+                player.chess_national_id
+            )
         )
 
         self.console.print()
@@ -100,7 +108,7 @@ class PlayerView(BaseView):
         self.console.print(
             Panel(
                 content,
-                self.results_title_format(
+                title=self.results_title_format(
                     "[bold yellow]- New Player created "
                     "successfully -[/bold yellow]"
                 ),
@@ -125,8 +133,10 @@ class PlayerView(BaseView):
         if not isinstance(type_of_player, str):
             raise TypeError("'type_of_player' must be a string.")
 
+        self.console.print("")
+
         table = Table(
-            title=self.results_title_format("Registered Players"),
+            title=self.results_title_format(type_of_player),
             width=self.APP_WIDTH,
             show_lines=True,
         )
@@ -165,16 +175,26 @@ class PlayerView(BaseView):
             player = players[index-1]
 
             content = (
-                f"[underline]First name[/underline]         :   "
-                f"{player.first_name}\n"
-                f"[underline]Last name[/underline]          :   "
-                f"{player.last_name}\n"
-                f"[underline]Birth date[/underline]         :   "
-                f"{player.birth_date}\n"
-                f"[underline]ELO rating[/underline]         :   "
-                f"{player.elo_rating}\n"
-                f"[underline]Chess National ID[/underline]  :   "
-                f"{player.chess_national_id}"
+                self.content_format(
+                    "First name",
+                    player.first_name
+                )
+                + self.content_format(
+                    "Last name",
+                    player.last_name
+                )
+                + self.content_format(
+                    "Birth date",
+                    player.birth_date
+                )
+                + self.content_format(
+                    "ELO rating",
+                    player.elo_rating
+                )
+                + self.content_format(
+                    "Chess National ID",
+                    player.chess_national_id
+                )
             )
 
             self.console.print(
