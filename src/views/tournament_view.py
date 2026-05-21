@@ -20,6 +20,8 @@ from src.views.input_helpers import (
 )
 from src.views.player_view import PlayerView
 from src.views.base_view import BaseView
+from src.services.ranking_manager import get_players_ranked
+from src.services.lifecycle_manager import EventStatus
 
 
 class TournamentView(BaseView):
@@ -241,7 +243,10 @@ class TournamentView(BaseView):
 
         return selected_index
 
-    def display_tournament_players(self):
+    def display_tournament_players_and_ranks(
+            self,
+            selected_tournament: Tournament
+    ):
         """"""
         if not isinstance(selected_tournament, Tournament):
             raise TypeError(
