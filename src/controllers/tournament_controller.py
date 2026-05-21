@@ -34,7 +34,7 @@ class TournamentController:
                     "A tournament with the same:\n"
                     f"- name: {tournament.name}\n"
                     "- start datetime: "
-                    f"{tournament.start_datetime.sfrtime("%Y-%m")}\n"
+                    f"{tournament.start_datetime.strftime("%Y-%m")}\n"
                     f"- city: {tournament.address.city}\n"
                     "already exists."
                 )
