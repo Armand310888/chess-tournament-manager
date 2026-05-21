@@ -86,26 +86,33 @@ class MainView(BaseView):
 
     def display_tournaments_menu(self) -> str:
         """"""
-        print("")
-        print("\n=== Tournaments Menu ===\n")
-        print(
-            "1. Create Tournament\n"
-            "2. List Tournaments\n"
-            "3. Run Tournaments\n"
-            "0. Back\n"
-        )
+        self.display_application_header()
+        self.display_section_title("Tournament Menu")
 
-        return input("Enter your choice here: ")
+        return questionary.select(
+            "Choose an action\n",
+            choices=[
+                questionary.Choice(
+                    "Create Tournament",
+                    value="create_tournament"
+                ),
+                questionary.Choice(
+                    "List Tournaments",
+                    value="list_tournaments"
+                ),
+                questionary.Choice(
+                    "Back",
+                    value="back"
+                )
+            ],
+            instruction="Use ↑ ↓ and 'Enter' to navigate",
+            style=self.QUESTIONARY_STYLE,
+            qmark=""
+        ).ask()
 
     def display_list_tournaments_menu(self) -> str:
         """"""
-        print("--- Choices ---\n")
-        print(
-            "1. Add players to the Tournament\n"
-            "2. List Tournament's Players\n"
-            "3. List Tournament's Rounds and Matches\n"
-            "0. Back\n"
-        )
+        self.display_section_title("Tournament Menu")
 
         return questionary.select(
             "Choose an action\n",
@@ -136,3 +143,36 @@ class MainView(BaseView):
         self.tournament_view.display_tournament_details(
             selected_tournament
         )
+
+        return questionary.select(
+            "Choose an action\n",
+            choices=[
+                questionary.Choice(
+                    "Add Players",
+                    value="add_players"
+                ),
+                questionary.Choice(
+                    "List players by rank",
+                    value="players_and_ranks"
+                ),
+                questionary.Choice(
+                    "Create next Round",
+                    value="next_round"
+                ),
+                questionary.Choice(
+                    "List Rounds and matches",
+                    value="rounds_and_matches"
+                ),
+                questionary.Choice(
+                    "Enter matches results",
+                    value="match_results"
+                ),
+                questionary.Choice(
+                    "Back",
+                    value="back"
+                )
+            ],
+            instruction="Use ↑ ↓ and 'Enter' to navigate",
+            style=self.QUESTIONARY_STYLE,
+            qmark=""
+        ).ask()

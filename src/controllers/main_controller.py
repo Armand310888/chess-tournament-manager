@@ -10,6 +10,9 @@ from src.views.player_view import PlayerView
 from src.views.round_view import RoundView
 from src.views.tournament_view import TournamentView
 from src.views.main_view import MainView
+from src.utils.exceptions import RoundNotFinishedError
+from src.models.tournament import Tournament
+from src.models.match import Match, MatchResult
 
 
 class MainController:
@@ -62,6 +65,7 @@ class MainController:
     def list_players_menu_flow(self) -> None:
         """"""
         while True:
+            self.main_view.display_application_header()
             self.player_view.display_players(self.players, "Registered")
 
             choice = self.main_view.display_list_players_menu()
