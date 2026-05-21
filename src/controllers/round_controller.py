@@ -6,6 +6,8 @@ from src.models.round import Round
 from src.models.tournament import Tournament
 from src.controllers.match_controller import MatchController
 from src.utils.id_generator import generate_next_id, IDPrefix
+from src.utils.exceptions import RoundNotFinishedError
+from src.services.lifecycle_manager import EventStatus
 from src.repository.round_repository import save_rounds
 from src.repository.tournament_repository import save_tournaments
 from src.services.pairing_manager import (
@@ -26,13 +28,25 @@ class RoundController:
         self.matches = matches
         self.rounds = rounds
         self.tournaments = tournaments
-        self.match_controller = MatchController()
+        self.match_controller = MatchController(
+            self.matches,
+            self.rounds,
+            self.tournaments
+        )
 
     def create_new_round(
             self,
             tournament: Tournament,
     ) -> Round:
         """"""
+        current_round = tournament.current_round
+
+        if (
+            current_round is not None
+            and current_round.status != EventStatus.FINISHED
+        ):
+            raise RoundNotFinishedError()
+
         round_number = (
             1
             if tournament.current_round is None
@@ -80,3 +94,4 @@ class RoundController:
 
             round.matches.append(match)
             save_rounds(self.rounds)
+
