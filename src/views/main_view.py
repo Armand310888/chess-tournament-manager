@@ -1,11 +1,17 @@
 """"""
-from src.views.base_view import BaseView
-
 import questionary
+
+from src.views.base_view import BaseView
+from src.views.tournament_view import TournamentView
+from src.models.tournament import Tournament
 
 
 class MainView(BaseView):
     """"""
+    def __init__(self) -> None:
+        super().__init__()
+        self.tournament_view = TournamentView()
+
     def display_main_menu(self) -> str:
         """"""
         self.display_application_header()

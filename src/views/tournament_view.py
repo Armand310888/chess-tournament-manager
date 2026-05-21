@@ -22,6 +22,7 @@ from src.views.base_view import BaseView
 class TournamentView(BaseView):
     """"""
     def __init__(self):
+        super().__init__()
         self.player_view = PlayerView()
 
     def prompt_for_tournament_data(self):
