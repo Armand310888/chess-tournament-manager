@@ -77,12 +77,11 @@ class TournamentView(BaseView):
 
         address = Address(street_number, street_name, postal_code, city)
 
-        print("")
         start_datetime = prompt_until_valid(
                 OptionalOrNot.NOT_OPTIONAL,
                 self.prompt_format(
                     "Enter the tournament starting date "
-                    "and time (YYYY-MM-DD HH:MM), or press'Enter' to skip: "
+                    "and time (YYYY-MM-DD HH:MM): "
                 ),
                 validate_datetime,
                 "start_date",
@@ -90,12 +89,11 @@ class TournamentView(BaseView):
             )
 
         while True:
-            print("")
             end_datetime = prompt_until_valid(
                 OptionalOrNot.NOT_OPTIONAL,
                 self.prompt_format(
                     "Enter the tournament end date and time "
-                    "(YYYY-MM-DD HH:MM), or press'Enter' to skip: "
+                    "(YYYY-MM-DD HH:MM): "
                 ),
                 validate_datetime,
                 "end_date",
@@ -108,12 +106,11 @@ class TournamentView(BaseView):
             except ValueError as error:
                 print(error)
 
-        print("")
         max_number_of_players = prompt_until_valid(
             OptionalOrNot.OPTIONAL,
             self.prompt_format(
-                "Enter the maximum number of players "
-                "admitted to the tournament (or press 'Enter' to skip): "
+                "Enter the number of players "
+                "for the tournament (or press 'Enter' to skip): "
             ),
             validate_number,
             "max_number_of_players",
@@ -123,8 +120,7 @@ class TournamentView(BaseView):
         )
 
         while True:
-            print("")
-            number_of_rounds_input = input(
+            number_of_rounds_input = self.console.input(
                 self.prompt_format(
                     "Enter the tournament number of rounds "
                     "(or press 'Enter' to set it by default (4 rounds)) : "
@@ -142,7 +138,6 @@ class TournamentView(BaseView):
                 )
             break
 
-        print("")
         description = prompt_until_valid(
             OptionalOrNot.OPTIONAL,
             self.prompt_format(
@@ -242,9 +237,9 @@ class TournamentView(BaseView):
             console=self.console
         )
 
-        selected_tournament_index = raw_selected_tournament_index[0]
+        selected_index = raw_selected_tournament_index[0]
 
-        return selected_tournament_index
+        return selected_index
 
     def display_tournament_players(self):
         """"""
