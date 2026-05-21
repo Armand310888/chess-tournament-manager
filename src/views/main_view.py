@@ -107,10 +107,32 @@ class MainView(BaseView):
             "0. Back\n"
         )
 
-        return input("Enter your choice here: ")
+        return questionary.select(
+            "Choose an action\n",
+            choices=[
+                questionary.Choice(
+                    "Select a Tournament",
+                    value="select_tournament"
+                ),
+                questionary.Choice(
+                    "Back",
+                    value="back"
+                )
+            ],
+            instruction="Use ↑ ↓ and 'Enter' to navigate",
+            style=self.QUESTIONARY_STYLE,
+            qmark=""
+        ).ask()
 
-    def invalid_choice_message(self) -> str:
-        print(
-            "Invalid choice.\n"
-            "Please enter the digit corresponding to your choice."
+    def display_select_tournament_menu(
+            self,
+            selected_tournament: Tournament
+    ) -> str:
+        """"""
+        self.display_section_title(
+            f"Tournament: {selected_tournament.name}"
+        )
+
+        self.tournament_view.display_tournament_details(
+            selected_tournament
         )

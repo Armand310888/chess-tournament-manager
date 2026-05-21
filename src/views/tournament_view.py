@@ -167,27 +167,65 @@ class TournamentView(BaseView):
 
     def display_created_tournament(self, tournament: Tournament) -> None:
         """"""
-        print(
-            "\nNew tournament created with success:\n"
-            f"{tournament.name} - {tournament.address.city} - "
-            f"{tournament.start_datetime.strftime("%Y-%m")}"
+        content = (
+            self.content_format(
+                "Tournament name",
+                tournament.name.upper()
+            )
+            + self.content_format(
+                "Place",
+                tournament.address.city
+            )
+            + self.content_format(
+                "Start date and time",
+                tournament.start_datetime
+            )
+        )
+
+        self.console.print()
+
+        self.console.print(
+            Panel(
+                content,
+                title=self.results_title_format(
+                    "[bold yellow]- New Tournament created "
+                    "successfully -[/bold yellow]"
+                ),
+                border_style="yellow",
+                width=self.APP_WIDTH
+            )
         )
 
     def display_tournaments(self, tournaments: list[Tournament]) -> None:
         """"""
         if not tournaments:
-            print("No tournament have been created yet.")
+            self.console.print("No tournament have been created yet.")
+            return
 
-        print("\n - Existing tournaments -\n")
+        table = Table(
+            title=self.results_title_format("Existing Tournaments"),
+            width=self.APP_WIDTH,
+            show_lines=True,
+        )
+
+        table.add_column("Index", style="bold")
+        table.add_column("Name", style="bold")
+        table.add_column("Place", style="bold")
+        table.add_column("Start date", style="bold")
+        table.add_column("End date", style="bold")
 
         for index, tournament in enumerate(tournaments, start=1):
-            print(
-                f"{index}. {tournament.name} - {tournament.address.city} - "
-                f"{tournament.start_datetime.strftime("%Y-%m")}"
+            table.add_row(
+                str(index),
+                tournament.name.upper(),
+                tournament.address.city,
+                str(tournament.start_datetime.strftime("%Y-%m")),
+                str(tournament.end_datetime.strftime("%Y-%m")),
             )
-        print("")
 
-    def prompt_to_select_tournament_indices(
+        self.console.print(table)
+
+    def prompt_to_select_tournament_index(
             self,
             tournaments: list[Tournament]
     ) -> list[int]:
@@ -210,4 +248,143 @@ class TournamentView(BaseView):
 
     def display_tournament_players(self):
         """"""
-        pass
+        if not isinstance(selected_tournament, Tournament):
+            raise TypeError(
+                "'selected_tournament', must be a Tournament object."
+            )
+        ranked_players = get_players_ranked(selected_tournament)
+
+        table = Table(
+            title=self.results_title_format(
+                f"'{selected_tournament.name}' tournament players and scores"
+            ),
+            width=self.APP_WIDTH,
+            show_lines=True,
+        )
+
+        table.add_column("Last name", style="bold")
+        table.add_column("First name", style="bold")
+        table.add_column("Total score", style="bold")
+
+        for player, total_score in ranked_players:
+            table.add_row(
+                player.last_name.upper(),
+                player.first_name,
+                f"{total_score:g}"
+            )
+
+        self.console.print()
+        self.console.print(table)
+
+    def display_tournament_details(
+            self,
+            selected_tournament: Tournament
+    ) -> str:
+        """"""
+        self.console.print()
+
+        table = Table(
+            title=None,
+            width=self.APP_WIDTH,
+            show_lines=True,
+            show_header=False
+        )
+
+        table.add_column(style="bold")
+        table.add_column()
+
+        table.add_row(
+            "Start date and time",
+            str(selected_tournament.start_datetime)
+        )
+
+        table.add_row(
+            "End date and time",
+            str(selected_tournament.end_datetime)
+        )
+
+        table.add_row(
+            "Address",
+            f"{selected_tournament.address.street_number} "
+            f"{selected_tournament.address.street_name}, "
+            f"{selected_tournament.address.postal_code}, "
+            f"{selected_tournament.address.city}."
+        )
+
+        table.add_row(
+            "Maximum number of players",
+            str(selected_tournament.max_number_of_players)
+        )
+
+        table.add_row(
+            "Current number of players",
+            str(len(selected_tournament.players))
+        )
+
+        table.add_row(
+            "Number of rounds",
+            str(selected_tournament.number_of_rounds)
+        )
+
+        table.add_row(
+            "Current round",
+            str(selected_tournament.current_round)
+        )
+
+        self.console.print(table)
+
+    def display_tournament_rounds_and_matches(
+            self,
+            selected_tournament: Tournament
+    ) -> None:
+        """"""
+        if not isinstance(selected_tournament, Tournament):
+            raise TypeError(
+                "'selected_tournament' must be a Tournament object."
+            )
+
+        for round in selected_tournament.rounds:
+            table = Table(
+                title=self.results_title_format(f"Round n°{round.number}"),
+                width=self.APP_WIDTH,
+                show_lines=True,
+            )
+
+            table.add_column("Match ID", style="bold")
+            table.add_column("White Player", style="bold")
+            table.add_column("Black Player", style="bold")
+            table.add_column("Status", style="bold")
+            table.add_column("Result", style="bold")
+            table.add_column("Score", style="bold")
+
+            for match in round.matches:
+                is_finished = (
+                    match.status == EventStatus.FINISHED
+                )
+
+                result = (
+                    match.result.value
+                    if is_finished else "-"
+                )
+
+                score = (
+                    f"{match.white_player.last_name.upper()}: "
+                    f"{match.white_player_score:g}\n"
+                    f"{match.black_player.last_name.upper()}: "
+                    f"{match.black_player_score:g}"
+                    if is_finished
+                    else "-"
+                )
+
+                table.add_row(
+                    str(match.id),
+                    f"{match.white_player.first_name} "
+                    f"{match.white_player.last_name.upper()}",
+                    f"{match.black_player.first_name} "
+                    f"{match.black_player.last_name.upper()}",
+                    match.status.value,
+                    result,
+                    score
+                )
+
+            self.console.print(table)
