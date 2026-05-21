@@ -120,6 +120,7 @@ class Tournament:
         self.players: list[Player] = []
         self.rounds: list[Round] = []
         self.current_round: Round | None = None
+        self.status = EventStatus.IN_PROGRESS
 
     @property
     def name(self) -> str:

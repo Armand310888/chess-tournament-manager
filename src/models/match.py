@@ -6,7 +6,6 @@ import random
 
 from src.models.player import Player
 from src.services.lifecycle_manager import (
-    start_lifecycle,
     end_lifecycle,
     EventStatus,
 )
@@ -40,9 +39,9 @@ class Match:
             raise ValueError("'player_1' must be different from 'player_2'")
 
         self.id: int | None = None
-        self.start_datetime: datetime | None = None
+        self.start_datetime = datetime.now()
         self.end_datetime: datetime | None = None
-        self.status = EventStatus.NOT_STARTED
+        self.status = EventStatus.IN_PROGRESS
         self.result: MatchResult | None = None
         self.white_player: Player | None = None
         self.black_player: Player | None = None
@@ -59,10 +58,6 @@ class Match:
             self.black_player = self.player_2
         else:
             self.black_player = self.player_1
-
-    def start_match(self) -> None:
-        """Start the match lifecycle."""
-        start_lifecycle(self)
 
     def end_match(self, result: MatchResult):
         """End the match and assign scores according to its result.

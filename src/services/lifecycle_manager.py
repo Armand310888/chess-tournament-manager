@@ -17,7 +17,6 @@ from typing import Protocol
 
 class EventStatus(Enum):
     """Represent the lifecycle status of a domain event."""
-    NOT_STARTED = "not_started"
     IN_PROGRESS = "in_progress"
     FINISHED = "finished"
 
@@ -27,27 +26,6 @@ class EventType(Protocol):
     status: EventStatus
     start_datetime: datetime | None
     end_datetime: datetime | None
-
-
-def start_lifecycle(event: EventType) -> None:
-    """Start an event if it has not already started.
-
-    Args:
-        event: Object with status, start_datetime and end_datetime attributes.
-
-    Raises:
-        ValueError: If the event has already started.
-    """
-    if (
-        event.start_datetime is not None
-        or event.status != EventStatus.NOT_STARTED
-    ):
-        raise ValueError(
-            f"'{event}' has already started and cannot be started again"
-        )
-
-    event.start_datetime = datetime.now()
-    event.status = EventStatus.IN_PROGRESS
 
 
 def end_lifecycle(event: EventType) -> None:

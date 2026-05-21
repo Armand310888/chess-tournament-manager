@@ -4,7 +4,6 @@ from datetime import datetime
 
 from src.models.match import Match
 from src.services.lifecycle_manager import (
-    start_lifecycle,
     end_lifecycle,
     EventStatus,
 )
@@ -21,9 +20,9 @@ class Round:
     def __init__(self, number: int) -> None:
         self.number = number
         self.matches: list[Match] = []
-        self.start_datetime: datetime | None = None
+        self.start_datetime = datetime.now()
         self.end_datetime: datetime | None = None
-        self.status = EventStatus.NOT_STARTED
+        self.status = EventStatus.IN_PROGRESS
         self.id: str | None = None
 
     @property
@@ -53,10 +52,6 @@ class Round:
             raise TypeError("'match' must be a Match object.")
 
         self.matches.append(match)
-
-    def start_round(self) -> None:
-        """Start the round lifecycle."""
-        start_lifecycle(self)
 
     def end_round(self) -> None:
         """End the round lifecycle."""
