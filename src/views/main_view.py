@@ -18,14 +18,14 @@ class MainView(BaseView):
         self.display_section_title("Main Menu")
 
         return questionary.select(
-            "Choose an action\n",
+            "Choose a menu\n",
             choices=[
                 questionary.Choice(
-                    "Manage Players",
+                    "Players Menu",
                     value="manage_players"
                 ),
                 questionary.Choice(
-                    "Manage Tournaments",
+                    "Tournaments Menu",
                     value="manage_tournaments"
                 ),
                 questionary.Choice(
@@ -66,6 +66,7 @@ class MainView(BaseView):
 
     def display_list_players_menu(self) -> str:
         """"""
+        self.display_section_title("Player Menu")
         return questionary.select(
             "Choose an action\n",
             choices=[
