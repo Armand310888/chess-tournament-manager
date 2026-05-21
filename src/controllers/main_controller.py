@@ -268,4 +268,6 @@ class MainController:
             )
         )
 
+        self.round_view.display_created_round(new_round)
+
         self.main_view.pause()
