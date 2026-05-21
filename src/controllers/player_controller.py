@@ -25,7 +25,3 @@ class PlayerController:
         self.players.append(player)
         save_players(self.players)
         return player
-    
-    def select_players(self, players: list[Player]) -> list[Player]:
-        """"""
-        
