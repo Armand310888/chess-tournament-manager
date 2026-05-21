@@ -37,13 +37,13 @@ def end_lifecycle(event: EventType) -> None:
     Raises:
         ValueError: If the event has not started or is not in progress.
     """
-    if (
-        event.start_datetime is None
-        or event.status != EventStatus.IN_PROGRESS
-    ):
+    if event.start_datetime is None:
         raise ValueError(
             f"'{event}' has not started yet and cannot be ended"
         )
+
+    if event.status == EventStatus.FINISHED:
+        raise ValueError(f"'{event}' has already ended")
 
     event.end_datetime = datetime.now()
     event.status = EventStatus.FINISHED
