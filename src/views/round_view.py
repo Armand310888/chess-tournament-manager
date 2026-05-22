@@ -1,4 +1,6 @@
 """"""
+from rich.table import Table
+
 from src.views.base_view import BaseView
 from src.views.input_helpers import (
     prompt_until_valid,
@@ -6,6 +8,7 @@ from src.views.input_helpers import (
     OptionalOrNot,
 )
 from src.models.round import Round
+from src.models.match import Match
 
 
 class RoundView(BaseView):
@@ -30,3 +33,31 @@ class RoundView(BaseView):
         )
 
         self.console.print(content)
+
+    def display_unfinished_matches(
+            self,
+            unfinished_matches: list[Match],
+    ) -> None:
+        """"""
+        table = Table(
+            title=self.results_title_format(
+                "Current Round unfinished matches"
+            ),
+            width=self.APP_WIDTH,
+            show_lines=True,
+        )
+
+        table.add_column("N°", style="bold")
+        table.add_column("White Player", style="bold")
+        table.add_column("Black Player", style="bold")
+
+        for index, match in enumerate(unfinished_matches, start=1):
+            table.add_row(
+                str(index),
+                f"{match.white_player.first_name} "
+                f"{match.white_player.last_name.upper()}",
+                f"{match.black_player.first_name} "
+                f"{match.black_player.last_name.upper()}",
+            )
+
+        self.console.print(table)

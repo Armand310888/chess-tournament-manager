@@ -4,9 +4,11 @@ from src.repository.match_repository import load_matches
 from src.repository.round_repository import load_rounds
 from src.repository.tournament_repository import load_tournaments
 from src.controllers.player_controller import PlayerController
+from src.controllers.match_controller import MatchController
 from src.controllers.round_controller import RoundController
 from src.controllers.tournament_controller import TournamentController
 from src.views.player_view import PlayerView
+from src.views.match_view import MatchView
 from src.views.round_view import RoundView
 from src.views.tournament_view import TournamentView
 from src.views.main_view import MainView
@@ -28,10 +30,16 @@ class MainController:
             self.rounds,
             self.tournaments
         )
+        self.match_controller = MatchController(
+            self.matches,
+            self.rounds,
+            self.tournaments
+        )
         self.tournament_controller = (
             TournamentController(self.tournaments, self.players)
         )
         self.player_view = PlayerView()
+        self.match_view = MatchView()
         self.round_view = RoundView()
         self.tournament_view = TournamentView()
         self.main_view = MainView()
@@ -275,3 +283,52 @@ class MainController:
         self.round_view.display_created_round(new_round)
 
         self.main_view.pause()
+
+    def enter_matches_results_flow(
+            self,
+            selected_tournament: Tournament
+    ) -> None:
+        """"""
+        if not isinstance(selected_tournament, Tournament):
+            raise TypeError(
+                "'selected_tournament' must be a Tournament object."
+            )
+
+        result_by_choice = {
+            "white_player": MatchResult.WHITE_WIN,
+            "black_player": MatchResult.BLACK_WIN,
+            "draw": MatchResult.DRAW
+        }
+
+        while True:
+            unfinished_matches = (
+                self.round_controller
+                .get_round_unfinished_matches(
+                    selected_tournament.current_round
+                )
+            )
+
+            if not unfinished_matches:
+                break
+
+            choice = (
+                self.match_view.prompt_to_select_match(
+                    unfinished_matches
+                )
+            )
+
+            if choice == "back":
+                break
+
+            match = choice
+
+            self.match_view.display_unfinished_match(match)
+            choice = self.match_view.prompt_for_match_result(match)
+
+            if choice == "back":
+                break
+
+            self.match_controller.enter_match_results(
+                match,
+                result_by_choice,
+            )

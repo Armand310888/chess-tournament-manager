@@ -95,3 +95,16 @@ class RoundController:
             round.matches.append(match)
             save_rounds(self.rounds)
 
+    def get_round_unfinished_matches(
+            self,
+            round: Round
+    ) -> list[Match]:
+        """"""
+
+        unfinished_matches = [
+            match
+            for match in round.matches
+            if match.status != EventStatus.FINISHED
+        ]
+
+        return unfinished_matches
