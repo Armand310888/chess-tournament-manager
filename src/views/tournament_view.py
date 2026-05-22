@@ -344,8 +344,16 @@ class TournamentView(BaseView):
             )
 
         for round in selected_tournament.rounds:
+            current_round_text = (
+                " -> CURRENT ROUND"
+                if round == selected_tournament.current_round
+                else ""
+            )
+
             table = Table(
-                title=self.results_title_format(f"Round n°{round.number}"),
+                title=self.results_title_format(
+                    f"Round n°{round.number}{current_round_text}"
+                ),
                 width=self.APP_WIDTH,
                 show_lines=True,
             )
