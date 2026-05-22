@@ -330,5 +330,5 @@ class MainController:
 
             self.match_controller.enter_match_results(
                 match,
-                result_by_choice,
+                result_by_choice[choice],
             )
