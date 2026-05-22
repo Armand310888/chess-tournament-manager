@@ -29,7 +29,7 @@ class MainView(BaseView):
                     value="manage_tournaments"
                 ),
                 questionary.Choice(
-                    "Exit",
+                    "← Exit",
                     value="exit"
                 ),
             ],
@@ -55,7 +55,7 @@ class MainView(BaseView):
                     value="list_players"
                 ),
                 questionary.Choice(
-                    "Back",
+                    "← Back",
                     value="back"
                 ),
             ],
@@ -75,7 +75,7 @@ class MainView(BaseView):
                     value="players_details"
                 ),
                 questionary.Choice(
-                    "Back",
+                    "← Back",
                     value="back"
                 )
             ],
@@ -101,7 +101,7 @@ class MainView(BaseView):
                     value="list_tournaments"
                 ),
                 questionary.Choice(
-                    "Back",
+                    "← Back",
                     value="back"
                 )
             ],
@@ -122,7 +122,7 @@ class MainView(BaseView):
                     value="select_tournament"
                 ),
                 questionary.Choice(
-                    "Back",
+                    "← Back",
                     value="back"
                 )
             ],
@@ -164,11 +164,11 @@ class MainView(BaseView):
                     value="rounds_and_matches"
                 ),
                 questionary.Choice(
-                    "Enter matches results",
+                    "Enter current round matches results",
                     value="match_results"
                 ),
                 questionary.Choice(
-                    "Back",
+                    "← Back",
                     value="back"
                 )
             ],
