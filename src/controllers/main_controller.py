@@ -90,7 +90,7 @@ class MainController:
 
             if choice == "create_tournament":
                 self.create_tournament_flow()
-            elif choice == "list_tournaments":
+            elif choice == "manage_tournaments":
                 self.list_tournaments_menu_flow()
             elif choice == "back":
                 break
