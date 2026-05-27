@@ -97,8 +97,8 @@ class MainView(BaseView):
                     value="create_tournament"
                 ),
                 questionary.Choice(
-                    "List Tournaments",
-                    value="list_tournaments"
+                    "Manage Tournaments",
+                    value="manage_tournaments"
                 ),
                 questionary.Choice(
                     "← Back",
@@ -164,7 +164,7 @@ class MainView(BaseView):
                     value="rounds_and_matches"
                 ),
                 questionary.Choice(
-                    "Enter current round matches results",
+                    "Enter current round results",
                     value="match_results"
                 ),
                 questionary.Choice(

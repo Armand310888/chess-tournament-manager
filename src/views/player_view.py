@@ -88,7 +88,7 @@ class PlayerView(BaseView):
     def display_created_player(self, player: Player) -> None:
         content = (
             f"\n{player.first_name.upper()} "
-            f"[bold]{player.last_name.upper()}[/bold]\n"
+            f"[bold]{player.last_name.upper()}[/bold]\n\n"
             + self.content_format(
                 "ELO rating",
                 player.elo_rating

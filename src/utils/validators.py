@@ -156,7 +156,7 @@ def validate_datetime(
     except ValueError:
         raise ValueError(
             f"'{field_name}' must be a valid datetime in isoformat.\n"
-            "YYYY-MM-DD HH:MM:SS\n")
+            "YYYY-MM-DD HH:MM:SS")
 
 
 def validate_date_order(

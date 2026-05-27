@@ -111,8 +111,9 @@ class TournamentView(BaseView):
         max_number_of_players = prompt_until_valid(
             OptionalOrNot.OPTIONAL,
             self.prompt_format(
-                "Enter the number of players "
-                "for the tournament (or press 'Enter' to skip): "
+                "Enter the maximum number of players "
+                "for the tournament\n"
+                "(or press 'Enter' to skip): "
             ),
             validate_number,
             "max_number_of_players",
@@ -124,7 +125,7 @@ class TournamentView(BaseView):
         while True:
             number_of_rounds_input = self.console.input(
                 self.prompt_format(
-                    "Enter the tournament number of rounds "
+                    "Enter the tournament number of rounds\n"
                     "(or press 'Enter' to set it by default (4 rounds)) : "
                 )
             )
@@ -165,7 +166,8 @@ class TournamentView(BaseView):
     def display_created_tournament(self, tournament: Tournament) -> None:
         """"""
         content = (
-            self.content_format(
+            "\n"
+            + self.content_format(
                 "Tournament name",
                 tournament.name.upper()
             )
