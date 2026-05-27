@@ -3,6 +3,8 @@ from enum import Enum
 from typing import Callable, TypeVar
 from rich.console import Console
 
+from src.views.base_view import BaseView
+
 T = TypeVar("T)")
 
 
@@ -32,7 +34,12 @@ def prompt_until_valid(
         try:
             return validator(raw_value, *args)
         except (TypeError, ValueError) as error:
-            print(error)
+            error_message = BaseView.error_format(str(error))
+
+            if console:
+                console.print(error_message)
+            else:
+                print(error_message)
 
 
 def validate_index_selection(
@@ -87,14 +94,9 @@ def validate_yes_or_no_string(
     """"""
     answer = raw_value.strip().lower()
 
-    try:
-        raw_value == "y" or raw_value == "n"
-    except ValueError:
+    if answer not in ("y", "n"):
         raise ValueError(
             "Invalid value. Answer must be 'y' for YES or 'n' for NO"
         )
 
     return answer
-
-
-

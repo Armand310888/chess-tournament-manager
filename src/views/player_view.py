@@ -60,7 +60,7 @@ class PlayerView(BaseView):
         )
 
         while True:
-            raw_chess_national_id = input(
+            raw_chess_national_id = self.console.input(
                 self.prompt_format("Enter player chess national ID: ")
             )
 
@@ -73,7 +73,7 @@ class PlayerView(BaseView):
                 )
                 break
             except ValueError as error:
-                print(error)
+                self.display_error(error)
 
         player_data = {
             "first_name": first_name,

@@ -45,15 +45,11 @@ class BaseView:
         """"""
         self.console.input("\n[yellow]Press Enter to continue...[/yellow]")
 
-    def display_error(self, message: str) -> None:
-        """Display an error message."""
+    def display_error(self, error_message: str) -> None:
+        """Display a formatted error message."""
+
         self.console.print(
-            Panel(
-                str(message),
-                title="[bold red]Error[/bold red]",
-                border_style="red",
-                width=self.APP_WIDTH
-            )
+            self.error_format(error_message)
         )
 
     @staticmethod
@@ -70,6 +66,15 @@ class BaseView:
     def content_format(data_name: str, data_value: str) -> str:
         """"""
         return (
-            f"[underline]{data_name}[/underline]"
-            f"               : {data_value}\n"
+            f"[underline]{data_name:<30}[/underline]"
+            f": {data_value}\n"
+        )
+
+    @staticmethod
+    def error_format(error_message: str) -> str:
+        """Format an error message."""
+
+        return (
+            "[bold red][underline]Error[/underline][/bold red]: "
+            f"{error_message}\n"
         )
