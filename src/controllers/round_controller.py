@@ -47,6 +47,12 @@ class RoundController:
         ):
             raise RoundNotFinishedError()
 
+        if len(tournament.players) < 2:
+            raise ValueError(
+                "A tournament must contain at least "
+                "2 players to create a round."
+            )
+
         round_number = (
             1
             if tournament.current_round is None
@@ -89,7 +95,6 @@ class RoundController:
             match = self.match_controller.create_match(
                 player_1,
                 player_2,
-                self.matches
             )
 
             round.matches.append(match)

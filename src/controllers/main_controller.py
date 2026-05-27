@@ -14,7 +14,7 @@ from src.views.tournament_view import TournamentView
 from src.views.main_view import MainView
 from src.utils.exceptions import RoundNotFinishedError
 from src.models.tournament import Tournament
-from src.models.match import Match, MatchResult
+from src.models.match import MatchResult
 
 
 class MainController:
@@ -145,7 +145,12 @@ class MainController:
                 )
                 self.main_view.pause()
             elif choice == "next_round":
-                self.create_next_round_flow(selected_tournament)
+                try:
+                    self.create_next_round_flow(selected_tournament)
+                except ValueError as error:
+                    self.round_view.display_error(error)
+                    self.main_view.pause()
+
             elif choice == "rounds_and_matches":
                 self.tournament_view.display_tournament_rounds_and_matches(
                     selected_tournament
