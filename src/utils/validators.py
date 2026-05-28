@@ -1,8 +1,8 @@
 """Reusable validation helpers for models and console inputs."""
 
 from datetime import date, datetime
-import re
 from enum import Enum
+import re
 
 
 class Pattern(Enum):
@@ -29,7 +29,7 @@ class PatternDescription(Enum):
     CHESS_NATIONAL_ID = (
         "Two uppercase letters followed by five digits.\n"
         "Example: AB12345 "
-        )
+    )
     ID = (
         "ID starts with one letter:\n"
         "- 'T' for tournament object\n"
@@ -45,12 +45,24 @@ ELO_MAXIMUM = 3000
 
 
 def validate_non_empty_string(
-        value: str,
-        field_name: str,
-        max_length: int | None = None,
+    value: str,
+    field_name: str,
+    max_length: int | None = None,
 ) -> str:
-    """Validate a non-empty string and return it stripped."""
+    """Validate and return a stripped non-empty string.
 
+    Args:
+        value: Value to validate.
+        field_name: Field name used in error messages.
+        max_length: Optional maximum accepted length.
+
+    Returns:
+        Stripped string value.
+
+    Raises:
+        TypeError: If value is not a string or max_length is invalid.
+        ValueError: If value is empty or exceeds max_length.
+    """
     if not isinstance(value, str):
         raise TypeError(f"'{field_name}' must be a string.")
 
@@ -76,17 +88,32 @@ def validate_person_name(
     field_name: str,
     max_length: int | None = None,
 ) -> str:
-    """Validate a person's name."""
+    """Validate and return a stripped person name.
 
+    The name may contain letters, spaces, apostrophes, and hyphens.
+
+    Args:
+        value: Name value to validate.
+        field_name: Field name used in error messages.
+        max_length: Optional maximum accepted length.
+
+    Returns:
+        Stripped name.
+
+    Raises:
+        TypeError: If value is not a string.
+        ValueError: If the name is empty, too long, or contains invalid
+            characters.
+    """
     cleaned_value = validate_non_empty_string(
         value,
         field_name,
-        max_length
+        max_length,
     )
 
     if not re.fullmatch(
         r"[A-Za-zÀ-ÖØ-öø-ÿ' -]+",
-        cleaned_value
+        cleaned_value,
     ):
         raise ValueError(
             f"'{field_name}' contains invalid characters "
@@ -97,14 +124,28 @@ def validate_person_name(
 
 
 def validate_regex_match(
-        value: str,
-        field_name: str,
-        regex_pattern: Pattern,
-        pattern_description: PatternDescription
+    value: str,
+    field_name: str,
+    regex_pattern: Pattern,
+    pattern_description: PatternDescription
 ) -> str:
-    """Validate a string against a predefined regex pattern.
+    """Validate and return a string matching a predefined pattern.
 
     The value is stripped and converted to uppercase before matching.
+
+    Args:
+        value: String value to validate.
+        field_name: Field name used in error messages.
+        regex_pattern: Pattern enum member containing the regex.
+        pattern_description: Human-readable expected format.
+
+    Returns:
+        Stripped uppercase value.
+
+    Raises:
+        TypeError: If regex_pattern or pattern_description has an
+            invalid type.
+        ValueError: If value is empty or does not match the pattern.
     """
     if not isinstance(regex_pattern, Pattern):
         raise TypeError("'regex_pattern' must be a Pattern object.")
@@ -115,8 +156,11 @@ def validate_regex_match(
         )
 
     cleaned_value = (
-        validate_non_empty_string(value, field_name).upper()
-    )
+        validate_non_empty_string(
+            value,
+            field_name
+        )
+    ).upper()
 
     if not regex_pattern.value.fullmatch(cleaned_value):
         raise ValueError(
@@ -128,12 +172,25 @@ def validate_regex_match(
 
 
 def validate_date(
-        value: str | date,
-        field_name: str,
-) -> date | datetime:
-    """Validate and return a date from an ISO date string.
+    value: str | date,
+    field_name: str,
+) -> date:
+    """Validate and return a date from a date or ISO date string.
 
-    Existing date objects are returned unchanged.
+    Existing date objects are returned unchanged. Datetime objects are
+    rejected to avoid silently losing time information.
+
+    Args:
+        value: Date object or ISO date string to validate.
+        field_name: Field name used in error messages.
+
+    Returns:
+        Validated date.
+
+    Raises:
+        TypeError: If value is not a string or date, or if it is a
+            datetime.
+        ValueError: If the string is empty or not a valid ISO date.
     """
     if isinstance(value, datetime):
         raise TypeError(f"'{field_name}' must be a date, not a datetime.")
@@ -143,7 +200,7 @@ def validate_date(
 
     if not isinstance(value, str):
         raise TypeError(
-            f"'{field_name}' must be a string, date, or datetime."
+            f"'{field_name}' must be a string or a date."
         )
 
     cleaned_value = validate_non_empty_string(value, field_name)
@@ -153,24 +210,35 @@ def validate_date(
     except ValueError:
         raise ValueError(
             f"'{field_name}' must be a valid date in isoformat.\n"
-            "YYYY-MM-DD")
+            "YYYY-MM-DD"
+        )
 
 
 def validate_datetime(
-        value: str | datetime,
-        field_name: str,
-) -> date | datetime:
-    """Validate and return a datetime from an ISO datetime string.
+    value: str | datetime,
+    field_name: str,
+) -> datetime:
+    """Validate and return a datetime from a datetime or ISO string.
 
     Existing datetime objects are returned unchanged.
-    """
 
+    Args:
+        value: Datetime object or ISO datetime string to validate.
+        field_name: Field name used in error messages.
+
+    Returns:
+        Validated datetime.
+
+    Raises:
+        TypeError: If value is not a string or datetime.
+        ValueError: If the string is empty or not a valid ISO datetime.
+    """
     if isinstance(value, datetime):
         return value
 
     if not isinstance(value, str):
         raise TypeError(
-            f"'{field_name}' must be a string, date, or datetime."
+            f"'{field_name}' must be a string or a datetime."
         )
 
     cleaned_value = validate_non_empty_string(value, field_name)
@@ -184,14 +252,22 @@ def validate_datetime(
 
 
 def validate_date_order(
-        start_date: date | datetime,
-        end_date: date | datetime
+    start_date: date | datetime,
+    end_date: date | datetime
 ) -> None:
     """Validate chronological order between two dates or datetimes.
 
     Dates may be equal. Datetimes must be strictly ordered.
-    """
 
+    Args:
+        start_date: Start date or datetime.
+        end_date: End date or datetime.
+
+    Raises:
+        TypeError: If both values are not of the same date type.
+        ValueError: If the end value is before the start value, or not
+            strictly later for datetimes.
+    """
     if type(start_date) is not type(end_date):
         raise TypeError(
             "start_date and end_date must be of the same type: "
@@ -220,10 +296,20 @@ def validate_number(
 ) -> int | float:
     """Validate and convert a numeric value.
 
-    The returned value keeps the requested type: int or float.
-    Optional bounds are inclusive.
-    """
+    Args:
+        value: Raw value to convert.
+        field_name: Field name used in error messages.
+        expected_type: Numeric type to return, either int or float.
+        minimum: Optional inclusive lower bound.
+        maximum: Optional inclusive upper bound.
 
+    Returns:
+        Converted int or float.
+
+    Raises:
+        TypeError: If expected_type, minimum, or maximum is invalid.
+        ValueError: If value cannot be converted or is out of bounds.
+    """
     if expected_type not in (int, float):
         raise TypeError("'expected_type' must be integer or float.")
 
@@ -233,9 +319,6 @@ def validate_number(
         raise ValueError(
             f"'{field_name}' must be a valid number."
         ) from error
-
-    if expected_type not in (int, float):
-        raise TypeError("'expected_type' must be int or float.")
 
     if minimum is not None:
         if not isinstance(minimum, (int, float)):
@@ -262,11 +345,23 @@ def validate_number(
 
 
 def validate_class_object(
-        value: object,
-        field_name: str,
-        expected_class: type
+    value: object,
+    field_name: str,
+    expected_class: type
 ) -> object:
-    """Validate that a value is an instance of the expected class."""
+    """Validate that a value is an instance of the expected class.
+
+    Args:
+        value: Object to validate.
+        field_name: Field name used in error messages.
+        expected_class: Required class.
+
+    Returns:
+        The validated object.
+
+    Raises:
+        TypeError: If value is not an instance of expected_class.
+    """
 
     if not isinstance(value, expected_class):
         raise TypeError(
