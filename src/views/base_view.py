@@ -45,11 +45,13 @@ class BaseView:
         """"""
         self.console.input("\n[yellow]Press Enter to continue...[/yellow]")
 
-    def display_error(self, error_message: str) -> None:
+    def display_error(self, error: Exception | str) -> None:
         """Display a formatted error message."""
 
         self.console.print(
-            self.error_format(error_message)
+            self.error_format(str(error))
+        )
+
     def clear(self) -> None:
         """Clear the console display."""
 

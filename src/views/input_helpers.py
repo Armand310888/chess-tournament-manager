@@ -19,7 +19,7 @@ def prompt_until_valid(
         prompt_message: str,
         validator: Callable[..., T],
         *args,
-        console: Console | None = None
+        console: Console
 ) -> T | None:
     """"""
     if not isinstance(optionnal_or_not, OptionalOrNot):
@@ -36,10 +36,8 @@ def prompt_until_valid(
         except (TypeError, ValueError) as error:
             error_message = BaseView.error_format(str(error))
 
-            if console:
-                console.print(error_message)
-            else:
-                print(error_message)
+        except (TypeError, ValueError) as error:
+            console.print(BaseView.error_format(str(error)))
 
 
 def validate_index_selection(

@@ -168,7 +168,8 @@ class MainController:
         try:
             player = self.player_controller.create_player(player_data)
         except (TypeError, ValueError) as error:
-            print(error)
+            self.main_view.display_error(error)
+            self.main_view.pause()
             return
 
         self.player_view.display_created_player(player)
@@ -206,7 +207,8 @@ class MainController:
             )
 
         except (TypeError, ValueError) as error:
-            print(error)
+            self.main_view.display_error(error)
+            self.main_view.pause()
             return
 
         self.tournament_view.display_created_tournament(tournament)
