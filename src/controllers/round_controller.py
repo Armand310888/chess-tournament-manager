@@ -1,30 +1,31 @@
-""""""
+"""Controller for round creation and tournament progression."""
+
 from datetime import datetime
 
+from src.controllers.match_controller import MatchController
 from src.models.match import Match
 from src.models.round import Round
 from src.models.tournament import Tournament
-from src.controllers.match_controller import MatchController
-from src.utils.id_generator import generate_next_id, IDPrefix
-from src.utils.exceptions import RoundNotFinishedError
 from src.repository.round_repository import save_rounds
 from src.repository.tournament_repository import save_tournaments
 from src.services.event_status_manager import EventStatus
 from src.services.pairing_manager import (
     create_random_pairs,
-    pair_players_by_score
+    pair_players_by_score,
 )
+from src.utils.exceptions import RoundNotFinishedError
+from src.utils.id_generator import IDPrefix, generate_next_id
 
 
 class RoundController:
-    """"""
+    """Coordinate round creation and associated match generation."""
     def __init__(
-            self,
-            matches: list[Match],
-            rounds: list[Round],
-            tournaments: list[Tournament],
+        self,
+        matches: list[Match],
+        rounds: list[Round],
+        tournaments: list[Tournament],
     ) -> None:
-        """"""
+        """Initialize the controller with loaded rounds and tournaments."""
         self.matches = matches
         self.rounds = rounds
         self.tournaments = tournaments
@@ -35,10 +36,24 @@ class RoundController:
         )
 
     def create_new_round(
-            self,
-            tournament: Tournament,
+        self,
+        tournament: Tournament,
     ) -> Round:
-        """"""
+        """Create, register, persist, and return a new tournament round.
+
+        The round is attached to the tournament and automatically populated
+        with generated matches.
+
+        Args:
+            tournament: Tournament receiving the new round.
+
+        Returns:
+            Created round.
+
+        Raises:
+            ValueError: If the tournament cannot accept a new round.
+            RoundNotFinishedError: If the current round is unfinished.
+        """
         current_round = tournament.current_round
 
         if (
@@ -86,11 +101,19 @@ class RoundController:
         return new_round
 
     def create_matches_for_round(
-            self,
-            round: Round,
-            tournament: Tournament,
+        self,
+        round: Round,
+        tournament: Tournament,
     ) -> list[Match]:
-        """"""
+        """Generate and persist matches for a tournament round.
+
+        The first round uses random pairings. Subsequent rounds use score-
+        based pairings while attempting to avoid repeated matchups.
+
+        Args:
+            tournament: Tournament containing participating players.
+            round: Round receiving generated matches.
+        """
         if round.number == 1:
             pairs = create_random_pairs(tournament.players)
 
@@ -112,12 +135,16 @@ class RoundController:
             self,
             round: Round
     ) -> list[Match]:
-        """"""
+        """Return unfinished matches for a given round.
 
-        unfinished_matches = [
+        Args:
+            round: Round whose matches must be inspected.
+
+        Returns:
+            Matches that are not finished yet.
+        """
+        return [
             match
             for match in round.matches
             if match.status != EventStatus.FINISHED
         ]
-
-        return unfinished_matches

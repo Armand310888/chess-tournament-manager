@@ -1,25 +1,45 @@
+"""Controller for tournament creation and player registration."""
+
 from datetime import datetime
 
-from src.models.tournament import Tournament
 from src.models.player import Player
-from src.views.tournament_view import TournamentView
-from src.views.round_view import RoundView
+from src.models.tournament import Tournament
 from src.repository.tournament_repository import save_tournaments
-from src.utils.id_generator import generate_next_id, IDPrefix
+from src.utils.id_generator import IDPrefix, generate_next_id
+from src.views.round_view import RoundView
+from src.views.tournament_view import TournamentView
 
 
 class TournamentController:
-    def __init__(self, tournaments: list[Tournament], players: list[Player]):
+    """Coordinate tournament creation, selection, and player assignment."""
+
+    def __init__(
+        self,
+        tournaments: list[Tournament],
+        players: list[Player]
+    ) -> None:
+        """Initialize the controller with loaded tournaments and players."""
         self.tournaments = tournaments
         self.players = players
         self.tournament_view = TournamentView()
         self.round_view = RoundView()
 
     def create_tournament(
-            self,
-            tournament_data: dict,
+        self,
+        tournament_data: dict,
     ) -> Tournament:
-        """"""
+        """Create, validate, persist, and return a new tournament.
+
+        Args:
+            tournament_data: Raw tournament attributes collected from the view.
+
+        Returns:
+            Created tournament with generated ID.
+
+        Raises:
+            ValueError: If tournament data is invalid or if a duplicate
+                tournament already exists.
+        """
         try:
             tournament = Tournament(**tournament_data)
         except (TypeError, ValueError) as error:
@@ -31,17 +51,17 @@ class TournamentController:
             tournament.start_datetime
         ):
             raise ValueError(
-                    "A tournament with the same:\n"
-                    f"- name: {tournament.name}\n"
-                    "- start datetime: "
-                    f"{tournament.start_datetime.strftime("%Y-%m")}\n"
-                    f"- city: {tournament.address.city}\n"
-                    "already exists."
-                )
+                "A tournament with the same:\n"
+                f"- name: {tournament.name}\n"
+                "- start datetime: "
+                f"{tournament.start_datetime.strftime('%Y-%m')}\n"
+                f"- city: {tournament.address.city}\n"
+                "already exists."
+            )
 
         existing_ids = [
-            tournament.id
-            for tournament in self.tournaments
+            existing_tournament.id
+            for existing_tournament in self.tournaments
         ]
 
         tournament.id = generate_next_id(IDPrefix.TOURNAMENT, existing_ids)
@@ -51,10 +71,17 @@ class TournamentController:
         return tournament
 
     def get_selectable_players(
-            self,
-            tournament: Tournament,
+        self,
+        tournament: Tournament,
     ) -> list[Player]:
-        """"""
+        """Return players not already registered in the tournament.
+
+        Args:
+            tournament: Tournament used to exclude already registered players.
+
+        Returns:
+            Players that can still be added to the tournament.
+        """
         tournament_players_ids = [
             player.chess_national_id
             for player in tournament.players
@@ -69,12 +96,24 @@ class TournamentController:
         return selectable_players
 
     def select_players(
-            self,
-            tournament: Tournament,
-            selectable_players: list[Player],
-            selected_players_indices: list[int],
+        self,
+        tournament: Tournament,
+        selectable_players: list[Player],
+        selected_players_indices: list[int],
     ) -> list[Player]:
-        """"""
+        """Register selected players in a tournament and persist the change.
+
+        Args:
+            tournament: Tournament receiving the selected players.
+            selectable_players: Players available for selection.
+            selected_players_indices: One-based selected indices.
+
+        Returns:
+            Players added to the tournament.
+
+        Raises:
+            TypeError: If arguments have invalid types.
+        """
         if not isinstance(tournament, Tournament):
             raise TypeError("'tournament' must be a Tournament object.")
 
@@ -83,7 +122,7 @@ class TournamentController:
 
         for player in selectable_players:
             if not isinstance(player, Player):
-                raise TypeError("'players' must contain only Player Object")
+                raise TypeError("'players' must contain only Player objects.")
 
         if not isinstance(selected_players_indices, list):
             raise TypeError("'selected_players_indices' must be a list.")
@@ -95,39 +134,58 @@ class TournamentController:
                     "only integer numbers."
                 )
 
-        selected_players = []
-
-        for index in selected_players_indices:
-            selected_players.append(selectable_players[index - 1])
+        selected_players = [
+            selectable_players[index - 1]
+            for index in selected_players_indices
+        ]
 
         tournament.players.extend(selected_players)
         save_tournaments(self.tournaments)
         return selected_players
 
     def select_tournament(
-            self,
-            selected_tournament_index: int,
+        self,
+        selected_tournament_index: int,
     ) -> Tournament:
-        """"""
+        """Return the tournament matching a one-based selection index.
+
+        Args:
+            selected_tournament_index: User-facing tournament index.
+
+        Returns:
+            Selected tournament.
+
+        Raises:
+            TypeError: If the selection index is not an integer.
+        """
         if not isinstance(selected_tournament_index, int):
             raise TypeError(
-                "'selected_tournament_index' must be an integer "
+                "'selected_tournament_index' must be an integer."
             )
 
         selected_tournament = self.tournaments[selected_tournament_index - 1]
 
         return selected_tournament
 
-    def start_tournament():
-        pass
-
     def tournament_already_exists(
-            self,
-            name: str,
-            city: str,
-            start_datetime: datetime,
+        self,
+        name: str,
+        city: str,
+        start_datetime: datetime,
     ) -> bool:
-        """"""
+        """Check whether a similar tournament already exists.
+
+        A tournament is considered duplicate when it has the same name, city,
+        and start month.
+
+        Args:
+            name: Tournament name to compare.
+            city: Tournament city to compare.
+            start_datetime: Tournament start date used for month comparison.
+
+        Returns:
+            True if a matching tournament already exists, otherwise False.
+        """
         for tournament in self.tournaments:
             if (
                 tournament.name.lower() == name.lower()
