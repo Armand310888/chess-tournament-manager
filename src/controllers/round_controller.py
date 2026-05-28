@@ -53,6 +53,12 @@ class RoundController:
                 "2 players to create a round."
             )
 
+        if len(tournament.players) % 2 != 0:
+            raise ValueError(
+                "A tournament must contain an even number of players "
+                "to create a round."
+            )
+
         round_number = (
             1
             if tournament.current_round is None
