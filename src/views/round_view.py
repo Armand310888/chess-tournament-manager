@@ -16,8 +16,11 @@ from src.models.match import Match
 
 
 class RoundView(BaseView):
-    """"""
-    def prompt_for_new_round(self):
+    """Collect and display round-related console data."""
+
+    def prompt_for_new_round(self) -> str:
+        """Prompt for confirmation before creating a new round."""
+
         choice = prompt_until_valid(
             OptionalOrNot.NOT_OPTIONAL,
             self.prompt_format(
@@ -102,7 +105,8 @@ class RoundView(BaseView):
             self,
             unfinished_matches: list[Match],
     ) -> None:
-        """"""
+        """Display unfinished matches for the current round."""
+
         table = Table(
             title=self.results_title_format(
                 "Current Round unfinished matches"

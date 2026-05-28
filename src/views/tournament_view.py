@@ -1,4 +1,5 @@
-""""""
+"""Tournament console view."""
+
 from rich.panel import Panel
 from rich.table import Table
 
@@ -25,19 +26,22 @@ from src.services.lifecycle_manager import EventStatus
 
 
 class TournamentView(BaseView):
-    """"""
+    """Collect and display tournament-related console data."""
+
     def __init__(self):
         super().__init__()
         self.player_view = PlayerView()
 
-    def prompt_for_tournament_data(self):
-        """"""
-        print("")
+    def prompt_for_tournament_data(self) -> dict[str, str | int | date]:
+        """Prompt for tournament data and return validated field values."""
+
+        self.console.print()
+
         name = prompt_until_valid(
             OptionalOrNot.NOT_OPTIONAL,
             self.prompt_format("Enter the tournament name: "),
             validate_non_empty_string,
-            "first_name",
+            "name",
             console=self.console
         )
 
@@ -164,7 +168,8 @@ class TournamentView(BaseView):
         }
 
     def display_created_tournament(self, tournament: Tournament) -> None:
-        """"""
+        """Display a confirmation panel for a newly created tournament."""
+
         content = (
             "\n"
             + self.content_format(
@@ -196,7 +201,8 @@ class TournamentView(BaseView):
         )
 
     def display_tournaments(self, tournaments: list[Tournament]) -> None:
-        """"""
+        """Display existing tournaments in a numbered table."""
+
         if not tournaments:
             self.console.print("No tournament have been created yet.")
             return
@@ -228,7 +234,8 @@ class TournamentView(BaseView):
             self,
             tournaments: list[Tournament]
     ) -> list[int]:
-        """"""
+        """Prompt for one tournament index and return it."""
+
         raw_selected_tournament_index = prompt_until_valid(
             OptionalOrNot.NOT_OPTIONAL,
             self.prompt_format(
@@ -249,7 +256,8 @@ class TournamentView(BaseView):
             self,
             selected_tournament: Tournament
     ):
-        """"""
+        """Display tournament players ordered by score."""
+
         if not isinstance(selected_tournament, Tournament):
             raise TypeError(
                 "'selected_tournament', must be a Tournament object."
@@ -282,7 +290,8 @@ class TournamentView(BaseView):
             self,
             selected_tournament: Tournament
     ) -> str:
-        """"""
+        """Display detailed information about a tournament."""
+
         self.console.print()
 
         table = Table(
@@ -339,7 +348,8 @@ class TournamentView(BaseView):
             self,
             selected_tournament: Tournament
     ) -> None:
-        """"""
+        """Display tournament rounds and their matches."""
+
         if not isinstance(selected_tournament, Tournament):
             raise TypeError(
                 "'selected_tournament' must be a Tournament object."

@@ -1,4 +1,5 @@
-""""""
+"""Main menu view for the console application."""
+
 import questionary
 
 from src.views.base_view import BaseView
@@ -7,13 +8,14 @@ from src.models.tournament import Tournament
 
 
 class MainView(BaseView):
-    """"""
+    """Display top-level navigation menus."""
+
     def __init__(self) -> None:
         super().__init__()
         self.tournament_view = TournamentView()
 
     def display_main_menu(self) -> str:
-        """"""
+        """Display the main menu and return the selected action."""
         self.display_application_header()
         self.display_section_title("Main Menu")
 
@@ -39,7 +41,7 @@ class MainView(BaseView):
         ).ask()
 
     def display_player_menu(self) -> str:
-        """"""
+        """Display the player menu and return the selected action."""
         self.display_application_header()
         self.display_section_title("Player Menu")
 
@@ -65,7 +67,7 @@ class MainView(BaseView):
         ).ask()
 
     def display_list_players_menu(self) -> str:
-        """"""
+        """Display player list actions and return the selected action."""
         self.display_section_title("Player Menu")
         return questionary.select(
             "Choose an action\n",
@@ -85,7 +87,7 @@ class MainView(BaseView):
         ).ask()
 
     def display_tournaments_menu(self) -> str:
-        """"""
+        """Display the tournament menu and return the selected action."""
         self.display_application_header()
         self.display_section_title("Tournament Menu")
 
@@ -136,7 +138,7 @@ class MainView(BaseView):
             self,
             selected_tournament: Tournament
     ) -> str:
-        """"""
+        """Display actions for the selected tournament."""
         self.display_section_title(
             f"Tournament: {selected_tournament.name}"
         )

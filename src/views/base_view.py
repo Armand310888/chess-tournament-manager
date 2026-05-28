@@ -1,4 +1,5 @@
-""""""
+"""Base console view and shared display formatting helpers."""
+
 from rich.console import Console
 from rich.panel import Panel
 from rich.rule import Rule
@@ -7,7 +8,7 @@ from questionary import Style
 
 
 class BaseView:
-    """"""
+    """Provide shared console display behavior for all views."""
     APP_WIDTH = 80
 
     QUESTIONARY_STYLE = Style([
@@ -21,6 +22,7 @@ class BaseView:
         self.console = Console()
 
     def display_application_header(self) -> None:
+        """Display the application title header."""
         self.console.print()
         self.console.print(
             Panel(
@@ -33,6 +35,7 @@ class BaseView:
         )
 
     def display_section_title(self, title: str) -> None:
+        """Display a highlighted section title."""
         self.console.print(
             Rule(
                 f"[bold yellow]{title}[/]",
@@ -42,7 +45,7 @@ class BaseView:
         )
 
     def pause(self) -> None:
-        """"""
+        """Pause execution until the user presses Enter."""
         self.console.input("\n[yellow]Press Enter to continue...[/yellow]")
 
     def display_error(self, error: Exception | str) -> None:
@@ -70,17 +73,17 @@ class BaseView:
 
     @staticmethod
     def prompt_format(message: str) -> str:
-        """"""
+        """Format a console prompt message."""
         return f"[yellow]{message}[/yellow]"
 
     @staticmethod
     def results_title_format(title: str) -> str:
-        """"""
+        """Format a result section title."""
         return f"[bold yellow]{title}[/bold yellow]"
 
     @staticmethod
-    def content_format(data_name: str, data_value: str) -> str:
-        """"""
+    def content_format(data_name: str, data_value: object) -> str:
+        """Format a label-value line with aligned labels."""
         return (
             f"[underline]{data_name:<30}[/underline]"
             f": {data_value}\n"

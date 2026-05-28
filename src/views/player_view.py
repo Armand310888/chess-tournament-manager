@@ -1,4 +1,5 @@
-""""""
+"""Player console view."""
+
 from rich.panel import Panel
 from rich.table import Table
 
@@ -22,8 +23,11 @@ from src.views.input_helpers import (
 
 
 class PlayerView(BaseView):
-    """"""
-    def prompt_for_player_data(self):
+    """Collect and display player-related console data."""
+
+    def prompt_for_player_data(self) -> dict[str, str | int | date]:
+        """Prompt for player data and return validated field values."""
+
         first_name = prompt_until_valid(
             OptionalOrNot.NOT_OPTIONAL,
             self.prompt_format("Enter player's first name: "),
@@ -86,6 +90,8 @@ class PlayerView(BaseView):
         return player_data
 
     def display_created_player(self, player: Player) -> None:
+        """Display a confirmation panel for a newly created player."""
+
         content = (
             f"\n{player.first_name.upper()} "
             f"[bold]{player.last_name.upper()}[/bold]\n\n"
@@ -122,7 +128,8 @@ class PlayerView(BaseView):
             players: list[Player],
             type_of_player: str,
     ) -> None:
-        """"""
+        """Display players in a numbered table."""
+
         if not isinstance(players, list):
             raise TypeError("'players' must be a list.")
 
@@ -161,7 +168,8 @@ class PlayerView(BaseView):
             players: list[Player],
             selected_indices: list[int]
     ) -> None:
-        """"""
+        """Display detailed cards for selected players."""
+
         if not isinstance(players, list):
             raise TypeError("'players' must be a list.")
 
@@ -210,7 +218,8 @@ class PlayerView(BaseView):
             self,
             selectable_players: list[Player],
     ) -> list[int]:
-        """"""
+        """Prompt for player indices and return validated selections."""
+
         return prompt_until_valid(
             OptionalOrNot.NOT_OPTIONAL,
             self.prompt_format(

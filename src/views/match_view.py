@@ -1,4 +1,5 @@
-""""""
+"""Match console view."""
+
 import questionary
 from rich.table import Table
 
@@ -7,12 +8,10 @@ from src.views.base_view import BaseView
 
 
 class MatchView(BaseView):
-    """"""
-    def prompt_for_match_result(
-            self,
-            match: Match
-    ):
-        """"""
+    """Collect and display match-related console data."""
+
+    def prompt_for_match_result(self) -> str:
+        """Prompt for a match result choice."""
         return questionary.select(
             "Select the match winner\n",
             choices=[
@@ -42,7 +41,8 @@ class MatchView(BaseView):
             self,
             unfinished_matches: list[Match]
     ) -> Match:
-        """"""
+        """Prompt for one unfinished match and return it."""
+
         choices = []
 
         for index, match in enumerate(
@@ -79,7 +79,7 @@ class MatchView(BaseView):
         )
 
         return questionary.select(
-            "Choose a match to enter it's result:\n",
+            "Choose a match to enter its result:\n",
             choices=choices,
             instruction="Use ↑ ↓ and 'Enter' to navigate",
             style=self.QUESTIONARY_STYLE,
@@ -87,10 +87,11 @@ class MatchView(BaseView):
         ).ask()
 
     def display_unfinished_match(self, match: Match) -> None:
-        """"""
+        """Display details for one unfinished match."""
+
         table = Table(
             title=self.results_title_format(
-                "Slected match details"
+                "Selected match details"
             ),
             width=self.APP_WIDTH,
             show_lines=True,
