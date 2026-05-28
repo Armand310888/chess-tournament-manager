@@ -5,9 +5,9 @@ from enum import Enum
 import random
 
 from src.models.player import Player
-from src.services.lifecycle_manager import (
-    end_lifecycle,
+from src.services.event_status_manager import (
     EventStatus,
+    end_event,
 )
 from src.utils.validators import validate_class_object
 from src.repository.player_repository import get_player_by_id
@@ -71,7 +71,7 @@ class Match:
         if not isinstance(result, MatchResult):
             raise ValueError("'result' must be a MatchResult value")
 
-        end_lifecycle(self)
+        end_event(self)
         self.result = result
 
         if result == MatchResult.WHITE_WIN:

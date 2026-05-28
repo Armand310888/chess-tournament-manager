@@ -7,9 +7,9 @@ from src.models.tournament import Tournament
 from src.controllers.match_controller import MatchController
 from src.utils.id_generator import generate_next_id, IDPrefix
 from src.utils.exceptions import RoundNotFinishedError
-from src.services.lifecycle_manager import EventStatus
 from src.repository.round_repository import save_rounds
 from src.repository.tournament_repository import save_tournaments
+from src.services.event_status_manager import EventStatus
 from src.services.pairing_manager import (
     create_random_pairs,
     pair_players_by_score

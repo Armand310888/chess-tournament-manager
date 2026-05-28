@@ -23,7 +23,7 @@ from src.views.input_helpers import (
 from src.views.player_view import PlayerView
 from src.views.base_view import BaseView
 from src.services.ranking_manager import get_players_ranked
-from src.services.lifecycle_manager import EventStatus
+from src.services.event_status_manager import EventStatus
 
 
 class TournamentView(BaseView):

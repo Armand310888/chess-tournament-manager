@@ -3,9 +3,9 @@
 from datetime import datetime
 
 from src.models.match import Match
-from src.services.lifecycle_manager import (
-    end_lifecycle,
+from src.services.event_status_manager import (
     EventStatus,
+    end_event,
 )
 from src.utils.validators import validate_number
 from src.repository.match_repository import get_match_by_id
@@ -55,7 +55,7 @@ class Round:
 
     def end_round(self) -> None:
         """End the round lifecycle."""
-        end_lifecycle(self)
+        end_event(self)
 
     def to_dict(self) -> dict:
         """Return a JSON-serializable dictionary representation of the round.

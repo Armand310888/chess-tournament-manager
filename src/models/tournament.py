@@ -4,6 +4,7 @@ from datetime import datetime
 
 from src.models.round import Round
 from src.models.player import Player
+from src.services.event_status_manager import EventStatus
 from src.utils.validators import (
     validate_non_empty_string,
     validate_regex_match,
@@ -14,7 +15,6 @@ from src.utils.validators import (
     Pattern,
     PatternDescription,
 )
-from src.services.lifecycle_manager import EventStatus
 from src.repository.player_repository import get_player_by_id
 from src.repository.round_repository import get_round_by_id
 

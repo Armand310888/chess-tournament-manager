@@ -1,6 +1,7 @@
 from src.models.player import Player
 from src.models.tournament import Tournament
-from src.services.lifecycle_manager import EventStatus
+from src.services.event_status_manager import EventStatus
+
 
 
 def get_player_score(player: Player, tournament: Tournament):
