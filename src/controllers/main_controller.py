@@ -231,6 +231,9 @@ class MainController:
             .get_selectable_players(selected_tournament)
         )
 
+        if not selectable_players:
+            self.main_view.display_error("No selectable players available.")
+
         self.player_view.display_players(
             selectable_players,
             "Selectable players"

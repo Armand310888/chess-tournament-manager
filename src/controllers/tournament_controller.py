@@ -66,9 +66,6 @@ class TournamentController:
             if player.chess_national_id not in tournament_players_ids
         ]
 
-        if not selectable_players:
-            print("No players selectable for this tournament.")
-
         return selectable_players
 
     def select_players(
