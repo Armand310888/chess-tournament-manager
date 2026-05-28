@@ -110,8 +110,9 @@ class MainView(BaseView):
             qmark=""
         ).ask()
 
-    def display_list_tournaments_menu(self) -> str:
-        """"""
+    def display_manage_tournament_menu(self) -> str:
+        """Display tournament actions and return the selected action."""
+
         self.display_section_title("Tournament Menu")
 
         return questionary.select(

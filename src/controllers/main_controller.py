@@ -91,17 +91,17 @@ class MainController:
             if choice == "create_tournament":
                 self.create_tournament_flow()
             elif choice == "manage_tournaments":
-                self.list_tournaments_menu_flow()
+                self.manage_tournament_menu_flow()
             elif choice == "back":
                 break
 
-    def list_tournaments_menu_flow(self):
+    def manage_tournament_menu_flow(self):
         """"""
         while True:
             self.main_view.display_application_header()
             self.tournament_view.display_tournaments(self.tournaments)
 
-            choice = self.main_view.display_list_tournaments_menu()
+            choice = self.main_view.display_manage_tournament_menu()
 
             if choice == "select_tournament":
                 selected_index = (
