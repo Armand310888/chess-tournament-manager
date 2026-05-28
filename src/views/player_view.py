@@ -2,6 +2,7 @@
 
 from rich.panel import Panel
 from rich.table import Table
+from datetime import date
 
 from src.views.input_helpers import prompt_until_valid
 from src.views.base_view import BaseView
@@ -63,21 +64,15 @@ class PlayerView(BaseView):
             console=self.console
         )
 
-        while True:
-            raw_chess_national_id = self.console.input(
-                self.prompt_format("Enter player chess national ID: ")
-            )
-
-            try:
-                chess_national_id = validate_regex_match(
-                    raw_chess_national_id,
-                    "chess_national_id",
-                    Pattern.CHESS_NATIONAL_ID,
-                    PatternDescription.CHESS_NATIONAL_ID,
-                )
-                break
-            except ValueError as error:
-                self.display_error(error)
+        chess_national_id = prompt_until_valid(
+            OptionalOrNot.NOT_OPTIONAL,
+            self.prompt_format("Enter player chess national ID: "),
+            validate_regex_match,
+            "chess_national_id",
+            Pattern.CHESS_NATIONAL_ID,
+            PatternDescription.CHESS_NATIONAL_ID,
+            console=self.console
+        )
 
         player_data = {
             "first_name": first_name,
