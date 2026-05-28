@@ -1,11 +1,26 @@
+"""Player ranking helpers for tournament standings."""
+
 from src.models.player import Player
 from src.models.tournament import Tournament
 from src.services.event_status_manager import EventStatus
 
 
+def get_player_score(player: Player, tournament: Tournament) -> float:
+    """Return a player's total score in a tournament.
 
-def get_player_score(player: Player, tournament: Tournament):
-    """"""
+    Only finished matches are counted. The player must belong to the
+    tournament before their score can be computed.
+
+    Args:
+        player: Player whose score must be computed.
+        tournament: Tournament containing the player and played rounds.
+
+    Returns:
+        Sum of the player's scores across finished matches.
+
+    Raises:
+        ValueError: If the player does not belong to the tournament.
+    """
     if player not in tournament.players:
         raise ValueError("Player does not belong to this tournament.")
 
@@ -22,8 +37,16 @@ def get_player_score(player: Player, tournament: Tournament):
     return total_score
 
 
-def get_players_ranked(tournament: Tournament) -> list[Player]:
-    """"""
+def get_players_ranked(tournament: Tournament) -> list[tuple[Player, float]]:
+    """Return tournament players sorted by descending score.
+
+    Args:
+        tournament: Tournament whose players must be ranked.
+
+    Returns:
+        List of ``(player, score)`` tuples sorted from highest to lowest
+        score.
+    """
     players_to_rank = []
 
     for player in tournament.players:
@@ -32,24 +55,35 @@ def get_players_ranked(tournament: Tournament) -> list[Player]:
 
     ranked_players = sorted(
         players_to_rank,
-        key=lambda x: x[1],
+        key=lambda player_score: player_score[1],
         reverse=True
     )
 
     return ranked_players
 
 
-def group_players_by_rank(ranked_players: list):
-    players_grouped_by_ranks = {}
+def group_players_by_score(
+        ranked_players: list[Player, float]
+) -> dict[float, list[Player]]:
+    """Group ranked players by identical tournament score.
+
+    Args:
+        ranked_players: ``(player, score)`` tuples sorted by score.
+
+    Returns:
+        Dictionary mapping each score to the players sharing that score,
+        sorted from highest to lowest score.
+    """
+    players_grouped_by_score = {}
 
     for player, score in ranked_players:
-        if score not in players_grouped_by_ranks:
-            players_grouped_by_ranks[score] = []
-        players_grouped_by_ranks[score].append(player)
+        if score not in players_grouped_by_score:
+            players_grouped_by_score[score] = []
+        players_grouped_by_score[score].append(player)
 
     return dict(
         sorted(
-            players_grouped_by_ranks.items(),
+            players_grouped_by_score.items(),
             reverse=True
         )
     )

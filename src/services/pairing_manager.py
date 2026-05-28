@@ -1,3 +1,5 @@
+"""Player pairing helpers for tournament rounds."""
+
 import random
 
 from src.models.player import Player
@@ -5,23 +7,21 @@ from src.models.round import Round
 from src.models.tournament import Tournament
 from src.services.ranking_manager import (
     get_players_ranked,
-    group_players_by_rank,
+    group_players_by_score,
 )
 
 
-def shuffle_a_list(list_to_shuffle: list):
-    shuffled_list = list_to_shuffle[:]
+def create_random_pairs(
+        list_of_players: list[Player]
+) -> list[tuple[Player, Player]]:
+    """Create random player pairs for a tournament round."""
+    if len(list_of_players) % 2 != 0:
+        raise ValueError(
+            "An even number of players is required to create pairs."
+        )
 
-    if len(shuffled_list) < 2:
-        raise ValueError("A minimum of two players are required.")
-
-    random.shuffle(shuffled_list)
-
-    return shuffled_list
-
-
-def create_random_pairs(list_of_players: list[Player]):
-    shuffled_players = shuffle_a_list(list_of_players)
+    shuffled_players = list_of_players.copy()
+    random.shuffle(shuffled_players)
 
     pairs = []
 
@@ -37,7 +37,16 @@ def have_players_been_opposed(
         player_2: Player,
         rounds: list[Round]
 ) -> bool:
-    """"""
+    """Check whether two players have already played each other.
+
+    Args:
+        player_1: First player to compare.
+        player_2: Second player to compare.
+        rounds: Rounds whose matches must be checked.
+
+    Returns:
+        True if the players have already been opposed, otherwise False.
+    """
     for round in rounds:
         for match in round.matches:
             if (
@@ -54,7 +63,16 @@ def find_valid_opponent(
         player_to_pair: Player,
         players_group: list[Player],
         tournament: Tournament) -> Player | None:
-    """"""
+    """Find an opponent not already paired with the given player.
+
+    Args:
+        player_to_pair: Player needing an opponent.
+        players_group: Candidate opponents from the current score group.
+        tournament: Tournament whose previous rounds are checked.
+
+    Returns:
+        A valid opponent if one is found, otherwise None.
+    """
     for opponent in players_group:
         if opponent == player_to_pair:
             continue
@@ -72,24 +90,10 @@ def find_valid_opponent(
 def pair_players_by_score(
         tournament: Tournament
 ) -> list[tuple[Player, Player]]:
-    """Pair players according to their tournament scores.
-
-    Players are grouped by score and paired within their own score
-    group whenever possible. Players without a valid opponent are
-    moved to the next lower score group.
-
-    In the final score group, rematches may be forced to avoid
-    leaving players unpaired.
-
-    Args:
-        tournament: Tournament containing players and played rounds.
-
-    Returns:
-        A list of paired players.
-    """
+    """Create score-based pairs while avoiding previous matchups."""
     ranked_players = get_players_ranked(tournament)
-    players_grouped_by_ranks = group_players_by_rank(ranked_players)
-    players_groups = list(players_grouped_by_ranks.values())
+    players_grouped_by_score = group_players_by_score(ranked_players)
+    players_groups = list(players_grouped_by_score.values())
 
     pairs = []
     leftover_players = []
@@ -97,9 +101,9 @@ def pair_players_by_score(
     for index, players_group in enumerate(players_groups):
         is_last_group = index == len(players_groups) - 1
 
-        players_to_pair = shuffle_a_list(
-            leftover_players + players_group
-        )
+        players_to_pair = leftover_players + players_group
+        random.shuffle(players_to_pair)
+
         leftover_players = []
 
         while len(players_to_pair) >= 2:
