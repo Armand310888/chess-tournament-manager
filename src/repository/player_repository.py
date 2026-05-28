@@ -1,10 +1,9 @@
-"""Provide repository functions for Player persistence and lookup.
+"""Provide repository functions for player persistence and lookup.
 
-This module handles loading and saving Player objects to a JSON
-file, as well as retrieving players by their chess national ID.
-It relies on Player serialization methods and ensures basic
-validation of inputs and stored data.
+This module loads and saves Player objects from JSON storage and
+retrieves players by chess national ID.
 """
+
 import json
 
 from src.models.player import Player
@@ -99,11 +98,12 @@ def save_players(players: list[Player]) -> None:
 
     paths.DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-    players_data = []
-
-    for player in players:
-        player_data = player.to_dict()
-        players_data.append(player_data)
+    players_data = [player.to_dict() for player in players]
 
     with open(paths.PLAYERS_FILE, "w", encoding="utf-8") as file:
-        json.dump(players_data, file, indent=4)
+        json.dump(
+            players_data,
+            file,
+            indent=4,
+            ensure_ascii=False,
+        )

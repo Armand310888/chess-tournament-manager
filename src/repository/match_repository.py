@@ -5,9 +5,10 @@ file, as well as retrieving matches by their generated ID. It
 relies on Match serialization methods and external Player data
 to rebuild player references during loading.
 """
-from src import paths
+
 import json
 
+from src import paths
 from src.models.match import Match
 from src.models.player import Player
 from src.utils.validators import Pattern, PatternDescription
@@ -114,13 +115,15 @@ def save_matches(matches: list[Match]) -> None:
             raise TypeError(
                 "'matches' must contain only Match instances."
             )
+
     paths.DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-    matches_data = []
-
-    for match in matches:
-        match_data = match.to_dict()
-        matches_data.append(match_data)
+    matches_data = [match.to_dict() for match in matches]
 
     with open(paths.MATCHES_FILE, "w", encoding="utf-8") as file:
-        json.dump(matches_data, file, indent=4)
+        json.dump(
+            matches_data,
+            file,
+            indent=4,
+            ensure_ascii=False,
+        )

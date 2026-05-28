@@ -6,12 +6,13 @@ Round serialization methods and resolves Match relationships
 during deserialization. Basic validation of inputs and stored
 data is also enforced.
 """
+
 import json
 
 from src import paths
-from src.utils.validators import Pattern, PatternDescription
-from src.models.round import Round
 from src.models.match import Match
+from src.models.round import Round
+from src.utils.validators import Pattern, PatternDescription
 
 
 def get_round_by_id(round_id: str, rounds: list[Round]) -> Round:
@@ -38,7 +39,7 @@ def get_round_by_id(round_id: str, rounds: list[Round]) -> Round:
         )
 
     if not isinstance(rounds, list):
-        raise TypeError("'roundes' must be a list.")
+        raise TypeError("'rounds' must be a list.")
 
     for round in rounds:
         if round.id == round_id:
@@ -102,20 +103,22 @@ def save_rounds(rounds: list[Round]) -> None:
         TypeError: If rounds is not a list or contains non-Round items.
     """
     if not isinstance(rounds, list):
-        raise TypeError("'roundes' must be a list.")
+        raise TypeError("'rounds' must be a list.")
 
     for round in rounds:
         if not isinstance(round, Round):
             raise TypeError(
                 "'rounds' must contain only Round instances."
             )
+
     paths.DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-    rounds_data = []
-
-    for round in rounds:
-        round_data = round.to_dict()
-        rounds_data.append(round_data)
+    rounds_data = [round.to_dict() for round in rounds]
 
     with open(paths.ROUNDS_FILE, "w", encoding="utf-8") as file:
-        json.dump(rounds_data, file, indent=4)
+        json.dump(
+            rounds_data,
+            file,
+            indent=4,
+            ensure_ascii=False,
+        )

@@ -6,18 +6,19 @@ Tournament serialization methods and resolves Player and Round
 relationships during deserialization. Basic validation of inputs
 and stored data is also enforced.
 """
+
 import json
 
-from src.utils.validators import Pattern, PatternDescription
-from src.models.tournament import Tournament
-from src.models.round import Round
-from src.models.player import Player
 from src import paths
+from src.models.player import Player
+from src.models.round import Round
+from src.models.tournament import Tournament
+from src.utils.validators import Pattern, PatternDescription
 
 
 def get_tournament_by_id(
-        tournament_id: str,
-        tournaments: list[Tournament],
+    tournament_id: str,
+    tournaments: list[Tournament],
 ) -> Tournament:
     """Return the tournament matching the given ID.
 
@@ -53,8 +54,8 @@ def get_tournament_by_id(
 
 
 def load_tournaments(
-        players: list[Player],
-        rounds: list[Round]
+    players: list[Player],
+    rounds: list[Round],
 ) -> list[Tournament]:
     """Load tournaments from the JSON storage file.
 
@@ -90,11 +91,10 @@ def load_tournaments(
             f"Expected a list of tournaments in {paths.TOURNAMENTS_FILE}."
         )
 
-    tournaments = []
-
-    for tournament_data in data:
-        tournament = Tournament.from_dict(tournament_data, players, rounds)
-        tournaments.append(tournament)
+    tournaments = [
+        Tournament.from_dict(tournament_data, players, rounds)
+        for tournament_data in data
+    ]
 
     return tournaments
 
@@ -120,13 +120,15 @@ def save_tournaments(tournaments: list[Tournament]) -> None:
             raise TypeError(
                 "'tournaments' must contain only Tournament instances."
             )
+
     paths.DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-    tournaments_data = []
-
-    for tournament in tournaments:
-        tournament_data = tournament.to_dict()
-        tournaments_data.append(tournament_data)
+    tournaments_data = [tournament.to_dict() for tournament in tournaments]
 
     with open(paths.TOURNAMENTS_FILE, "w", encoding="utf-8") as file:
-        json.dump(tournaments_data, file, indent=4)
+        json.dump(
+            tournaments_data,
+            file,
+            indent=4,
+            ensure_ascii=False
+        )
