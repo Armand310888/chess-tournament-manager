@@ -2,27 +2,28 @@
 
 from datetime import datetime
 
-from src.models.round import Round
 from src.models.player import Player
-from src.services.event_status_manager import EventStatus
-from src.utils.validators import (
-    validate_non_empty_string,
-    validate_regex_match,
-    validate_datetime,
-    validate_date_order,
-    validate_number,
-    validate_class_object,
-    Pattern,
-    PatternDescription,
-)
+from src.models.round import Round
 from src.repository.player_repository import get_player_by_id
 from src.repository.round_repository import get_round_by_id
+from src.services.event_status_manager import EventStatus
+from src.utils.validators import (
+    Pattern,
+    PatternDescription,
+    validate_class_object,
+    validate_date_order,
+    validate_datetime,
+    validate_non_empty_string,
+    validate_number,
+    validate_regex_match,
+)
 
 DEFAULT_ROUND_NUMBER = 4
 
 
 class Address:
     """Represent the address where a tournament takes place."""
+
     def __init__(
         self,
         street_number: str,
@@ -30,11 +31,12 @@ class Address:
         postal_code: str,
         city: str,
     ) -> None:
+        """Initialize a validated tournament address."""
         self.street_number = validate_regex_match(
             street_number,
             "street_number",
             Pattern.STREET_NUMBER,
-            PatternDescription.STREET_NUMBER
+            PatternDescription.STREET_NUMBER,
         )
         self.street_name = validate_non_empty_string(
             street_name,
@@ -48,7 +50,7 @@ class Address:
         )
         self.city = validate_non_empty_string(city, "city")
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         """Return a JSON-serializable representation of the address.
 
         Converts the Address instance into a dictionary suitable for
@@ -61,11 +63,11 @@ class Address:
             "street_number": self.street_number,
             "street_name": self.street_name,
             "postal_code": self.postal_code,
-            "city": self.city
+            "city": self.city,
         }
 
     @classmethod
-    def from_dict(cls, data: dict):
+    def from_dict(cls, data: dict) -> "Address":
         """Create an Address instance from a dictionary.
 
         Reconstructs an Address object from serialized data.
@@ -89,6 +91,24 @@ class Address:
 
         return address
 
+    def __str__(self) -> str:
+        """Return the formatted address."""
+        return (
+            f"{self.street_number} {self.street_name}, "
+            f"{self.postal_code} {self.city}"
+        )
+
+    def __repr__(self) -> str:
+        """Return a developer-friendly representation of the address."""
+        return (
+            "Address("
+            f"street_number={self.street_number!r}, "
+            f"street_name={self.street_name!r}, "
+            f"postal_code={self.postal_code!r}, "
+            f"city={self.city!r}"
+            ")"
+        )
+
 
 class Tournament:
     """Represent a chess tournament, complete or still being prepared.
@@ -100,15 +120,16 @@ class Tournament:
     """
 
     def __init__(
-            self,
-            name: str,
-            address: Address,
-            start_datetime: datetime,
-            end_datetime: datetime,
-            max_number_of_players: int | None = None,
-            number_of_rounds: int = DEFAULT_ROUND_NUMBER,
-            description: str | None = None,
-    ):
+        self,
+        name: str,
+        address: Address,
+        start_datetime: datetime,
+        end_datetime: datetime,
+        max_number_of_players: int | None = None,
+        number_of_rounds: int = DEFAULT_ROUND_NUMBER,
+        description: str | None = None,
+    ) -> None:
+        """Initialize a tournament with validated core information."""
         self.name = name
         self.address = address
         self.start_datetime = start_datetime
@@ -116,7 +137,7 @@ class Tournament:
         self.max_number_of_players = max_number_of_players
         self.number_of_rounds = number_of_rounds
         self.description = description
-        self.id: int | None = None
+        self.id: str | None = None
         self.players: list[Player] = []
         self.rounds: list[Round] = []
         self.current_round: Round | None = None
@@ -161,7 +182,7 @@ class Tournament:
 
     @end_datetime.setter
     def end_datetime(self, value: datetime | None) -> None:
-        validated_date = validate_datetime(value, "end_date")
+        validated_date = validate_datetime(value, "end_datetime")
 
         if (
             hasattr(self, "_start_datetime")
@@ -200,7 +221,7 @@ class Tournament:
         return self._number_of_rounds
 
     @number_of_rounds.setter
-    def number_of_rounds(self, value: int):
+    def number_of_rounds(self, value: int) -> None:
         self._number_of_rounds = validate_number(
             value,
             "number_of_rounds",
@@ -214,7 +235,7 @@ class Tournament:
         return self._description
 
     @description.setter
-    def description(self, value: str | None):
+    def description(self, value: str | None) -> None:
         if value in ("", None):
             self._description = None
             return
@@ -290,18 +311,9 @@ class Tournament:
 
         return {
             "name": self.name,
-            "address": (
-                self.address.to_dict()
-                if self.address else None
-            ),
-            "start_datetime": (
-                self.start_datetime.isoformat()
-                if self.start_datetime else None
-            ),
-            "end_datetime": (
-                self.end_datetime.isoformat()
-                if self.end_datetime else None
-            ),
+            "address": self.address.to_dict(),
+            "start_datetime": self.start_datetime.isoformat(),
+            "end_datetime": self.end_datetime.isoformat(),
             "max_number_of_players": (
                 self.max_number_of_players
                 if self.max_number_of_players else None
@@ -336,6 +348,8 @@ class Tournament:
 
         Args:
             data: Dictionary containing serialized tournament data.
+            players: Existing players used to resolve stored player IDs.
+            rounds: Existing rounds used to resolve stored round IDs.
 
         Returns:
             A Tournament instance.
@@ -391,14 +405,15 @@ class Tournament:
                 f"Missing field: {missing_field.args[0]}"
             ) from missing_field
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return the tournament name."""
         return self.name
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Return a developer-friendly representation of the tournament."""
         return (
             f"Tournament("
+            f"id={self.id!r}, "
             f"name={self.name!r}, "
             f"players={len(self.players)!r}, "
             f"rounds={len(self.rounds)!r}, "

@@ -3,21 +3,23 @@
 from datetime import datetime
 
 from src.models.match import Match
+from src.repository.match_repository import get_match_by_id
 from src.services.event_status_manager import (
     EventStatus,
     end_event,
 )
 from src.utils.validators import validate_number
-from src.repository.match_repository import get_match_by_id
 
 
 class Round:
     """Represent a tournament round containing several matches.
 
     A round has a number, a list of matches, lifecycle dates, and a status.
-    It can be started and ended through the shared lifecycle helpers."""
+    It can be started and ended through the shared lifecycle helpers.
+    """
 
     def __init__(self, number: int) -> None:
+        """Initialize an active round with no registered matches yet."""
         self.number = number
         self.matches: list[Match] = []
         self.start_datetime = datetime.now()
@@ -27,7 +29,7 @@ class Round:
 
     @property
     def number(self) -> int:
-        """"""
+        """Return the round number."""
         return self._number
 
     @number.setter
@@ -68,14 +70,8 @@ class Round:
         return {
             "number": self.number,
             "matches_id": matches_id,
-            "start_datetime": (
-                self.start_datetime.isoformat()
-                if self.start_datetime else None
-            ),
-            "end_datetime": (
-                self.end_datetime.isoformat()
-                if self.end_datetime else None
-            ),
+            "start_datetime": self.start_datetime.isoformat(),
+            "end_datetime": self.end_datetime.isoformat(),
             "status": self.status.value,
             "id": self.id,
         }
@@ -113,12 +109,10 @@ class Round:
 
             round.start_datetime = (
                 datetime.fromisoformat(data["start_datetime"])
-                if data.get("start_datetime") else None
             )
 
             round.end_datetime = (
                 datetime.fromisoformat(data["end_datetime"])
-                if data.get("end_datetime") else None
             )
 
             round.status = EventStatus(data["status"])
@@ -140,8 +134,9 @@ class Round:
         """Return a developer-friendly representation of the round."""
         return (
             f"Round("
+            f"id={self.id!r}, "
             f"number={self.number!r}, "
             f"matches={len(self.matches)!r}, "
             f"status={self.status!r}"
-            f")"
+            ")"
         )

@@ -1,21 +1,22 @@
 """Player domain model."""
 
+from datetime import date
+
 from src.utils.validators import (
-    validate_non_empty_string,
-    validate_date,
-    validate_regex_match,
-    validate_number,
+    ELO_MAXIMUM,
+    ELO_MINIMUM,
     Pattern,
     PatternDescription,
-    ELO_MAXIMUM,
-    ELO_MINIMUM
+    validate_date,
+    validate_non_empty_string,
+    validate_number,
+    validate_regex_match,
 )
-
-from datetime import date
 
 
 class Player:
-    """Represent a chess player registerd in the application."""
+    """Represent a chess player registered in the application."""
+
     def __init__(
         self,
         first_name: str,
@@ -24,6 +25,7 @@ class Player:
         elo_rating: int,
         chess_national_id: str,
     ) -> None:
+        """Initialize a player with validated identity and ranking data."""
         self.first_name = first_name
         self.last_name = last_name
         self.birth_date = birth_date
@@ -84,7 +86,7 @@ class Player:
             "chess_national_id",
             Pattern.CHESS_NATIONAL_ID,
             PatternDescription.CHESS_NATIONAL_ID,
-            )
+        )
 
     def to_dict(self) -> dict:
         """Convert the player instance into a JSON-serializable dictionary.

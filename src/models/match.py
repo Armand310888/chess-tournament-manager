@@ -5,12 +5,12 @@ from enum import Enum
 import random
 
 from src.models.player import Player
+from src.repository.player_repository import get_player_by_id
 from src.services.event_status_manager import (
     EventStatus,
     end_event,
 )
 from src.utils.validators import validate_class_object
-from src.repository.player_repository import get_player_by_id
 
 
 class MatchResult(Enum):
@@ -26,19 +26,20 @@ class Match:
     A match stores the two players involved, assigns white and black colors,
     tracks lifecycle dates, and records the final result and scores.
     """
-    def __init__(
-            self,
-            player_1: Player,
-            player_2: Player,
-    ) -> None:
 
+    def __init__(
+        self,
+        player_1: Player,
+        player_2: Player,
+    ) -> None:
+        """Initialize a match with two distinct validated players."""
         self.player_1 = validate_class_object(player_1, "player_1", Player)
         self.player_2 = validate_class_object(player_2, "player_2", Player)
 
         if self.player_1 is self.player_2:
             raise ValueError("'player_1' must be different from 'player_2'")
 
-        self.id: int | None = None
+        self.id: str | None = None
         self.start_datetime = datetime.now()
         self.end_datetime: datetime | None = None
         self.status = EventStatus.IN_PROGRESS
@@ -49,7 +50,7 @@ class Match:
         self.black_player_score: float | None = None
 
     def set_black_and_white_player(self) -> None:
-        """Randomly assign white and black colors to match players."""
+        """Randomly assign one player to white and the other to black."""
         players = [self.player_1, self.player_2]
 
         self.white_player = random.choice(players)
@@ -59,8 +60,8 @@ class Match:
         else:
             self.black_player = self.player_1
 
-    def end_match(self, result: MatchResult):
-        """End the match and assign scores according to its result.
+    def end_match(self, result: MatchResult) -> None:
+        """End the match and assign player scores from the final result.
 
         Args:
             result: Final result of the match.
@@ -123,7 +124,7 @@ class Match:
                 if self.black_player else None
             ),
             "white_player_score": self.white_player_score,
-            "black_player_score": self.black_player_score
+            "black_player_score": self.black_player_score,
         }
 
     @classmethod
@@ -195,7 +196,7 @@ class Match:
 
     def __str__(self) -> str:
         """Return a readable match description."""
-        return f"{self.white_player} vs {self.black_player}"
+        return f"{self.player_1} vs {self.player_2}"
 
     def __repr__(self) -> str:
         """Return a developer-friendly representation of the match."""
