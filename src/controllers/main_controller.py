@@ -314,7 +314,12 @@ class MainController:
             )
 
             if not unfinished_matches:
+                self.match_view.display_success(
+                    "All match results have been entered."
+                )
                 break
+
+            self.main_view.clear()
 
             choice = (
                 self.match_view.prompt_to_select_match(
@@ -328,7 +333,7 @@ class MainController:
             match = choice
 
             self.match_view.display_unfinished_match(match)
-            choice = self.match_view.prompt_for_match_result(match)
+            choice = self.match_view.prompt_for_match_result()
 
             if choice == "back":
                 break
@@ -337,3 +342,6 @@ class MainController:
                 match,
                 result_by_choice[choice],
             )
+
+            self.main_view.clear()
+            self.match_view.display_success("Match result saved.")

@@ -50,6 +50,20 @@ class BaseView:
 
         self.console.print(
             self.error_format(error_message)
+    def clear(self) -> None:
+        """Clear the console display."""
+
+        self.console.clear()
+
+    def display_success(self, message: str) -> None:
+        """Display a formatted success message."""
+
+        self.console.print(
+            Panel(
+                f"[bold green]{message}[/bold green]",
+                border_style="green",
+                width=self.APP_WIDTH,
+            )
         )
 
     @staticmethod
