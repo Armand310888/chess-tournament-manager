@@ -2,6 +2,7 @@
 
 from rich.panel import Panel
 from rich.table import Table
+from datetime import date
 
 from src.utils.validators import (
     validate_non_empty_string,
@@ -110,7 +111,7 @@ class TournamentView(BaseView):
                 validate_date_order(start_datetime, end_datetime)
                 break
             except ValueError as error:
-                print(error)
+                self.display_error(error)
 
         max_number_of_players = prompt_until_valid(
             OptionalOrNot.OPTIONAL,
@@ -136,14 +137,19 @@ class TournamentView(BaseView):
 
             if number_of_rounds_input == "":
                 number_of_rounds = 4
-            else:
+                break
+
+            try:
                 number_of_rounds = validate_number(
                     number_of_rounds_input,
                     "number_of_rounds",
                     int,
                     1
                 )
-            break
+                break
+
+            except ValueError as error:
+                self.display_error(error)
 
         description = prompt_until_valid(
             OptionalOrNot.OPTIONAL,
