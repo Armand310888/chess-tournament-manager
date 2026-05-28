@@ -163,7 +163,10 @@ class Tournament:
     def end_datetime(self, value: datetime | None) -> None:
         validated_date = validate_datetime(value, "end_date")
 
-        if hasattr(self, "_start_date") and self._start_datetime is not None:
+        if (
+            hasattr(self, "_start_datetime")
+            and self._start_datetime is not None
+        ):
             validate_date_order(self._start_datetime, validated_date)
 
         self._end_datetime = validated_date
