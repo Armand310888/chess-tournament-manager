@@ -243,47 +243,6 @@ class Tournament:
 
         self.players.append(validated_player)
 
-    def create_round(self) -> Round:
-        """Create, start, and add the next round to the tournament.
-
-        The round number is automatically computed from the number of rounds
-        already registered in the tournament.
-
-        Raises:
-            ValueError: If the maximum number of rounds has already been
-                reached, or if the previous round is not finished.
-
-        Returns:
-            The newly created Round object.
-        """
-        if len(self.rounds) >= self.number_of_rounds:
-            raise ValueError(
-                "Maximum number of rounds set for this tournament "
-                "has already been reached."
-            )
-
-        if self.rounds:
-            previous_round = self.rounds[-1]
-
-            if (
-                previous_round.end_datetime is None
-                or previous_round.status != EventStatus.FINISHED
-            ):
-                raise ValueError(
-                    f"Previous round n° {previous_round.number} "
-                    "is still ongoing. Previous round must be finished "
-                    "before creating a new round."
-                )
-
-        next_round_number = len(self.rounds) + 1
-        new_round = Round(number=next_round_number)
-        new_round.start_round()
-
-        self.rounds.append(new_round)
-        self.current_round = new_round
-
-        return new_round
-
     def validate_ready_to_start(self) -> None:
         """Validate that the tournament has all data required to start.
 
