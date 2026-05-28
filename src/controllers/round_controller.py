@@ -79,16 +79,16 @@ class RoundController:
 
         return new_round
 
-    def create_match_for_round(
+    def create_matches_for_round(
             self,
             round: Round,
             tournament: Tournament,
-    ) -> None:
+    ) -> list[Match]:
         """"""
         if round.number == 1:
             pairs = create_random_pairs(tournament.players)
 
-        if round.number != 1:
+        else:
             pairs = pair_players_by_score(tournament)
 
         for player_1, player_2 in pairs:
@@ -98,7 +98,9 @@ class RoundController:
             )
 
             round.matches.append(match)
-            save_rounds(self.rounds)
+
+        save_rounds(self.rounds)
+        return round.matches
 
     def get_round_unfinished_matches(
             self,

@@ -279,7 +279,7 @@ class MainController:
 
         new_round.matches = (
             self.round_controller
-            .create_match_for_round(
+            .create_matches_for_round(
                 new_round,
                 selected_tournament
             )
