@@ -56,13 +56,37 @@ def validate_non_empty_string(
     cleaned_value = value.strip()
 
     if not cleaned_value:
-        raise ValueError(f"'{field_name}' must be a non-empty string")
+        raise ValueError(f"'{field_name}' must be a non-empty string.")
 
-    if max_length is not None:
-        if len(cleaned_value) > max_length:
-            raise ValueError(
-                f"'{field_name}' must be {max_length} characters maximum."
-            )
+    if max_length is not None and len(cleaned_value) > max_length:
+        raise ValueError(
+            f"'{field_name}' must be {max_length} characters maximum."
+        )
+
+    return cleaned_value
+
+
+def validate_person_name(
+    value: str,
+    field_name: str,
+    max_length: int | None = None,
+) -> str:
+    """Validate a person's name."""
+
+    cleaned_value = validate_non_empty_string(
+        value,
+        field_name,
+        max_length
+    )
+
+    if not re.fullmatch(
+        r"[A-Za-zÀ-ÖØ-öø-ÿ' -]+",
+        cleaned_value
+    ):
+        raise ValueError(
+            f"'{field_name}' contains invalid characters "
+            "such as numbers or unsupported signs."
+        )
 
     return cleaned_value
 
@@ -105,7 +129,7 @@ def validate_regex_match(
     if not regex_pattern.value.fullmatch(cleaned_value):
         raise ValueError(
             f"'{field_name}' format must be: "
-            f"'{pattern_description.value}"
+            f"{pattern_description.value}"
         )
 
     return cleaned_value
@@ -116,7 +140,9 @@ def validate_date(
         field_name: str,
 ) -> date | datetime:
     """
-    """
+    if isinstance(value, datetime):
+        raise TypeError(f"'{field_name}' must be a date, not a datetime.")
+
     if isinstance(value, date):
         return value
 
@@ -186,13 +212,13 @@ def validate_date_order(
     if isinstance(start_date, datetime):
         if end_date <= start_date:
             raise ValueError(
-                "End date and time must be later than the start date and time"
+                "End date and time must be later than the start date and time."
             )
 
     elif isinstance(start_date, date):
         if end_date < start_date:
             raise ValueError(
-                "End date cannot be before start date"
+                "End date cannot be before start date."
             )
 
 
@@ -203,32 +229,21 @@ def validate_number(
     minimum: int | float | None = None,
     maximum: int | float | None = None,
 ) -> int | float:
-    """Validate and convert a numeric input.
+    """Validate and convert a numeric value.
 
-    Convert a string input into the expected numeric type and
-    enforce optional minimum and maximum bounds.
-
-    Args:
-        value: Raw input value to validate.
-        field_name: Name of the field, used in error messages.
-        expected_type: Target numeric type (int or float).
-        minimum: Optional lower bound (inclusive).
-        maximum: Optional upper bound (inclusive).
-
-    Returns:
-        The validated number converted to the expected type.
-
-    Raises:
-        TypeError: If expected_type is not int or float, or if
-            minimum/maximum are not numeric.
-        ValueError: If value cannot be converted to a number, if
-            bounds are inconsistent, or if the value is outside
-            the allowed range.
+    The returned value keeps the requested type: int or float.
+    Optional bounds are inclusive.
     """
+
+    if expected_type not in (int, float):
+        raise TypeError("'expected_type' must be integer or float.")
+
     try:
         number = expected_type(value)
-    except ValueError:
-        raise ValueError(f"'{field_name} must be a valid number.")
+    except ValueError as error:
+        raise ValueError(
+            f"'{field_name}' must be a valid number."
+        ) from error
 
     if expected_type not in (int, float):
         raise TypeError("'expected_type' must be int or float.")
@@ -254,7 +269,7 @@ def validate_number(
             f"'{field_name}' must be less than or equal to {maximum}."
         )
 
-    return int(value)
+    return number
 
 
 def validate_class_object(
@@ -278,11 +293,7 @@ def validate_class_object(
 
     if not isinstance(value, expected_class):
         raise TypeError(
-            f"'{field_name}' must be a '{expected_class.__name__}' object"
+            f"'{field_name}' must be a '{expected_class.__name__}' object."
         )
 
     return value
-
-
-def validate_ID():
-    pass

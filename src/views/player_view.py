@@ -6,9 +6,9 @@ from src.views.input_helpers import prompt_until_valid
 from src.views.base_view import BaseView
 from src.utils.validators import (
     validate_regex_match,
-    validate_non_empty_string,
     validate_number,
     validate_date,
+    validate_person_name,
     ELO_MAXIMUM,
     ELO_MINIMUM,
     Pattern,
@@ -27,7 +27,7 @@ class PlayerView(BaseView):
         first_name = prompt_until_valid(
             OptionalOrNot.NOT_OPTIONAL,
             self.prompt_format("Enter player's first name: "),
-            validate_non_empty_string,
+            validate_person_name,
             "first_name",
             console=self.console
         )
@@ -35,7 +35,7 @@ class PlayerView(BaseView):
         last_name = prompt_until_valid(
             OptionalOrNot.NOT_OPTIONAL,
             self.prompt_format("Enter player's last name: "),
-            validate_non_empty_string,
+            validate_person_name,
             "last_name",
             console=self.console
         )
