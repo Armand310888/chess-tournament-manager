@@ -1,4 +1,4 @@
-"""Validation helpers and validation constants."""
+"""Reusable validation helpers for models and console inputs."""
 
 from datetime import date, datetime
 import re
@@ -6,7 +6,8 @@ from enum import Enum
 
 
 class Pattern(Enum):
-    """"""
+    """Store regular expressions used by validators."""
+
     STREET_NUMBER = re.compile(r"^\d+\s?(bis|ter|[A-Za-z])?$")
     POSTAL_CODE = re.compile(r"^\d{5}$")
     CHESS_NATIONAL_ID = re.compile(r"^[A-Z]{2}\d{5}$")
@@ -14,15 +15,19 @@ class Pattern(Enum):
 
 
 class PatternDescription(Enum):
-    """"""
+    """Store user-facing descriptions of expected input formats."""
+
     STREET_NUMBER = (
-        "One or more digits, optionally followed by a space "
-        "and a suffix such as 'bis' or 'ter', or a single letter. "
+        "One or more digits, optionally followed by a space\n"
+        "and a suffix such as 'bis' or 'ter', or a single letter.\n"
         "Examples: 12, 12 bis, 12A"
     )
-    POSTAL_CODE = "five positive digits. Example: 92700"
+    POSTAL_CODE = (
+        "five positive digits.\n"
+        "Example: 92700"
+    )
     CHESS_NATIONAL_ID = (
-        "Two uppercase letters followed by five digits. "
+        "Two uppercase letters followed by five digits.\n"
         "Example: AB12345 "
         )
     ID = (
@@ -44,10 +49,10 @@ def validate_non_empty_string(
         field_name: str,
         max_length: int | None = None,
 ) -> str:
-    """
-    """
+    """Validate a non-empty string and return it stripped."""
+
     if not isinstance(value, str):
-        raise TypeError(f"'{field_name}' must be a string")
+        raise TypeError(f"'{field_name}' must be a string.")
 
     if max_length is not None:
         if not isinstance(max_length, int):
@@ -97,22 +102,9 @@ def validate_regex_match(
         regex_pattern: Pattern,
         pattern_description: PatternDescription
 ) -> str:
-    """Validate that a string matches a regular expression.
+    """Validate a string against a predefined regex pattern.
 
-    The value is stripped and converted to uppercase before validation.
-
-    Args:
-        value: String value to validate.
-        field_name: Name of the validated field.
-        regex_pattern: Regular expression pattern to match.
-        pattern_description: Human-readable description of the expected format.
-
-    Raises:
-        TypeError: If value is not a string.
-        ValueError: If value does not match the expected pattern.
-
-    Returns:
-        The cleaned uppercase string.
+    The value is stripped and converted to uppercase before matching.
     """
     if not isinstance(regex_pattern, Pattern):
         raise TypeError("'regex_pattern' must be a Pattern object.")
@@ -139,6 +131,9 @@ def validate_date(
         value: str | date,
         field_name: str,
 ) -> date | datetime:
+    """Validate and return a date from an ISO date string.
+
+    Existing date objects are returned unchanged.
     """
     if isinstance(value, datetime):
         raise TypeError(f"'{field_name}' must be a date, not a datetime.")
@@ -158,15 +153,18 @@ def validate_date(
     except ValueError:
         raise ValueError(
             f"'{field_name}' must be a valid date in isoformat.\n"
-            "YYYY-MM-DD\n")
+            "YYYY-MM-DD")
 
 
 def validate_datetime(
         value: str | datetime,
         field_name: str,
 ) -> date | datetime:
+    """Validate and return a datetime from an ISO datetime string.
+
+    Existing datetime objects are returned unchanged.
     """
-    """
+
     if isinstance(value, datetime):
         return value
 
@@ -189,20 +187,11 @@ def validate_date_order(
         start_date: date | datetime,
         end_date: date | datetime
 ) -> None:
-    """Validate that an end date is not before a start date.
+    """Validate chronological order between two dates or datetimes.
 
-    If both values are datetimes, the end datetime must be strictly later than
-    the start datetime. If both values are dates, the end date may be equal to
-    the start date but cannot be earlier.
-
-    Args:
-        start_date: Start date or datetime.
-        end_date: End date or datetime.
-
-    Raises:
-        TypeError: If start_date and end_date do not have the same type.
-        ValueError: If the date order is invalid.
+    Dates may be equal. Datetimes must be strictly ordered.
     """
+
     if type(start_date) is not type(end_date):
         raise TypeError(
             "start_date and end_date must be of the same type: "
@@ -277,19 +266,7 @@ def validate_class_object(
         field_name: str,
         expected_class: type
 ) -> object:
-    """Validate that a value is an instance of the expected class.
-
-    Args:
-        value: Object to validate.
-        field_name: Name of the validated field.
-        expected_class: Expected class.
-
-    Raises:
-        TypeError: If value is not an instance of expected_class.
-
-    Returns:
-        The validated object.
-    """
+    """Validate that a value is an instance of the expected class."""
 
     if not isinstance(value, expected_class):
         raise TypeError(

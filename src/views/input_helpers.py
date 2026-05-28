@@ -1,40 +1,44 @@
-""""""
+"""Input validation helpers for console views."""
+
 from enum import Enum
 from typing import Callable, TypeVar
 from rich.console import Console
 
 from src.views.base_view import BaseView
 
-T = TypeVar("T)")
+T = TypeVar("T")
 
 
 class OptionalOrNot(Enum):
-    """"""
+    """Represent whether a prompt allows empty input."""
     OPTIONAL = "yes"
     NOT_OPTIONAL = "no"
 
 
 def prompt_until_valid(
-        optionnal_or_not: OptionalOrNot,
+        optional_or_not: OptionalOrNot,
         prompt_message: str,
         validator: Callable[..., T],
         *args,
         console: Console
 ) -> T | None:
-    """"""
-    if not isinstance(optionnal_or_not, OptionalOrNot):
-        raise TypeError("'optionnal_or_not' must be an OptionnalOrNot value.")
+    """Prompt until the user enters a valid value.
+
+    Empty input returns None only when the prompt is optional.
+    Validation errors are displayed and the prompt is repeated.
+    """
+
+    if not isinstance(optional_or_not, OptionalOrNot):
+        raise TypeError("'optional_or_not' must be an OptionalOrNot value.")
 
     while True:
         raw_value = console.input(prompt_message)
 
-        if optionnal_or_not == OptionalOrNot.OPTIONAL and raw_value == "":
+        if optional_or_not == OptionalOrNot.OPTIONAL and raw_value == "":
             return None
 
         try:
             return validator(raw_value, *args)
-        except (TypeError, ValueError) as error:
-            error_message = BaseView.error_format(str(error))
 
         except (TypeError, ValueError) as error:
             console.print(BaseView.error_format(str(error)))
@@ -46,7 +50,11 @@ def validate_index_selection(
         minimum_selection: int = 1,
         maximum_selection: int | None = None,
 ) -> list[str]:
-    """"""
+    """Validate comma-separated indices against a selectable list.
+
+    Returned indices are one-based so they can be reused directly
+    with view-level numbered selections.
+    """
     raw_indices = (
         raw_selection
         .strip()
@@ -89,7 +97,8 @@ def validate_index_selection(
 def validate_yes_or_no_string(
         raw_value: str,
 ) -> str:
-    """"""
+    """Validate a yes/no answer and return it normalized."""
+
     answer = raw_value.strip().lower()
 
     if answer not in ("y", "n"):
