@@ -157,7 +157,7 @@ class MainController:
                 )
                 self.main_view.pause()
             elif choice == "match_results":
-                self.enter_matches_results_flow(selected_tournament, )
+                self.enter_matches_results_flow(selected_tournament)
             elif choice == "back":
                 break
 
@@ -307,8 +307,15 @@ class MainController:
         result_by_choice = {
             "white_player": MatchResult.WHITE_WIN,
             "black_player": MatchResult.BLACK_WIN,
-            "draw": MatchResult.DRAW
+            "draw": MatchResult.DRAW,
         }
+
+        if selected_tournament.current_round is None:
+            self.match_view.display_error(
+                "No current round available for this tournament."
+            )
+            self.main_view.pause()
+            return
 
         while True:
             unfinished_matches = (

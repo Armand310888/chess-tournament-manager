@@ -62,17 +62,8 @@ class RoundController:
         ):
             raise RoundNotFinishedError()
 
-        if len(tournament.players) < 2:
-            raise ValueError(
-                "A tournament must contain at least "
-                "2 players to create a round."
-            )
-
-        if len(tournament.players) % 2 != 0:
-            raise ValueError(
-                "A tournament must contain an even number of players "
-                "to create a round."
-            )
+        if tournament.current_round is None:
+            tournament.validate_ready_to_start()
 
         round_number = (
             1
@@ -81,8 +72,8 @@ class RoundController:
         )
 
         new_round = Round(round_number)
-        if tournament.current_round is None:
-            tournament.current_round = new_round
+
+        tournament.current_round = new_round
 
         existing_ids = [
             existing_round.id
