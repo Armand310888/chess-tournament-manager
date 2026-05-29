@@ -13,6 +13,7 @@ from src.utils.validators import (
     validate_class_object,
     validate_date_order,
     validate_datetime,
+    validate_even_number,
     validate_non_empty_string,
     validate_number,
     validate_regex_match,
@@ -125,7 +126,9 @@ class Tournament:
         address: Address,
         start_datetime: datetime,
         end_datetime: datetime,
+        min_number_of_players: int | None = None,
         max_number_of_players: int | None = None,
+        exact_number_of_players: int | None = None,
         number_of_rounds: int = DEFAULT_ROUND_NUMBER,
         description: str | None = None,
     ) -> None:
@@ -134,7 +137,9 @@ class Tournament:
         self.address = address
         self.start_datetime = start_datetime
         self.end_datetime = end_datetime
+        self.min_number_of_players = min_number_of_players
         self.max_number_of_players = max_number_of_players
+        self.exact_number_of_players = exact_number_of_players
         self.number_of_rounds = number_of_rounds
         self.description = description
         self.id: str | None = None
@@ -193,27 +198,43 @@ class Tournament:
         self._end_datetime = validated_date
 
     @property
+    def min_number_of_players(self) -> int | None:
+        """Return the minimum number of players, if defined."""
+        return self._min_number_of_players
+
+    @min_number_of_players.setter
+    def min_number_of_players(self, value: int | None) -> None:
+        self._min_number_of_players = validate_even_number(
+            value,
+            "min_number_of_players",
+        )
+        self._validate_player_count_rules()
+
+    @property
     def max_number_of_players(self) -> int | None:
         """Return the maximum number of players, if defined."""
         return self._max_number_of_players
 
     @max_number_of_players.setter
     def max_number_of_players(self, value: int | None) -> None:
-        if value is None:
-            self._max_number_of_players = None
-            return
-
-        validated_value = validate_number(
+        self._max_number_of_players = validate_even_number(
             value,
             "max_number_of_players",
-            int,
-            2
         )
+        self._validate_player_count_rules()
 
-        if validated_value % 2 != 0:
-            raise ValueError("'max_number_of_players' must be even.")
+    @property
+    def exact_number_of_players(self) -> int | None:
+        """Return the exact number of players, if defined."""
+        return self._exact_number_of_players
 
-        self._max_number_of_players = validated_value
+    @exact_number_of_players.setter
+    def exact_number_of_players(self, value: int | None) -> None:
+        self._exact_number_of_players = self.validate_even_number(
+            value,
+            "exact_number_of_players",
+        )
+        self._validate_player_count_rules()
 
     @property
     def number_of_rounds(self) -> int:
@@ -242,6 +263,61 @@ class Tournament:
 
         self._description = validate_non_empty_string(value, "description")
 
+    def validate_ready_to_start(self) -> None:
+        """Validate that the tournament can start its first round.
+
+        A tournament must satisfy all configured player-count constraints
+        before the first round can be created.
+
+        Raises:
+            ValueError: If the tournament contains fewer than two players.
+            ValueError: If the tournament contains an odd number of players.
+            ValueError: If the number of registered players does not match
+                the configured exact player count.
+            ValueError: If the number of registered players is below the
+                configured minimum player count.
+            ValueError: If the number of registered players exceeds the
+                configured maximum player count.
+        """
+        player_count = len(self.players)
+
+        if player_count < 2:
+            raise ValueError(
+                "A tournament must contain at least two players."
+            )
+
+        if player_count % 2 != 0:
+            raise ValueError(
+                "A tournament must contain an even number of players."
+            )
+
+        if (
+            self.exact_number_of_players is not None
+            and player_count != self.exact_number_of_players
+        ):
+            raise ValueError(
+                f"The tournament requires exactly "
+                f"{self.exact_number_of_players} players."
+            )
+
+        if (
+            self.min_number_of_players is not None
+            and player_count < self.min_number_of_players
+        ):
+            raise ValueError(
+                f"The tournament requires at least "
+                f"{self.min_number_of_players} players."
+            )
+
+        if (
+            self.max_number_of_players is not None
+            and player_count > self.max_number_of_players
+        ):
+            raise ValueError(
+                f"The tournament cannot exceed "
+                f"{self.max_number_of_players} players."
+            )
+
     def add_player(self, player: Player) -> None:
         """Add a player to the tournament.
 
@@ -264,35 +340,6 @@ class Tournament:
 
         self.players.append(validated_player)
 
-    def validate_ready_to_start(self) -> None:
-        """Validate that the tournament has all data required to start.
-
-        Raises:
-            ValueError: If required tournament data is missing or inconsistent.
-        """
-        if self.address is None:
-            raise ValueError(
-                "Tournament address must be defined before starting."
-            )
-
-        if self.start_datetime is None:
-            raise ValueError(
-                "Tournament start date must be defined before starting."
-            )
-
-        if self.end_datetime is None:
-            raise ValueError(
-                "Tournament end date must be defined before starting."
-            )
-
-        if self.max_number_of_players is None:
-            raise ValueError(
-                "Tournament number of players must be defined before starting."
-            )
-
-        if len(self.players) < 2:
-            raise ValueError("Tournament must have at least two players.")
-
     def to_dict(self) -> dict:
         """Convert the tournament into a JSON-serializable dictionary.
 
@@ -314,9 +361,17 @@ class Tournament:
             "address": self.address.to_dict(),
             "start_datetime": self.start_datetime.isoformat(),
             "end_datetime": self.end_datetime.isoformat(),
+            "min_number_of_players": (
+                self.min_number_of_players
+                if self.min_number_of_players else None
+            ),
             "max_number_of_players": (
                 self.max_number_of_players
                 if self.max_number_of_players else None
+            ),
+            "exact_number_of_players": (
+                self.exact_number_of_players
+                if self.exact_number_of_players else None
             ),
             "number_of_rounds": self.number_of_rounds,
             "description": (
@@ -385,7 +440,9 @@ class Tournament:
                 end_datetime=(
                     datetime.fromisoformat(data["end_datetime"])
                 ),
+                min_number_of_players=data.get("min_number_of_players"),
                 max_number_of_players=data.get("max_number_of_players"),
+                exact_number_of_players=data.get("exact_number_of_players"),
                 number_of_rounds=data.get("number_of_rounds"),
                 description=data.get("description"),
             )
@@ -404,6 +461,29 @@ class Tournament:
             raise ValueError(
                 f"Missing field: {missing_field.args[0]}"
             ) from missing_field
+
+    def _validate_player_count_rules(self) -> None:
+        """Validate consistency between player count constraints."""
+        min_players = getattr(self, "_min_number_of_players", None)
+        max_players = getattr(self, "_max_number_of_players", None)
+        exact_players = getattr(self, "_exact_number_of_players", None)
+
+        if exact_players is not None:
+            if min_players is not None or max_players is not None:
+                raise ValueError(
+                    "Exact number of players cannot be combined with "
+                    "minimum or maximum player limits."
+                )
+
+        if (
+            min_players is not None
+            and max_players is not None
+            and min_players > max_players
+        ):
+            raise ValueError(
+                "'min_number_of_players' must be lower than or equal to "
+                "'max_number_of_players'."
+            )
 
     def __str__(self) -> str:
         """Return the tournament name."""

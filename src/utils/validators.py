@@ -369,3 +369,19 @@ def validate_class_object(
         )
 
     return value
+
+
+def validate_even_number(
+    value: int | None,
+    field_name: str,
+) -> int | None:
+    """Validate a number is even."""
+    if value is None:
+        return None
+
+    validated_value = validate_number(value, field_name, int, 2)
+
+    if validated_value % 2 != 0:
+        raise ValueError(f"'{field_name}' must be even.")
+
+    return validated_value
