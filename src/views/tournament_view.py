@@ -18,6 +18,7 @@ from src.models.tournament import Tournament
 from src.views.input_helpers import (
     prompt_until_valid,
     validate_index_selection,
+    validate_yes_or_no_string,
     OptionalOrNot,
 )
 from src.views.player_view import PlayerView
@@ -79,20 +80,20 @@ class TournamentView(BaseView):
             self.prompt_format("Enter the tournament city name: "),
             validate_non_empty_string,
             "city",
-            console=self.console
+            console=self.console,
         )
 
         address = Address(street_number, street_name, postal_code, city)
 
         start_datetime = prompt_until_valid(
-                OptionalOrNot.NOT_OPTIONAL,
-                self.prompt_format(
-                    "Enter the tournament starting date "
-                    "and time (YYYY-MM-DD HH:MM): "
-                ),
-                validate_datetime,
-                "start_date",
-                console=self.console
+            OptionalOrNot.NOT_OPTIONAL,
+            self.prompt_format(
+                "Enter the tournament starting date "
+                "and time (YYYY-MM-DD HH:MM): "
+            ),
+            validate_datetime,
+            "start_datetime",
+            console=self.console,
             )
 
         while True:
@@ -103,8 +104,8 @@ class TournamentView(BaseView):
                     "(YYYY-MM-DD HH:MM): "
                 ),
                 validate_datetime,
-                "end_date",
-                console=self.console
+                "end_datetime",
+                console=self.console,
             )
 
             try:
@@ -113,19 +114,77 @@ class TournamentView(BaseView):
             except ValueError as error:
                 self.display_error(error)
 
-        max_number_of_players = prompt_until_valid(
-            OptionalOrNot.OPTIONAL,
+        min_number_of_players = None
+        max_number_of_players = None
+        exact_number_of_players = None
+
+        use_exact_number = prompt_until_valid(
+            OptionalOrNot.NOT_OPTIONAL,
             self.prompt_format(
-                "Enter the maximum number of players "
-                "for the tournament\n"
-                "(or press 'Enter' to skip): "
+                "Do you want to define an exact number of players? "
+                "Enter 'y' for YES or 'n' for NO: "
             ),
-            validate_number,
-            "max_number_of_players",
-            int,
-            1,
-            console=self.console
+            validate_yes_or_no_string,
+            console=self.console,
         )
+
+        if use_exact_number == "y":
+            exact_number_of_players = prompt_until_valid(
+                OptionalOrNot.NOT_OPTIONAL,
+                self.prompt_format("Enter the exact number of players: "),
+                validate_number,
+                "exact_number_of_players",
+                int,
+                2,
+                console=self.console,
+            )
+
+        else:
+            use_min_number = prompt_until_valid(
+                OptionalOrNot.NOT_OPTIONAL,
+                self.prompt_format(
+                    "Do you want to define a minimum number of players? "
+                    "Enter 'y' for YES or 'n' for NO: "
+                ),
+                validate_yes_or_no_string,
+                console=self.console,
+            )
+
+            if use_min_number == "y":
+                min_number_of_players = prompt_until_valid(
+                    OptionalOrNot.NOT_OPTIONAL,
+                    self.prompt_format(
+                        "Enter the minimum number of players: "
+                    ),
+                    validate_number,
+                    "min_number_of_players",
+                    int,
+                    2,
+                    console=self.console,
+                )
+
+            use_max_number = prompt_until_valid(
+                OptionalOrNot.NOT_OPTIONAL,
+                self.prompt_format(
+                    "Do you want to define a maximum number of players? "
+                    "Enter 'y' for YES or 'n' for NO: "
+                ),
+                validate_yes_or_no_string,
+                console=self.console,
+            )
+
+            if use_max_number == "y":
+                max_number_of_players = prompt_until_valid(
+                    OptionalOrNot.NOT_OPTIONAL,
+                    self.prompt_format(
+                        "Enter the maximum number of players: "
+                    ),
+                    validate_number,
+                    "max_number_of_players",
+                    int,
+                    2,
+                    console=self.console,
+                )
 
         while True:
             number_of_rounds_input = self.console.input(
@@ -168,7 +227,9 @@ class TournamentView(BaseView):
             "address": address,
             "start_datetime": start_datetime,
             "end_datetime": end_datetime,
+            "min_number_of_players": min_number_of_players,
             "max_number_of_players": max_number_of_players,
+            "exact_number_of_players": exact_number_of_players,
             "number_of_rounds": number_of_rounds,
             "description": description
         }
