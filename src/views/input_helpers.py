@@ -109,6 +109,9 @@ def validate_index_selection(
             f"A minimum of {minimum_selection} numbers must be selected."
         )
 
+    if len(selected_indices) != len(set(selected_indices)):
+        raise ValueError("The same number cannot be selected twice.")
+
     if (
         maximum_selection is not None
         and len(selected_indices) > maximum_selection

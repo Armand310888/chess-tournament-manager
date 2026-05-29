@@ -39,10 +39,14 @@ class RoundController:
         self,
         tournament: Tournament,
     ) -> Round:
-        """Create, register, persist, and return a new tournament round.
+        """Create, register, and return a new tournament round.
 
-        The round is attached to the tournament and automatically populated
-        with generated matches.
+        The round is added to the tournament, assigned a generated ID,
+        persisted to storage, and set as the current round.
+
+        For the first round, the tournament must satisfy all player-count
+        requirements before it can start. For subsequent rounds, the current
+        round must be finished before a new one can be created.
 
         Args:
             tournament: Tournament receiving the new round.
@@ -51,9 +55,14 @@ class RoundController:
             Created round.
 
         Raises:
-            ValueError: If the tournament cannot accept a new round.
-            RoundNotFinishedError: If the current round is unfinished.
+            TypeError: If tournament is not a Tournament object.
+            RoundNotFinishedError: If the current round is still in progress.
+            ValueError: If the tournament does not satisfy the requirements
+                needed to start.
         """
+        if not isinstance(tournament, Tournament):
+            raise TypeError("'tournament' must be a Tournament object.")
+
         current_round = tournament.current_round
 
         if (

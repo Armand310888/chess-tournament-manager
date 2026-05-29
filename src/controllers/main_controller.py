@@ -242,6 +242,8 @@ class MainController:
 
         if not selectable_players:
             self.main_view.display_error("No selectable players available.")
+            self.main_view.pause()
+            return
 
         self.player_view.display_players(
             selectable_players,
