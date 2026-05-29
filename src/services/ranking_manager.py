@@ -55,8 +55,11 @@ def get_players_ranked(tournament: Tournament) -> list[tuple[Player, float]]:
 
     ranked_players = sorted(
         players_to_rank,
-        key=lambda player_score: player_score[1],
-        reverse=True
+        key=lambda player_score: (
+            -player_score[1],
+            player_score[0].last_name.lower(),
+            player_score[0].first_name.lower(),
+        )
     )
 
     return ranked_players

@@ -401,10 +401,23 @@ class TournamentView(BaseView):
             f"{selected_tournament.address.city}."
         )
 
-        table.add_row(
-            "Maximum number of players",
-            str(selected_tournament.max_number_of_players),
-        )
+        if selected_tournament.min_number_of_players is not None:
+            table.add_row(
+                "Minimum number of players",
+                str(selected_tournament.min_number_of_players),
+            )
+
+        if selected_tournament.max_number_of_players is not None:
+            table.add_row(
+                "Maximum number of players",
+                str(selected_tournament.max_number_of_players),
+            )
+
+        if selected_tournament.exact_number_of_players is not None:
+            table.add_row(
+                "Exact number of players required",
+                str(selected_tournament.exact_number_of_players)
+            )
 
         table.add_row(
             "Current number of players",
