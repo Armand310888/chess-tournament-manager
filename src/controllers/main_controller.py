@@ -374,5 +374,5 @@ class MainController:
                 result_by_choice[choice],
             )
 
-            self.main_view.clear()
             self.match_view.display_success("Match result saved.")
+            self.main_view.pause()

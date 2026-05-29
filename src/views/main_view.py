@@ -121,7 +121,7 @@ class MainView(BaseView):
             "Choose an action\n",
             choices=[
                 questionary.Choice(
-                    "Select a Tournament",
+                    "Select a tournament to manage",
                     value="select_tournament",
                 ),
                 questionary.Choice(

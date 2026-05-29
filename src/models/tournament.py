@@ -230,7 +230,7 @@ class Tournament:
 
     @exact_number_of_players.setter
     def exact_number_of_players(self, value: int | None) -> None:
-        self._exact_number_of_players = self.validate_even_number(
+        self._exact_number_of_players = validate_even_number(
             value,
             "exact_number_of_players",
         )
