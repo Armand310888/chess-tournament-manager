@@ -163,6 +163,8 @@ class MainController:
                 self.main_view.pause()
             elif choice == "match_results":
                 self.enter_matches_results_flow(selected_tournament)
+            elif choice == "end_round":
+                self.end_current_round_flow(selected_tournament)
             elif choice == "back":
                 break
 
@@ -376,3 +378,22 @@ class MainController:
 
             self.match_view.display_success("Match result saved.")
             self.main_view.pause()
+
+    def end_current_round_flow(
+        self,
+        selected_tournament: Tournament,
+    ) -> None:
+        """Prompt for confirmation and end the current round."""
+        choice = self.round_view.prompt_for_end_round()
+
+        if choice != "y":
+            return
+
+        try:
+            self.round_controller.end_current_round(selected_tournament)
+        except ValueError as error:
+            self.round_view.display_error(error)
+        else:
+            self.round_view.display_success("Round ended successfully.")
+
+        self.main_view.pause()

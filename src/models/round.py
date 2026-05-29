@@ -57,6 +57,30 @@ class Round:
 
     def end_round(self) -> None:
         """End the round lifecycle."""
+        if self.status == EventStatus.FINISHED:
+            raise ValueError("This round is already finished.")
+
+        if not self.matches:
+            raise ValueError("A round without matches cannot be finished.")
+
+        unfinished_matches = []
+
+        for match in self.matches:
+            if match.status != EventStatus.FINISHED:
+                unfinished_matches.append(match)
+
+        if len(unfinished_matches) > 0:
+            matches_list = "\n".join(
+                str(match)
+                for match in unfinished_matches
+            )
+
+            raise ValueError(
+                "The following round matches are still ongoing "
+                "and must be terminated first:\n"
+                f"{matches_list}"
+            )
+
         end_event(self)
 
     def to_dict(self) -> dict:

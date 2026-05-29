@@ -74,11 +74,7 @@ class RoundController:
         if tournament.current_round is None:
             tournament.validate_ready_to_start()
 
-        round_number = (
-            1
-            if tournament.current_round is None
-            else tournament.current_round.number + 1
-        )
+        round_number = len(tournament.rounds) + 1
 
         new_round = Round(round_number)
 
@@ -148,3 +144,32 @@ class RoundController:
             for match in round.matches
             if match.status != EventStatus.FINISHED
         ]
+
+    def end_current_round(
+        self,
+        selected_tournament: Tournament,
+    ) -> None:
+        """End the current round and clear it from the tournament.
+
+        Args:
+            selected_tournament: Tournament whose current round must be
+                ended.
+
+        Raises:
+            TypeError: If selected_tournament is not a Tournament object.
+            ValueError: If no round is currently in progress.
+            ValueError: If the current round cannot be ended.
+        """
+        if not isinstance(selected_tournament, Tournament):
+            raise TypeError(
+                "'selected_tournament' must be a Tournament object."
+            )
+
+        if selected_tournament.current_round is None:
+            raise ValueError("No round in progress yet.")
+
+        selected_tournament.current_round.end_round()
+        selected_tournament.current_round = None
+
+        save_rounds(self.rounds)
+        save_tournaments(self.tournaments)

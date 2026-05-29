@@ -178,6 +178,10 @@ class MainView(BaseView):
                     value="match_results",
                 ),
                 questionary.Choice(
+                    "End current round",
+                    value="end_round",
+                ),
+                questionary.Choice(
                     "← Back",
                     value="back",
                 )

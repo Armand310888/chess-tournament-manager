@@ -138,3 +138,12 @@ class RoundView(BaseView):
             )
 
         self.console.print(table)
+
+    def prompt_for_end_round(self) -> str:
+        """Prompt for confirmation before ending the current round."""
+        return prompt_until_valid(
+            OptionalOrNot.NOT_OPTIONAL,
+            self.prompt_format("End current round? (y/n): "),
+            validate_yes_or_no_string,
+            console=self.console,
+        )
