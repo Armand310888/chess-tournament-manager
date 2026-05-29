@@ -70,8 +70,16 @@ class Round:
         return {
             "number": self.number,
             "matches_id": matches_id,
-            "start_datetime": self.start_datetime.isoformat(),
-            "end_datetime": self.end_datetime.isoformat(),
+            "start_datetime": (
+                self.start_datetime.isoformat()
+                if self.start_datetime is not None
+                else None
+            ),
+            "end_datetime": (
+                self.end_datetime.isoformat()
+                if self.end_datetime is not None
+                else None
+            ),
             "status": self.status.value,
             "id": self.id,
         }
@@ -109,10 +117,14 @@ class Round:
 
             round.start_datetime = (
                 datetime.fromisoformat(data["start_datetime"])
+                if data.get("start_datetime") is not None
+                else None
             )
 
             round.end_datetime = (
                 datetime.fromisoformat(data["end_datetime"])
+                if data.get("end_datetime") is not None
+                else None
             )
 
             round.status = EventStatus(data["status"])
