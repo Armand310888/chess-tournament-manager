@@ -2,6 +2,7 @@
 
 from enum import Enum
 from typing import Callable, TypeVar
+
 from rich.console import Console
 
 from src.views.base_view import BaseView
@@ -11,23 +12,36 @@ T = TypeVar("T")
 
 class OptionalOrNot(Enum):
     """Represent whether a prompt allows empty input."""
+
     OPTIONAL = "yes"
     NOT_OPTIONAL = "no"
 
 
 def prompt_until_valid(
-        optional_or_not: OptionalOrNot,
-        prompt_message: str,
-        validator: Callable[..., T],
-        *args,
-        console: Console
+    optional_or_not: OptionalOrNot,
+    prompt_message: str,
+    validator: Callable[..., T],
+    *args,
+    console: Console
 ) -> T | None:
     """Prompt until the user enters a valid value.
 
-    Empty input returns None only when the prompt is optional.
-    Validation errors are displayed and the prompt is repeated.
-    """
+    Empty input returns None only when the prompt is optional. Validation
+    errors are displayed and the prompt is repeated.
 
+    Args:
+        optional_or_not: Whether empty input is accepted.
+        prompt_message: Message displayed to the user.
+        validator: Callable used to validate and convert raw input.
+        *args: Additional positional arguments passed to the validator.
+        console: Rich console used for input and error display.
+
+    Returns:
+        Validated value, or None for accepted optional empty input.
+
+    Raises:
+        TypeError: If optional_or_not has an invalid type.
+    """
     if not isinstance(optional_or_not, OptionalOrNot):
         raise TypeError("'optional_or_not' must be an OptionalOrNot value.")
 
@@ -45,15 +59,27 @@ def prompt_until_valid(
 
 
 def validate_index_selection(
-        raw_selection,
-        list_for_selection: list,
-        minimum_selection: int = 1,
-        maximum_selection: int | None = None,
+    raw_selection,
+    list_for_selection: list,
+    minimum_selection: int = 1,
+    maximum_selection: int | None = None,
 ) -> list[str]:
     """Validate comma-separated indices against a selectable list.
 
-    Returned indices are one-based so they can be reused directly
-    with view-level numbered selections.
+    Returned indices are one-based so they can be reused directly with
+    view-level numbered selections.
+
+    Args:
+        raw_selection: Raw comma-separated user input.
+        list_for_selection: Selectable items used to validate bounds.
+        minimum_selection: Minimum number of required selections.
+        maximum_selection: Optional maximum number of accepted selections.
+
+    Returns:
+        One-based selected indices.
+
+    Raises:
+        ValueError: If the input is malformed or outside accepted bounds.
     """
     raw_indices = (
         raw_selection
@@ -66,7 +92,7 @@ def validate_index_selection(
 
     for raw_index in raw_indices:
         if not raw_index.isdigit():
-            raise ValueError("Enter only numbers separated by comas.")
+            raise ValueError("Enter only numbers separated by commas.")
 
         index = int(raw_index)
 
@@ -95,10 +121,19 @@ def validate_index_selection(
 
 
 def validate_yes_or_no_string(
-        raw_value: str,
+    raw_value: str,
 ) -> str:
-    """Validate a yes/no answer and return it normalized."""
+    """Validate a yes/no answer and return it normalized.
 
+    Args:
+        raw_value: Raw user input.
+
+    Returns:
+        Normalized answer, either ``"y"`` or ``"n"``.
+
+    Raises:
+        ValueError: If the answer is neither ``"y"`` nor ``"n"``.
+    """
     answer = raw_value.strip().lower()
 
     if answer not in ("y", "n"):

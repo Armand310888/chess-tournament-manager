@@ -31,12 +31,18 @@ class TournamentView(BaseView):
     """Collect and display tournament-related console data."""
 
     def __init__(self):
+        """Initialize the tournament view and nested player view."""
         super().__init__()
         self.player_view = PlayerView()
 
-    def prompt_for_tournament_data(self) -> dict[str, str | int | date]:
-        """Prompt for tournament data and return validated field values."""
+    def prompt_for_tournament_data(
+        self
+    ) -> dict[str, str | int | date | object]:
+        """Prompt for validated tournament data.
 
+        Returns:
+            Dictionary of validated values required to create a tournament.
+        """
         self.console.print()
 
         name = prompt_until_valid(
@@ -44,7 +50,7 @@ class TournamentView(BaseView):
             self.prompt_format("Enter the tournament name: "),
             validate_non_empty_string,
             "name",
-            console=self.console
+            console=self.console,
         )
 
         street_number = prompt_until_valid(
@@ -54,7 +60,7 @@ class TournamentView(BaseView):
             "street_number",
             Pattern.STREET_NUMBER,
             PatternDescription.STREET_NUMBER,
-            console=self.console
+            console=self.console,
         )
 
         street_name = prompt_until_valid(
@@ -62,7 +68,7 @@ class TournamentView(BaseView):
             self.prompt_format("Enter the tournament street name: "),
             validate_non_empty_string,
             "street_name",
-            console=self.console
+            console=self.console,
         )
 
         postal_code = prompt_until_valid(
@@ -72,7 +78,7 @@ class TournamentView(BaseView):
             "postal_code",
             Pattern.POSTAL_CODE,
             PatternDescription.POSTAL_CODE,
-            console=self.console
+            console=self.console,
         )
 
         city = prompt_until_valid(
@@ -219,7 +225,7 @@ class TournamentView(BaseView):
             validate_non_empty_string,
             "description",
             100,
-            console=self.console
+            console=self.console,
         )
 
         return {
@@ -236,20 +242,19 @@ class TournamentView(BaseView):
 
     def display_created_tournament(self, tournament: Tournament) -> None:
         """Display a confirmation panel for a newly created tournament."""
-
         content = (
             "\n"
             + self.content_format(
                 "Tournament name",
-                tournament.name.upper()
+                tournament.name.upper(),
             )
             + self.content_format(
                 "Place",
-                tournament.address.city
+                tournament.address.city,
             )
             + self.content_format(
                 "Start date and time",
-                tournament.start_datetime
+                tournament.start_datetime,
             )
         )
 
@@ -263,15 +268,14 @@ class TournamentView(BaseView):
                     "successfully -[/bold yellow]"
                 ),
                 border_style="yellow",
-                width=self.APP_WIDTH
+                width=self.APP_WIDTH,
             )
         )
 
     def display_tournaments(self, tournaments: list[Tournament]) -> None:
         """Display existing tournaments in a numbered table."""
-
         if not tournaments:
-            self.console.print("No tournament have been created yet.")
+            self.console.print("No tournament has been created yet.")
             return
 
         table = Table(
@@ -298,21 +302,20 @@ class TournamentView(BaseView):
         self.console.print(table)
 
     def prompt_to_select_tournament_index(
-            self,
-            tournaments: list[Tournament]
+        self,
+        tournaments: list[Tournament]
     ) -> list[int]:
         """Prompt for one tournament index and return it."""
-
         raw_selected_tournament_index = prompt_until_valid(
             OptionalOrNot.NOT_OPTIONAL,
             self.prompt_format(
-                "Select tournament by entering it's number (ex: 3): "
+                "Select tournament by entering its number (ex: 3): "
             ),
             validate_index_selection,
             tournaments,
             1,
             1,
-            console=self.console
+            console=self.console,
         )
 
         selected_index = raw_selected_tournament_index[0]
@@ -320,14 +323,20 @@ class TournamentView(BaseView):
         return selected_index
 
     def display_tournament_players_and_ranks(
-            self,
-            selected_tournament: Tournament
+        self,
+        selected_tournament: Tournament
     ):
-        """Display tournament players ordered by score."""
+        """Display tournament players ordered by descending score.
 
+        Args:
+            selected_tournament: Tournament whose player scores are displayed.
+
+        Raises:
+            TypeError: If selected_tournament is not a Tournament.
+        """
         if not isinstance(selected_tournament, Tournament):
             raise TypeError(
-                "'selected_tournament', must be a Tournament object."
+                "'selected_tournament' must be a Tournament object."
             )
         ranked_players = get_players_ranked(selected_tournament)
 
@@ -347,25 +356,28 @@ class TournamentView(BaseView):
             table.add_row(
                 player.last_name.upper(),
                 player.first_name,
-                f"{total_score:g}"
+                f"{total_score:g}",
             )
 
         self.console.print()
         self.console.print(table)
 
     def display_tournament_details(
-            self,
-            selected_tournament: Tournament
+        self,
+        selected_tournament: Tournament
     ) -> str:
-        """Display detailed information about a tournament."""
+        """Display detailed information about a tournament.
 
+        Args:
+            selected_tournament: Tournament to display.
+        """
         self.console.print()
 
         table = Table(
             title=None,
             width=self.APP_WIDTH,
             show_lines=True,
-            show_header=False
+            show_header=False,
         )
 
         table.add_column(style="bold")
@@ -391,32 +403,38 @@ class TournamentView(BaseView):
 
         table.add_row(
             "Maximum number of players",
-            str(selected_tournament.max_number_of_players)
+            str(selected_tournament.max_number_of_players),
         )
 
         table.add_row(
             "Current number of players",
-            str(len(selected_tournament.players))
+            str(len(selected_tournament.players)),
         )
 
         table.add_row(
             "Number of rounds",
-            str(selected_tournament.number_of_rounds)
+            str(selected_tournament.number_of_rounds),
         )
 
         table.add_row(
             "Current round",
-            str(selected_tournament.current_round)
+            str(selected_tournament.current_round),
         )
 
         self.console.print(table)
 
     def display_tournament_rounds_and_matches(
-            self,
-            selected_tournament: Tournament
+        self,
+        selected_tournament: Tournament
     ) -> None:
-        """Display tournament rounds and their matches."""
+        """Display tournament rounds and their matches.
 
+        Args:
+            selected_tournament: Tournament whose rounds and matches are shown.
+
+        Raises:
+            TypeError: If selected_tournament is not a Tournament.
+        """
         if not isinstance(selected_tournament, Tournament):
             raise TypeError(
                 "'selected_tournament' must be a Tournament object."
@@ -471,7 +489,7 @@ class TournamentView(BaseView):
                     f"{match.black_player.last_name.upper()}",
                     match.status.value,
                     result,
-                    score
+                    score,
                 )
 
             self.console.print(table)

@@ -1,14 +1,15 @@
 """Base console view and shared display formatting helpers."""
 
+from questionary import Style
+from rich.align import Align
 from rich.console import Console
 from rich.panel import Panel
 from rich.rule import Rule
-from rich.align import Align
-from questionary import Style
 
 
 class BaseView:
     """Provide shared console display behavior for all views."""
+
     APP_WIDTH = 80
 
     QUESTIONARY_STYLE = Style([
@@ -19,6 +20,7 @@ class BaseView:
     ])
 
     def __init__(self) -> None:
+        """Initialize the shared Rich console."""
         self.console = Console()
 
     def display_application_header(self) -> None:
@@ -39,7 +41,7 @@ class BaseView:
         self.console.print(
             Rule(
                 f"[bold yellow]{title}[/]",
-                style="yellow"
+                style="yellow",
             ),
             width=self.APP_WIDTH,
         )
@@ -50,19 +52,20 @@ class BaseView:
 
     def display_error(self, error: Exception | str) -> None:
         """Display a formatted error message."""
-
         self.console.print(
             self.error_format(str(error))
         )
 
     def clear(self) -> None:
         """Clear the console display."""
-
         self.console.clear()
 
     def display_success(self, message: str) -> None:
-        """Display a formatted success message."""
+        """Display a formatted success message.
 
+        Args:
+            message: Success message to display.
+        """
         self.console.print(
             Panel(
                 f"[bold green]{message}[/bold green]",
@@ -83,7 +86,15 @@ class BaseView:
 
     @staticmethod
     def content_format(data_name: str, data_value: object) -> str:
-        """Format a label-value line with aligned labels."""
+        """Format a label-value line with aligned labels.
+
+    Args:
+        data_name: Label displayed before the value.
+        data_value: Value associated with the label.
+
+    Returns:
+        Rich markup string ending with a newline.
+    """
         return (
             f"[underline]{data_name:<30}[/underline]"
             f": {data_value}\n"
@@ -91,7 +102,11 @@ class BaseView:
 
     @staticmethod
     def error_format(error_message: str) -> str:
-        """Format an error message."""
+        """Display a formatted error message.
+
+        Args:
+            error: Exception or message to display.
+        """
 
         return (
             "[bold red][underline]Error[/underline][/bold red]: "

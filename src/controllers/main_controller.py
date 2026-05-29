@@ -1,25 +1,28 @@
-""""""
-from src.repository.player_repository import load_players
-from src.repository.match_repository import load_matches
-from src.repository.round_repository import load_rounds
-from src.repository.tournament_repository import load_tournaments
-from src.controllers.player_controller import PlayerController
+"""Main application controller and high-level menu flows."""
+
 from src.controllers.match_controller import MatchController
+from src.controllers.player_controller import PlayerController
 from src.controllers.round_controller import RoundController
 from src.controllers.tournament_controller import TournamentController
-from src.views.player_view import PlayerView
+from src.models.match import MatchResult
+from src.models.tournament import Tournament
+from src.repository.match_repository import load_matches
+from src.repository.player_repository import load_players
+from src.repository.round_repository import load_rounds
+from src.repository.tournament_repository import load_tournaments
+from src.utils.exceptions import RoundNotFinishedError
+from src.views.main_view import MainView
 from src.views.match_view import MatchView
+from src.views.player_view import PlayerView
 from src.views.round_view import RoundView
 from src.views.tournament_view import TournamentView
-from src.views.main_view import MainView
-from src.utils.exceptions import RoundNotFinishedError
-from src.models.tournament import Tournament
-from src.models.match import MatchResult
 
 
 class MainController:
-    """"""
-    def __init__(self):
+    """Coordinate application startup, menus, and user flows."""
+
+    def __init__(self) -> None:
+        """Load persisted data and initialize controllers and views."""
         self.players = load_players()
         self.matches = load_matches(self.players)
         self.rounds = load_rounds(self.matches)
@@ -45,8 +48,7 @@ class MainController:
         self.main_view = MainView()
 
     def run(self) -> None:
-        """"""
-        print("Application started")
+        """Run the main application loop until the user exits."""
 
         while True:
             choice = self.main_view.display_main_menu()
@@ -59,7 +61,7 @@ class MainController:
                 break
 
     def player_menu_flow(self) -> None:
-        """"""
+        """Run the player management menu loop."""
         while True:
             choice = self.main_view.display_player_menu()
 
@@ -71,7 +73,7 @@ class MainController:
                 break
 
     def list_players_menu_flow(self) -> None:
-        """"""
+        """Run the registered players listing menu loop."""
         while True:
             self.main_view.display_application_header()
             self.player_view.display_players(self.players, "Registered")
@@ -84,7 +86,7 @@ class MainController:
                 break
 
     def tournament_menu_flow(self) -> None:
-        """"""
+        """Run the tournament management entry menu loop."""
         while True:
             choice = self.main_view.display_tournaments_menu()
 
@@ -95,8 +97,8 @@ class MainController:
             elif choice == "back":
                 break
 
-    def manage_tournament_menu_flow(self):
-        """"""
+    def manage_tournament_menu_flow(self) -> None:
+        """Run the tournament selection menu loop."""
         while True:
             self.main_view.display_application_header()
             self.tournament_view.display_tournaments(self.tournaments)
@@ -125,8 +127,11 @@ class MainController:
             elif choice == "back":
                 break
 
-    def select_tournament_menu_flow(self, selected_tournament: Tournament):
-        """"""
+    def select_tournament_menu_flow(
+        self,
+        selected_tournament: Tournament
+    ) -> None:
+        """Run the menu loop for a selected tournament."""
         while True:
             self.main_view.display_application_header()
 
@@ -222,10 +227,14 @@ class MainController:
         self.main_view.pause()
 
     def add_player_to_tournament_flow(
-            self,
-            selected_tournament: Tournament
+        self,
+        selected_tournament: Tournament
     ) -> None:
-        """"""
+        """Prompt for players and register them in the selected tournament.
+
+        Args:
+            selected_tournament: Tournament receiving selected players.
+        """
         selectable_players = (
             self.tournament_controller
             .get_selectable_players(selected_tournament)
@@ -261,10 +270,14 @@ class MainController:
         self.main_view.pause()
 
     def create_next_round_flow(
-            self,
-            selected_tournament: Tournament
+        self,
+        selected_tournament: Tournament
     ) -> None:
-        """"""
+        """Prompt for confirmation and create the next tournament round.
+
+        Args:
+            selected_tournament: Tournament receiving the next round.
+        """
         choice = self.round_view.prompt_for_new_round()
 
         if choice != "y":
@@ -286,7 +299,7 @@ class MainController:
             self.round_controller
             .create_matches_for_round(
                 new_round,
-                selected_tournament
+                selected_tournament,
             )
         )
 
@@ -295,10 +308,14 @@ class MainController:
         self.main_view.pause()
 
     def enter_matches_results_flow(
-            self,
-            selected_tournament: Tournament
+        self,
+        selected_tournament: Tournament
     ) -> None:
-        """"""
+        """Prompt for unfinished matches and record their results.
+
+        Args:
+            selected_tournament: Tournament whose current round is scored.
+        """
         if not isinstance(selected_tournament, Tournament):
             raise TypeError(
                 "'selected_tournament' must be a Tournament object."

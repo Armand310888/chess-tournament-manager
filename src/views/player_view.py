@@ -1,25 +1,26 @@
 """Player console view."""
 
-from rich.panel import Panel
-from rich.table import Table
 from datetime import date
 
-from src.views.input_helpers import prompt_until_valid
-from src.views.base_view import BaseView
+from rich.panel import Panel
+from rich.table import Table
+
+from src.models.player import Player
 from src.utils.validators import (
-    validate_regex_match,
-    validate_number,
-    validate_date,
-    validate_person_name,
     ELO_MAXIMUM,
     ELO_MINIMUM,
     Pattern,
     PatternDescription,
+    validate_date,
+    validate_number,
+    validate_person_name,
+    validate_regex_match,
 )
-from src.models.player import Player
+from src.views.base_view import BaseView
 from src.views.input_helpers import (
-    validate_index_selection,
     OptionalOrNot,
+    prompt_until_valid,
+    validate_index_selection,
 )
 
 
@@ -27,14 +28,17 @@ class PlayerView(BaseView):
     """Collect and display player-related console data."""
 
     def prompt_for_player_data(self) -> dict[str, str | int | date]:
-        """Prompt for player data and return validated field values."""
+        """Prompt for validated player data.
 
+        Returns:
+            Dictionary of validated values required to create a player.
+        """
         first_name = prompt_until_valid(
             OptionalOrNot.NOT_OPTIONAL,
             self.prompt_format("Enter player's first name: "),
             validate_person_name,
             "first_name",
-            console=self.console
+            console=self.console,
         )
 
         last_name = prompt_until_valid(
@@ -42,7 +46,7 @@ class PlayerView(BaseView):
             self.prompt_format("Enter player's last name: "),
             validate_person_name,
             "last_name",
-            console=self.console
+            console=self.console,
         )
 
         birth_date = prompt_until_valid(
@@ -50,7 +54,7 @@ class PlayerView(BaseView):
             self.prompt_format("Enter player's birth date: "),
             validate_date,
             "birth_date",
-            console=self.console
+            console=self.console,
         )
 
         elo_rating = prompt_until_valid(
@@ -61,7 +65,7 @@ class PlayerView(BaseView):
             int,
             ELO_MINIMUM,
             ELO_MAXIMUM,
-            console=self.console
+            console=self.console,
         )
 
         chess_national_id = prompt_until_valid(
@@ -71,7 +75,7 @@ class PlayerView(BaseView):
             "chess_national_id",
             Pattern.CHESS_NATIONAL_ID,
             PatternDescription.CHESS_NATIONAL_ID,
-            console=self.console
+            console=self.console,
         )
 
         player_data = {
@@ -79,28 +83,27 @@ class PlayerView(BaseView):
             "last_name": last_name,
             "birth_date": birth_date,
             "elo_rating": elo_rating,
-            "chess_national_id": chess_national_id
+            "chess_national_id": chess_national_id,
         }
 
         return player_data
 
     def display_created_player(self, player: Player) -> None:
         """Display a confirmation panel for a newly created player."""
-
         content = (
             f"\n{player.first_name.upper()} "
             f"[bold]{player.last_name.upper()}[/bold]\n\n"
             + self.content_format(
                 "ELO rating",
-                player.elo_rating
+                player.elo_rating,
             )
             + self.content_format(
                 "Birth date",
-                player.birth_date
+                player.birth_date,
             )
             + self.content_format(
                 "Chess National ID",
-                player.chess_national_id
+                player.chess_national_id,
             )
         )
 
@@ -114,17 +117,24 @@ class PlayerView(BaseView):
                     "successfully -[/bold yellow]"
                 ),
                 border_style="yellow",
-                width=self.APP_WIDTH
+                width=self.APP_WIDTH,
             )
         )
 
     def display_players(
-            self,
-            players: list[Player],
-            type_of_player: str,
+        self,
+        players: list[Player],
+        type_of_player: str,
     ) -> None:
-        """Display players in a numbered table."""
+        """Display players in a numbered table.
 
+        Args:
+            players: Players to display.
+            type_of_player: Table title describing the displayed list.
+
+        Raises:
+            TypeError: If arguments have invalid types.
+        """
         if not isinstance(players, list):
             raise TypeError("'players' must be a list.")
 
@@ -159,12 +169,19 @@ class PlayerView(BaseView):
         self.console.print(table)
 
     def display_players_details(
-            self,
-            players: list[Player],
-            selected_indices: list[int]
+        self,
+        players: list[Player],
+        selected_indices: list[int]
     ) -> None:
-        """Display detailed cards for selected players."""
+        """Display detailed cards for selected players.
 
+        Args:
+            players: Complete list containing the selected players.
+            selected_indices: One-based indices of players to display.
+
+        Raises:
+            TypeError: If players is invalid.
+        """
         if not isinstance(players, list):
             raise TypeError("'players' must be a list.")
 
@@ -175,7 +192,7 @@ class PlayerView(BaseView):
         self.console.print()
 
         for index in selected_indices:
-            player = players[index-1]
+            player = players[index - 1]
 
             content = (
                 self.content_format(
@@ -210,11 +227,17 @@ class PlayerView(BaseView):
             )
 
     def prompt_to_select_players_indices(
-            self,
-            selectable_players: list[Player],
+        self,
+        selectable_players: list[Player],
     ) -> list[int]:
-        """Prompt for player indices and return validated selections."""
+        """Prompt for player indices and return validated selections.
 
+        Args:
+            selectable_players: Players available for selection.
+
+        Returns:
+            One-based selected player indices.
+        """
         return prompt_until_valid(
             OptionalOrNot.NOT_OPTIONAL,
             self.prompt_format(
@@ -224,5 +247,5 @@ class PlayerView(BaseView):
             validate_index_selection,
             selectable_players,
             1,
-            console=self.console
+            console=self.console,
         )

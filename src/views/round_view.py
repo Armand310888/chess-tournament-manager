@@ -1,54 +1,60 @@
 """Round console view."""
 
-from rich.table import Table
-from rich.panel import Panel
 from rich.console import Group
+from rich.panel import Panel
+from rich.table import Table
 from rich.text import Text
 
+from src.models.match import Match
+from src.models.round import Round
 from src.views.base_view import BaseView
 from src.views.input_helpers import (
+    OptionalOrNot,
     prompt_until_valid,
     validate_yes_or_no_string,
-    OptionalOrNot,
 )
-from src.models.round import Round
-from src.models.match import Match
 
 
 class RoundView(BaseView):
     """Collect and display round-related console data."""
 
     def prompt_for_new_round(self) -> str:
-        """Prompt for confirmation before creating a new round."""
+        """Prompt for confirmation before creating a new round.
 
+        Returns:
+            Normalized confirmation answer, either ``"y"`` or ``"n"``.
+        """
         choice = prompt_until_valid(
             OptionalOrNot.NOT_OPTIONAL,
             self.prompt_format(
                 "Create round? (y/n) : "
             ),
             validate_yes_or_no_string,
-            console=self.console
+            console=self.console,
         )
 
         return choice
 
     def display_created_round(self, new_round: Round) -> None:
-        """Display a newly created round and its created matches."""
+        """Display a newly created round and its generated matches.
 
+        Args:
+            new_round: Round to display.
+        """
         matches_table = Table(
             expand=True,
-            show_lines=True
+            show_lines=True,
         )
 
         matches_table.add_column(
             "White player",
             justify="left",
-            ratio=1
+            ratio=1,
         )
         matches_table.add_column(
             "Black player",
             justify="left",
-            ratio=1
+            ratio=1,
         )
 
         for match in new_round.matches:
@@ -67,15 +73,15 @@ class RoundView(BaseView):
             "\n"
             + self.content_format(
                 "Round number",
-                str(new_round.number)
+                str(new_round.number),
             )
             + self.content_format(
                 "Status",
-                new_round.status.value
+                new_round.status.value,
             )
             + self.content_format(
                 "Number of matches",
-                str(len(new_round.matches))
+                str(len(new_round.matches)),
             )
         )
 
@@ -87,7 +93,7 @@ class RoundView(BaseView):
         content = Group(
             round_data,
             matches_title,
-            matches_table
+            matches_table,
         )
 
         self.console.print(
@@ -102,11 +108,14 @@ class RoundView(BaseView):
         )
 
     def display_unfinished_matches(
-            self,
-            unfinished_matches: list[Match],
+        self,
+        unfinished_matches: list[Match],
     ) -> None:
-        """Display unfinished matches for the current round."""
+        """Display unfinished matches for the current round.
 
+        Args:
+            unfinished_matches: Matches still waiting for a result.
+        """
         table = Table(
             title=self.results_title_format(
                 "Current Round unfinished matches"

@@ -1,6 +1,7 @@
 """Match console view."""
 
 import questionary
+
 from rich.table import Table
 
 from src.models.match import Match
@@ -11,38 +12,48 @@ class MatchView(BaseView):
     """Collect and display match-related console data."""
 
     def prompt_for_match_result(self) -> str:
-        """Prompt for a match result choice."""
+        """Prompt for a match result choice.
+
+        Returns:
+            Selected result action.
+        """
         return questionary.select(
             "Select the match winner\n",
             choices=[
                 questionary.Choice(
                     "White Player",
-                    value="white_player"
+                    value="white_player",
                 ),
                 questionary.Choice(
                     "Black Player",
-                    value="black_player"
+                    value="black_player",
                 ),
                 questionary.Choice(
                     "Draw",
-                    value="draw"
+                    value="draw",
                 ),
                 questionary.Choice(
                     "← Back",
-                    value="back"
+                    value="back",
                 )
             ],
             instruction="Use ↑ ↓ and 'Enter' to navigate",
             style=self.QUESTIONARY_STYLE,
-            qmark=""
+            qmark="",
         ).ask()
 
     def prompt_to_select_match(
-            self,
-            unfinished_matches: list[Match]
-    ) -> Match:
-        """Prompt for one unfinished match and return it."""
+        self,
+        unfinished_matches: list[Match]
+    ) -> Match | str:
+        """Prompt for one unfinished match.
 
+        Args:
+            unfinished_matches: Matches available for result entry.
+
+        Returns:
+            Selected match, or ``"back"`` if the user cancels.
+        """
         choices = []
 
         for index, match in enumerate(
@@ -74,7 +85,7 @@ class MatchView(BaseView):
         choices.append(
             questionary.Choice(
                 "← Back",
-                value="back"
+                value="back",
             )
         )
 
@@ -83,12 +94,11 @@ class MatchView(BaseView):
             choices=choices,
             instruction="Use ↑ ↓ and 'Enter' to navigate",
             style=self.QUESTIONARY_STYLE,
-            qmark=""
+            qmark="",
         ).ask()
 
     def display_unfinished_match(self, match: Match) -> None:
         """Display details for one unfinished match."""
-
         table = Table(
             title=self.results_title_format(
                 "Selected match details"
@@ -96,18 +106,16 @@ class MatchView(BaseView):
             width=self.APP_WIDTH,
             show_lines=True,
         )
-
         table.add_column(
             "White Player",
             style="bold",
-            ratio=1
+            ratio=1,
         )
         table.add_column(
             "Black Player",
             style="bold",
-            ratio=1
+            ratio=1,
         )
-
         table.add_row(
             f"{match.white_player.first_name} "
             f"{match.white_player.last_name.upper()}",

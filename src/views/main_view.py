@@ -2,15 +2,16 @@
 
 import questionary
 
+from src.models.tournament import Tournament
 from src.views.base_view import BaseView
 from src.views.tournament_view import TournamentView
-from src.models.tournament import Tournament
 
 
 class MainView(BaseView):
     """Display top-level navigation menus."""
 
     def __init__(self) -> None:
+        """Initialize the main view and nested tournament view."""
         super().__init__()
         self.tournament_view = TournamentView()
 
@@ -24,20 +25,20 @@ class MainView(BaseView):
             choices=[
                 questionary.Choice(
                     "Players Menu",
-                    value="manage_players"
+                    value="manage_players",
                 ),
                 questionary.Choice(
                     "Tournaments Menu",
-                    value="manage_tournaments"
+                    value="manage_tournaments",
                 ),
                 questionary.Choice(
                     "← Exit",
-                    value="exit"
+                    value="exit",
                 ),
             ],
             instruction="Use ↑ ↓ and 'Enter' to navigate",
             style=self.QUESTIONARY_STYLE,
-            qmark=""
+            qmark="",
         ).ask()
 
     def display_player_menu(self) -> str:
@@ -50,20 +51,20 @@ class MainView(BaseView):
             choices=[
                 questionary.Choice(
                     "Add Player",
-                    value="add_player"
+                    value="add_player",
                 ),
                 questionary.Choice(
                     "List Players",
-                    value="list_players"
+                    value="list_players",
                 ),
                 questionary.Choice(
                     "← Back",
-                    value="back"
+                    value="back",
                 ),
             ],
             instruction="Use ↑ ↓ and 'Enter' to navigate",
             style=self.QUESTIONARY_STYLE,
-            qmark=""
+            qmark="",
         ).ask()
 
     def display_list_players_menu(self) -> str:
@@ -74,16 +75,16 @@ class MainView(BaseView):
             choices=[
                 questionary.Choice(
                     "Show Player(s) details",
-                    value="players_details"
+                    value="players_details",
                 ),
                 questionary.Choice(
                     "← Back",
-                    value="back"
+                    value="back",
                 )
             ],
             instruction="Use ↑ ↓ and 'Enter' to navigate",
             style=self.QUESTIONARY_STYLE,
-            qmark=""
+            qmark="",
         ).ask()
 
     def display_tournaments_menu(self) -> str:
@@ -96,25 +97,24 @@ class MainView(BaseView):
             choices=[
                 questionary.Choice(
                     "Create Tournament",
-                    value="create_tournament"
+                    value="create_tournament",
                 ),
                 questionary.Choice(
                     "Manage Tournaments",
-                    value="manage_tournaments"
+                    value="manage_tournaments",
                 ),
                 questionary.Choice(
                     "← Back",
-                    value="back"
+                    value="back",
                 )
             ],
             instruction="Use ↑ ↓ and 'Enter' to navigate",
             style=self.QUESTIONARY_STYLE,
-            qmark=""
+            qmark="",
         ).ask()
 
     def display_manage_tournament_menu(self) -> str:
         """Display tournament actions and return the selected action."""
-
         self.display_section_title("Tournament Menu")
 
         return questionary.select(
@@ -122,23 +122,30 @@ class MainView(BaseView):
             choices=[
                 questionary.Choice(
                     "Select a Tournament",
-                    value="select_tournament"
+                    value="select_tournament",
                 ),
                 questionary.Choice(
                     "← Back",
-                    value="back"
+                    value="back",
                 )
             ],
             instruction="Use ↑ ↓ and 'Enter' to navigate",
             style=self.QUESTIONARY_STYLE,
-            qmark=""
+            qmark="",
         ).ask()
 
     def display_select_tournament_menu(
-            self,
-            selected_tournament: Tournament
+        self,
+        selected_tournament: Tournament
     ) -> str:
-        """Display actions for the selected tournament."""
+        """Display actions for the selected tournament.
+
+        Args:
+            selected_tournament: Tournament currently being managed.
+
+        Returns:
+            Selected menu action.
+        """
         self.display_section_title(
             f"Tournament: {selected_tournament.name}"
         )
@@ -152,30 +159,30 @@ class MainView(BaseView):
             choices=[
                 questionary.Choice(
                     "Add Players",
-                    value="add_players"
+                    value="add_players",
                 ),
                 questionary.Choice(
                     "List players by rank",
-                    value="players_and_ranks"
+                    value="players_and_ranks",
                 ),
                 questionary.Choice(
                     "Create next Round",
-                    value="next_round"
+                    value="next_round",
                 ),
                 questionary.Choice(
                     "List Rounds and matches",
-                    value="rounds_and_matches"
+                    value="rounds_and_matches",
                 ),
                 questionary.Choice(
                     "Enter current round results",
-                    value="match_results"
+                    value="match_results",
                 ),
                 questionary.Choice(
                     "← Back",
-                    value="back"
+                    value="back",
                 )
             ],
             instruction="Use ↑ ↓ and 'Enter' to navigate",
             style=self.QUESTIONARY_STYLE,
-            qmark=""
+            qmark="",
         ).ask()
