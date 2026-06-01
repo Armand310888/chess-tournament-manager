@@ -10,3 +10,7 @@ __pycache__/
 
 # Data
 data/
+
+# ZIP project extractions
+*_review.zip
+
