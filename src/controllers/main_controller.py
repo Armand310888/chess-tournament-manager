@@ -247,6 +247,16 @@ class MainController:
             self.main_view.pause()
             return
 
+        if (
+            len(selected_tournament.rounds) > 0
+            or selected_tournament.current_round is not None
+        ):
+            self.main_view.display_error(
+                "Cannot add players after the first round has been created."
+            )
+            self.main_view.pause()
+            return
+        
         self.player_view.display_players(
             selectable_players,
             "Selectable players"
