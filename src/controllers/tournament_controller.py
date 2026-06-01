@@ -6,8 +6,6 @@ from src.models.player import Player
 from src.models.tournament import Tournament
 from src.repository.tournament_repository import save_tournaments
 from src.utils.id_generator import IDPrefix, generate_next_id
-from src.views.round_view import RoundView
-from src.views.tournament_view import TournamentView
 
 
 class TournamentController:
@@ -21,8 +19,6 @@ class TournamentController:
         """Initialize the controller with loaded tournaments and players."""
         self.tournaments = tournaments
         self.players = players
-        self.tournament_view = TournamentView()
-        self.round_view = RoundView()
 
     def create_tournament(
         self,

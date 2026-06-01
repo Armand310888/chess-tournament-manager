@@ -66,7 +66,7 @@ def get_players_ranked(tournament: Tournament) -> list[tuple[Player, float]]:
 
 
 def group_players_by_score(
-        ranked_players: list[Player, float]
+        ranked_players: list[tuple[Player, float]]
 ) -> dict[float, list[Player]]:
     """Group ranked players by identical tournament score.
 

@@ -1,8 +1,9 @@
 """Custom exceptions used by application flows."""
 
 
-class NoPlayersAvailableError(Exception):
+class NoPlayersAvailableError(ValueError):
     """Raised when an action requires existing players."""
+
     def __init__(self) -> None:
         """Initialize the exception with a user-facing message."""
         super().__init__(
@@ -10,8 +11,9 @@ class NoPlayersAvailableError(Exception):
         )
 
 
-class RoundNotFinishedError(Exception):
+class RoundNotFinishedError(ValueError):
     """Raised when creating a round before ending the current one."""
+
     def __init__(self) -> None:
         """Initialize the exception with a user-facing message."""
         super().__init__(
@@ -21,5 +23,5 @@ class RoundNotFinishedError(Exception):
         )
 
 
-class TournamentFinishedError(Exception):
-    """"""
+class TournamentFinishedError(ValueError):
+    """Raised when an action requires a tournament still in progress."""
