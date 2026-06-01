@@ -342,15 +342,19 @@ class Tournament:
 
     def end_tournament(self) -> None:
         """End the tournament once all planned rounds are completed."""
-        rounds_count = len(self.rounds)
+        finished_rounds_count = len([
+            round
+            for round in self.rounds
+            if round.status == EventStatus.FINISHED
+        ])
 
-        if rounds_count < self.number_of_rounds:
-            remaining_rounds = self.number_of_rounds - rounds_count
+        if finished_rounds_count < self.number_of_rounds:
+            remaining_rounds = self.number_of_rounds - finished_rounds_count
 
             raise ValueError(
                 "All tournament rounds must be completed "
                 "before ending the tournament.\n"
-                f"Completed rounds: {rounds_count}\n"
+                f"Completed rounds: {finished_rounds_count}\n"
                 f"Remaining rounds: {remaining_rounds} "
                 f"out of {self.number_of_rounds}"
             )
@@ -403,6 +407,7 @@ class Tournament:
                 if self.current_round
                 else None
             ),
+            "status": self.status.value,
         }
 
     @classmethod
@@ -470,6 +475,9 @@ class Tournament:
             tournament.current_round = (
                 get_round_by_id(data["current_round_id"], rounds)
                 if data.get("current_round_id") else None
+            )
+            tournament.status = EventStatus(
+                data.get("status")
             )
 
             return tournament
