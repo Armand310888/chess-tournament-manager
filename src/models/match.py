@@ -49,6 +49,18 @@ class Match:
         self.white_player_score: float | None = None
         self.black_player_score: float | None = None
 
+    @property
+    def match_representation(self) -> tuple[list, list]:
+        """Return the project-required tuple representation.
+
+        The returned structure is:
+        ``([white_player, white_score], [black_player, black_score])``.
+        """
+        return (
+            [self.white_player, self.white_player_score],
+            [self.black_player, self.black_player_score],
+        )
+
     def set_black_and_white_player(self) -> None:
         """Randomly assign one player to white and the other to black."""
         players = [self.player_1, self.player_2]
