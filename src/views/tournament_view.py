@@ -434,6 +434,11 @@ class TournamentView(BaseView):
             str(selected_tournament.current_round),
         )
 
+        table.add_row(
+            "Tournament status",
+            f"{selected_tournament.status.value}"
+        )
+
         self.console.print(table)
 
     def display_tournament_rounds_and_matches(
