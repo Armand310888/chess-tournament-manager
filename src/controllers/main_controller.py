@@ -273,8 +273,8 @@ class MainController:
                 selected_tournament,
                 selectable_players,
                 selected_players_indices
+                )
             )
-        )
 
         self.player_view.display_players(
             selected_players,
@@ -358,8 +358,9 @@ class MainController:
 
             if not unfinished_matches:
                 self.match_view.display_success(
-                    "All match results have been entered."
+                    "All match results have been entered for this round."
                 )
+                self.main_view.pause()
                 break
 
             self.main_view.clear()

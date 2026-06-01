@@ -70,14 +70,14 @@ class Round:
                 unfinished_matches.append(match)
 
         if len(unfinished_matches) > 0:
-            matches_list = "\n".join(
+            matches_list = "\n\n".join(
                 str(match)
                 for match in unfinished_matches
             )
 
             raise ValueError(
                 "The following round matches are still ongoing "
-                "and must be terminated first:\n"
+                "and must be terminated first:\n\n"
                 f"{matches_list}"
             )
 

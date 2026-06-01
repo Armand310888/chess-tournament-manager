@@ -196,7 +196,15 @@ class Match:
 
     def __str__(self) -> str:
         """Return a readable match description."""
-        return f"{self.player_1} vs {self.player_2}"
+        return (
+            f"{self.player_1.first_name} "
+            f"{self.player_1.last_name.upper()} "
+            f"({self.player_1.elo_rating}) "
+            f"vs "
+            f"{self.player_2.first_name} "
+            f"{self.player_2.last_name.upper()} "
+            f"({self.player_2.elo_rating})"
+        )
 
     def __repr__(self) -> str:
         """Return a developer-friendly representation of the match."""
