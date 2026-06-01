@@ -165,6 +165,8 @@ class MainController:
                 self.enter_matches_results_flow(selected_tournament)
             elif choice == "end_round":
                 self.end_current_round_flow(selected_tournament)
+            elif choice == "end_tournament":
+                self.end_tournament_flow(selected_tournament)
             elif choice == "back":
                 break
 
@@ -256,7 +258,7 @@ class MainController:
             )
             self.main_view.pause()
             return
-        
+
         self.player_view.display_players(
             selectable_players,
             "Selectable players"
@@ -412,4 +414,28 @@ class MainController:
                 f"ended successfully."
             )
 
+        self.main_view.pause()
+
+    def end_tournament_flow(self, selected_tournament: Tournament) -> None:
+        """"""
+        if not isinstance(selected_tournament, Tournament):
+            raise TypeError(
+                "'selected_tournament' must be a Tournament object."
+            )
+
+        choice = self.tournament_view.prompt_to_end_tournament(
+            selected_tournament
+        )
+
+        if choice != "y":
+            return
+
+        try:
+            self.tournament_controller.end_tournament(selected_tournament)
+        except ValueError as error:
+            self.main_view.display_error(error)
+            self.main_view.pause()
+            return
+
+        self.tournament_view.display_ended_tournament(selected_tournament)
         self.main_view.pause()

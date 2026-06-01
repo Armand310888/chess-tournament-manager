@@ -203,3 +203,13 @@ class TournamentController:
                 return True
 
         return False
+
+    def end_tournament(self, selected_tournament: Tournament) -> None:
+        """End the selected tournament and persist the updated state."""
+        if not isinstance(selected_tournament, Tournament):
+            raise TypeError(
+                "'selected_tournament' must be a Tournament object."
+            )
+
+        selected_tournament.end_tournament()
+        save_tournaments(self.tournaments)

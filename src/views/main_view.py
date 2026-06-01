@@ -182,6 +182,10 @@ class MainView(BaseView):
                     value="end_round",
                 ),
                 questionary.Choice(
+                    "End tournament",
+                    value="end_tournament",
+                ),
+                questionary.Choice(
                     "← Back",
                     value="back",
                 )

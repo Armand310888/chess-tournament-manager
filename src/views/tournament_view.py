@@ -511,3 +511,24 @@ class TournamentView(BaseView):
                 )
 
             self.console.print(table)
+
+    def prompt_to_end_tournament(self, selected_tournament: Tournament) -> str:
+        """"""
+        return prompt_until_valid(
+            OptionalOrNot.NOT_OPTIONAL,
+            self.prompt_format(
+                f"End '{selected_tournament.name}' tournament? (y/n): "
+            ),
+            validate_yes_or_no_string,
+            console=self.console,
+        )
+
+    def display_ended_tournament(self, selected_tournament: Tournament):
+        """"""
+        self.display_success(
+            f"Tournament {selected_tournament.name} "
+            "has been ended successfully."
+        )
+
+        self.display_section_title("Final scores")
+        self.display_tournament_players_and_ranks(selected_tournament)

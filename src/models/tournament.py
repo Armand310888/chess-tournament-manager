@@ -6,7 +6,7 @@ from src.models.player import Player
 from src.models.round import Round
 from src.repository.player_repository import get_player_by_id
 from src.repository.round_repository import get_round_by_id
-from src.services.event_status_manager import EventStatus
+from src.services.event_status_manager import EventStatus, end_event
 from src.utils.validators import (
     Pattern,
     PatternDescription,
@@ -339,6 +339,23 @@ class Tournament:
             )
 
         self.players.append(validated_player)
+
+    def end_tournament(self) -> None:
+        """End the tournament once all planned rounds are completed."""
+        rounds_count = len(self.rounds)
+
+        if rounds_count < self.number_of_rounds:
+            remaining_rounds = self.number_of_rounds - rounds_count
+
+            raise ValueError(
+                "All tournament rounds must be completed "
+                "before ending the tournament.\n"
+                f"Completed rounds: {rounds_count}\n"
+                f"Remaining rounds: {remaining_rounds} "
+                f"out of {self.number_of_rounds}"
+            )
+
+        end_event(self)
 
     def to_dict(self) -> dict:
         """Convert the tournament into a JSON-serializable dictionary.
