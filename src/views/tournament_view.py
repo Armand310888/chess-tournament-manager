@@ -530,7 +530,10 @@ class TournamentView(BaseView):
             console=self.console,
         )
 
-    def display_ended_tournament(self, selected_tournament: Tournament):
+    def display_ended_tournament(
+        self,
+        selected_tournament: Tournament
+    ) -> None:
         """Display tournament end confirmation and final scores.
 
         Args:

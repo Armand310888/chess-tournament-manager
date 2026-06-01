@@ -249,16 +249,6 @@ class MainController:
             self.main_view.pause()
             return
 
-        if (
-            len(selected_tournament.rounds) > 0
-            or selected_tournament.current_round is not None
-        ):
-            self.main_view.display_error(
-                "Cannot add players after the first round has been created."
-            )
-            self.main_view.pause()
-            return
-
         self.player_view.display_players(
             selectable_players,
             "Selectable players"
@@ -269,14 +259,19 @@ class MainController:
             .prompt_to_select_players_indices(selectable_players)
         )
 
-        selected_players = (
-            self.tournament_controller
-            .select_players(
-                selected_tournament,
-                selectable_players,
-                selected_players_indices
+        try:
+            selected_players = (
+                self.tournament_controller
+                .select_players(
+                    selected_tournament,
+                    selectable_players,
+                    selected_players_indices
                 )
             )
+        except (TypeError, ValueError) as error:
+            self.main_view.display_error(error)
+            self.main_view.pause()
+            return
 
         self.player_view.display_players(
             selected_players,
@@ -297,7 +292,7 @@ class MainController:
         choice = self.round_view.prompt_for_new_round()
 
         if choice != "y":
-            return None
+            return
 
         try:
             new_round = (

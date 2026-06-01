@@ -77,6 +77,12 @@ class RoundController:
                 "No new round can be created."
             )
 
+        if len(tournament.rounds) >= tournament.number_of_rounds:
+            raise ValueError(
+                "All planned rounds have already been created "
+                "for this tournament."
+            )
+
         if tournament.current_round is None:
             tournament.validate_ready_to_start()
 

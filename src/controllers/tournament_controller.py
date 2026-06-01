@@ -113,7 +113,7 @@ class TournamentController:
         if not isinstance(tournament, Tournament):
             raise TypeError("'tournament' must be a Tournament object.")
 
-        if tournament.rounds:
+        if tournament.rounds or tournament.current_round is not None:
             raise ValueError(
                 "Cannot add players after the first round has been created."
             )
