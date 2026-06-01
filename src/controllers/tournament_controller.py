@@ -113,10 +113,7 @@ class TournamentController:
         if not isinstance(tournament, Tournament):
             raise TypeError("'tournament' must be a Tournament object.")
 
-        if tournament.rounds or tournament.current_round is not None:
-            raise ValueError(
-                "Cannot add players after the first round has been created."
-            )
+        self.validate_can_add_players(tournament)
 
         if not isinstance(selectable_players, list):
             raise TypeError("'players' must be a list.")
@@ -209,3 +206,21 @@ class TournamentController:
 
         selected_tournament.end_tournament()
         save_tournaments(self.tournaments)
+
+    def validate_can_add_players(self, tournament: Tournament) -> None:
+        """Ensure players can still be added to the tournament.
+
+        Args:
+            tournament: Tournament to validate.
+
+        Raises:
+            TypeError: If tournament is not a Tournament instance.
+            ValueError: If the tournament has already started.
+        """
+        if not isinstance(tournament, Tournament):
+            raise TypeError("'tournament' must be a Tournament object.")
+
+        if tournament.rounds or tournament.current_round is not None:
+            raise ValueError(
+                "Cannot add players after the first round has been created."
+            )

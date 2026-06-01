@@ -239,6 +239,15 @@ class MainController:
         Args:
             selected_tournament: Tournament receiving selected players.
         """
+        try:
+            self.tournament_controller.validate_can_add_players(
+                selected_tournament
+            )
+        except (TypeError, ValueError) as error:
+            self.main_view.display_error(error)
+            self.main_view.pause()
+            return
+
         selectable_players = (
             self.tournament_controller
             .get_selectable_players(selected_tournament)
