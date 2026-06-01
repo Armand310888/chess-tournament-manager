@@ -19,3 +19,7 @@ class RoundNotFinishedError(Exception):
             "Current round must be finished before "
             "creating a new round."
         )
+
+
+class TournamentFinishedError(Exception):
+    """"""

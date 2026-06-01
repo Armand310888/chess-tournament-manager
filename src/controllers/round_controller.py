@@ -13,7 +13,7 @@ from src.services.pairing_manager import (
     create_random_pairs,
     pair_players_by_score,
 )
-from src.utils.exceptions import RoundNotFinishedError
+from src.utils.exceptions import RoundNotFinishedError, TournamentFinishedError
 from src.utils.id_generator import IDPrefix, generate_next_id
 
 
@@ -70,6 +70,12 @@ class RoundController:
             and current_round.status != EventStatus.FINISHED
         ):
             raise RoundNotFinishedError()
+
+        if tournament.status == EventStatus.FINISHED:
+            raise TournamentFinishedError(
+                "The tournament is already finished. "
+                "No new round can be created."
+            )
 
         if tournament.current_round is None:
             tournament.validate_ready_to_start()
