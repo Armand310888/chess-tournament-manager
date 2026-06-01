@@ -513,7 +513,14 @@ class TournamentView(BaseView):
             self.console.print(table)
 
     def prompt_to_end_tournament(self, selected_tournament: Tournament) -> str:
-        """"""
+        """Prompt for confirmation before ending a tournament.
+
+        Args:
+            selected_tournament: Tournament the user is about to end.
+
+        Returns:
+            Normalized confirmation answer, either ``"y"`` or ``"n"``.
+        """
         return prompt_until_valid(
             OptionalOrNot.NOT_OPTIONAL,
             self.prompt_format(
@@ -524,7 +531,11 @@ class TournamentView(BaseView):
         )
 
     def display_ended_tournament(self, selected_tournament: Tournament):
-        """"""
+        """Display tournament end confirmation and final scores.
+
+        Args:
+            selected_tournament: Tournament that has just been ended.
+        """
         self.display_success(
             f"Tournament {selected_tournament.name} "
             "has been ended successfully."

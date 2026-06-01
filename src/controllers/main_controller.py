@@ -171,7 +171,7 @@ class MainController:
                 break
 
     def create_player_flow(self) -> None:
-        """"""
+        """Prompt for player data, create the player, and display feedback."""
         player_data = self.player_view.prompt_for_player_data()
 
         try:
@@ -186,13 +186,13 @@ class MainController:
         self.main_view.pause()
 
     def get_players_flow(self) -> None:
-        """"""
+        """Display all available players."""
         self.player_view.display_players(self.players, "Available")
 
         self.main_view.pause()
 
     def show_selected_players_details_flow(self) -> None:
-        """"""
+        """Prompt for players and display their detailed information."""
         selected_indices = self.player_view.prompt_to_select_players_indices(
             self.players,
         )
@@ -205,7 +205,7 @@ class MainController:
         self.main_view.pause()
 
     def create_tournament_flow(self) -> None:
-        """"""
+        """Prompt for tournament data, create it, and display feedback."""
         tournament_data = self.tournament_view.prompt_for_tournament_data()
 
         try:
@@ -225,7 +225,7 @@ class MainController:
         self.main_view.pause()
 
     def get_tournaments_flow(self) -> None:
-        """"""
+        """Display all existing tournaments."""
         self.tournament_view.display_tournaments(self.tournaments)
 
         self.main_view.pause()
@@ -417,7 +417,11 @@ class MainController:
         self.main_view.pause()
 
     def end_tournament_flow(self, selected_tournament: Tournament) -> None:
-        """"""
+        """Prompt for confirmation and end the selected tournament.
+
+        Args:
+            selected_tournament: Tournament to end.
+        """
         if not isinstance(selected_tournament, Tournament):
             raise TypeError(
                 "'selected_tournament' must be a Tournament object."

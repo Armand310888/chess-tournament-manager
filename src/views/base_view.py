@@ -88,13 +88,13 @@ class BaseView:
     def content_format(data_name: str, data_value: object) -> str:
         """Format a label-value line with aligned labels.
 
-    Args:
-        data_name: Label displayed before the value.
-        data_value: Value associated with the label.
+        Args:
+            data_name: Label displayed before the value.
+            data_value: Value associated with the label.
 
-    Returns:
-        Rich markup string ending with a newline.
-    """
+        Returns:
+            Rich markup string ending with a newline.
+        """
         return (
             f"[underline]{data_name:<30}[/underline]"
             f": {data_value}\n"
@@ -102,10 +102,13 @@ class BaseView:
 
     @staticmethod
     def error_format(error_message: str) -> str:
-        """Display a formatted error message.
+        """Format an error message with Rich markup.
 
         Args:
-            error: Exception or message to display.
+            error_message: Error message to display.
+
+        Returns:
+            Rich markup string containing the formatted error.
         """
 
         return (
