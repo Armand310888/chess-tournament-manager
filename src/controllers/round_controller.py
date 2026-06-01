@@ -148,7 +148,7 @@ class RoundController:
     def end_current_round(
         self,
         selected_tournament: Tournament,
-    ) -> None:
+    ) -> int:
         """End the current round and clear it from the tournament.
 
         Args:
@@ -169,7 +169,10 @@ class RoundController:
             raise ValueError("No round in progress yet.")
 
         selected_tournament.current_round.end_round()
+        ended_round_number = selected_tournament.current_round.number
         selected_tournament.current_round = None
 
         save_rounds(self.rounds)
         save_tournaments(self.tournaments)
+
+        return ended_round_number

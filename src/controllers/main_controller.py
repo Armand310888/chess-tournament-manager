@@ -400,10 +400,15 @@ class MainController:
             return
 
         try:
-            self.round_controller.end_current_round(selected_tournament)
+            ended_round_number = (
+                self.round_controller.end_current_round(selected_tournament)
+            )
         except ValueError as error:
             self.round_view.display_error(error)
         else:
-            self.round_view.display_success("Round ended successfully.")
+            self.round_view.display_success(
+                f"Round n°{ended_round_number} "
+                f"ended successfully."
+            )
 
         self.main_view.pause()
