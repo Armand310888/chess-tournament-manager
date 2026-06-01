@@ -118,7 +118,7 @@ flake8 src
 Generate an HTML report:
 
 ```bash
-flake8 src --format=html --htmldir=flake8-report
+flake8 src --max-line-length=119 --format=html --htmldir=flake8_rapport
 ```
 
 ---
