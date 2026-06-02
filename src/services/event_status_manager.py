@@ -47,6 +47,9 @@ def end_event(event: EventType) -> None:
             f"'{event}' has not started yet and cannot be ended."
         )
 
+    if event.status == EventStatus.FINISHED:
+        raise ValueError(f"'{event}' has already ended.")
+
     if event.end_datetime is None:
         event.end_datetime = datetime.now()
 
