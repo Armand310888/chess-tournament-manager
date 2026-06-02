@@ -425,8 +425,13 @@ class TournamentView(BaseView):
         )
 
         table.add_row(
-            "Number of rounds",
+            "Total number of rounds",
             str(selected_tournament.number_of_rounds),
+        )
+
+        table.add_row(
+            "Remaining rounds",
+            str(selected_tournament.remaining_rounds),
         )
 
         table.add_row(

@@ -263,6 +263,11 @@ class Tournament:
 
         self._description = validate_non_empty_string(value, "description")
 
+    @property
+    def remaining_rounds(self) -> int:
+        """Return the number of rounds that remain to be played."""
+        return self.number_of_rounds - len(self.rounds)
+
     def validate_ready_to_start(self) -> None:
         """Validate that the tournament can start its first round.
 
