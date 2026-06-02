@@ -5,12 +5,14 @@ from src.controllers.player_controller import PlayerController
 from src.controllers.round_controller import RoundController
 from src.controllers.tournament_controller import TournamentController
 from src.models.match import MatchResult
+from src.models.player import Player
 from src.models.tournament import Tournament
 from src.repository.match_repository import load_matches
 from src.repository.player_repository import load_players
 from src.repository.round_repository import load_rounds
 from src.repository.tournament_repository import load_tournaments
 from src.utils.exceptions import RoundNotFinishedError
+from src.utils.player_sorting_manager import sort_players_alphabetically
 from src.views.main_view import MainView
 from src.views.match_view import MatchView
 from src.views.player_view import PlayerView
@@ -76,12 +78,15 @@ class MainController:
         """Run the registered players listing menu loop."""
         while True:
             self.main_view.display_application_header()
-            self.player_view.display_players(self.players, "Registered")
+
+            sorted_players = sort_players_alphabetically(self.players)
+
+            self.player_view.display_players(sorted_players, "Registered")
 
             choice = self.main_view.display_list_players_menu()
 
             if choice == "players_details":
-                self.show_selected_players_details_flow()
+                self.show_selected_players_details_flow(sorted_players)
             elif choice == "back":
                 break
 
@@ -186,19 +191,24 @@ class MainController:
         self.main_view.pause()
 
     def get_players_flow(self) -> None:
-        """Display all available players."""
-        self.player_view.display_players(self.players, "Available")
+        """Display all available players, sorted alphabetically."""
+        sorted_players = sort_players_alphabetically(self.players)
+
+        self.player_view.display_players(sorted_players, "Available")
 
         self.main_view.pause()
 
-    def show_selected_players_details_flow(self) -> None:
+    def show_selected_players_details_flow(
+        self,
+        sorted_players: list[Player]
+    ) -> None:
         """Prompt for players and display their detailed information."""
         selected_indices = self.player_view.prompt_to_select_players_indices(
-            self.players,
+            sorted_players,
         )
 
         self.player_view.display_players_details(
-            self.players,
+            sorted_players,
             selected_indices,
         )
 
@@ -258,8 +268,10 @@ class MainController:
             self.main_view.pause()
             return
 
+        sorted_players = sort_players_alphabetically(selectable_players)
+
         self.player_view.display_players(
-            selectable_players,
+            sorted_players,
             "Selectable players"
         )
 
