@@ -67,7 +67,7 @@ Developed as part of the OpenClassrooms Python Application Developer curriculum,
 ### Clone the repository
 
 ```bash
-git clone git@github.com:Armand310888/chess-tournament-manager.git
+git clone https://github.com/Armand310888/chess-tournament-manager.git
 cd chess-tournament-manager
 ```
 
