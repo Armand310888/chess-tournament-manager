@@ -32,8 +32,9 @@ class EventType(Protocol):
 def end_event(event: EventType) -> None:
     """Mark an in-progress event as finished.
 
-    The helper sets the event end date to the current datetime and updates
-    its status to finished.
+    For events without a planned end datetime, set the end datetime to
+    the current datetime. For events with a planned end datetime, preserve
+    it and only update the status.
 
     Args:
         event: Object exposing lifecycle status and date attributes.
@@ -46,8 +47,7 @@ def end_event(event: EventType) -> None:
             f"'{event}' has not started yet and cannot be ended."
         )
 
-    if event.status == EventStatus.FINISHED:
-        raise ValueError(f"'{event}' has already ended.")
+    if event.end_datetime is None:
+        event.end_datetime = datetime.now()
 
-    event.end_datetime = datetime.now()
     event.status = EventStatus.FINISHED

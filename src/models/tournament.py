@@ -341,7 +341,12 @@ class Tournament:
         self.players.append(validated_player)
 
     def end_tournament(self) -> None:
-        """End the tournament once all planned rounds are completed."""
+        """End the tournament once all planned rounds are completed.
+
+        Raises:
+            ValueError: If not all planned rounds are completed or if the
+                tournament is already finished.
+        """
         finished_rounds_count = len([
             round
             for round in self.rounds
@@ -349,15 +354,16 @@ class Tournament:
         ])
 
         if finished_rounds_count < self.number_of_rounds:
-            remaining_rounds = self.number_of_rounds - finished_rounds_count
-
             raise ValueError(
                 "All tournament rounds must be completed "
                 "before ending the tournament.\n"
                 f"Completed rounds: {finished_rounds_count}\n"
-                f"Remaining rounds: {remaining_rounds} "
+                f"Remaining rounds: {self.remaining_rounds} "
                 f"out of {self.number_of_rounds}"
             )
+
+        if self.status == EventStatus.FINISHED:
+            raise ValueError("This tournament is already finished")
 
         end_event(self)
 
