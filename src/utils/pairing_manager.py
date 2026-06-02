@@ -5,7 +5,7 @@ import random
 from src.models.player import Player
 from src.models.round import Round
 from src.models.tournament import Tournament
-from src.services.ranking_manager import (
+from src.utils.player_sorting_manager import (
     get_players_ranked,
     group_players_by_score,
 )

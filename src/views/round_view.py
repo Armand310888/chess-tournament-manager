@@ -8,7 +8,7 @@ from rich.text import Text
 from src.models.match import Match
 from src.models.round import Round
 from src.views.base_view import BaseView
-from src.views.input_helpers import (
+from src.utils.input_helpers import (
     OptionalOrNot,
     prompt_until_valid,
     validate_yes_or_no_string,

@@ -8,13 +8,13 @@ from src.models.round import Round
 from src.models.tournament import Tournament
 from src.repository.round_repository import save_rounds
 from src.repository.tournament_repository import save_tournaments
-from src.services.event_status_manager import EventStatus
-from src.services.pairing_manager import (
+from src.utils.event_status_manager import EventStatus
+from src.utils.exceptions import RoundNotFinishedError, TournamentFinishedError
+from src.utils.id_generator import IDPrefix, generate_next_id
+from src.utils.pairing_manager import (
     create_random_pairs,
     pair_players_by_score,
 )
-from src.utils.exceptions import RoundNotFinishedError, TournamentFinishedError
-from src.utils.id_generator import IDPrefix, generate_next_id
 
 
 class RoundController:

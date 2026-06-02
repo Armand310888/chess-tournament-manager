@@ -6,7 +6,7 @@ import random
 
 from src.models.player import Player
 from src.repository.player_repository import get_player_by_id
-from src.services.event_status_manager import (
+from src.utils.event_status_manager import (
     EventStatus,
     end_event,
 )

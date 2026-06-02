@@ -1,8 +1,8 @@
-"""Player ranking helpers for tournament standings."""
+"""Player sorting helpers for tournament standings."""
 
 from src.models.player import Player
 from src.models.tournament import Tournament
-from src.services.event_status_manager import EventStatus
+from src.utils.event_status_manager import EventStatus
 
 
 def get_player_score(player: Player, tournament: Tournament) -> float:
@@ -88,5 +88,16 @@ def group_players_by_score(
         sorted(
             players_grouped_by_score.items(),
             reverse=True
+        )
+    )
+
+
+def sort_players_alphabetically(players: list[Player]) -> list[Player]:
+    """Return players sorted by last name, then first name."""
+    return sorted(
+        players,
+        key=lambda player: (
+            player.last_name.lower(),
+            player.first_name.lower(),
         )
     )

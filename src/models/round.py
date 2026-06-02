@@ -4,7 +4,7 @@ from datetime import datetime
 
 from src.models.match import Match
 from src.repository.match_repository import get_match_by_id
-from src.services.event_status_manager import (
+from src.utils.event_status_manager import (
     EventStatus,
     end_event,
 )

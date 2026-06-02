@@ -6,7 +6,7 @@ from src.models.player import Player
 from src.models.round import Round
 from src.repository.player_repository import get_player_by_id
 from src.repository.round_repository import get_round_by_id
-from src.services.event_status_manager import EventStatus, end_event
+from src.utils.event_status_manager import EventStatus, end_event
 from src.utils.validators import (
     Pattern,
     PatternDescription,

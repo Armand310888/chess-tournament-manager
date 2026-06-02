@@ -17,7 +17,7 @@ from src.utils.validators import (
     validate_regex_match,
 )
 from src.views.base_view import BaseView
-from src.views.input_helpers import (
+from src.utils.input_helpers import (
     OptionalOrNot,
     prompt_until_valid,
     validate_index_selection,

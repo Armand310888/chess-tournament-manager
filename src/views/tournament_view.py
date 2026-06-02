@@ -15,7 +15,7 @@ from src.utils.validators import (
 )
 from src.models.tournament import Address
 from src.models.tournament import Tournament
-from src.views.input_helpers import (
+from src.utils.input_helpers import (
     prompt_until_valid,
     validate_index_selection,
     validate_yes_or_no_string,
@@ -23,8 +23,8 @@ from src.views.input_helpers import (
 )
 from src.views.player_view import PlayerView
 from src.views.base_view import BaseView
-from src.services.ranking_manager import get_players_ranked
-from src.services.event_status_manager import EventStatus
+from src.utils.player_sorting_manager import get_players_ranked
+from src.utils.event_status_manager import EventStatus
 
 
 class TournamentView(BaseView):
